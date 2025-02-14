@@ -31,29 +31,12 @@ export const userChallengeList = [
         clgDoing: true,
         clgDone: false,
     },
+
     {
         id: 2,
-        authorId: 'happy2@naver.com',
-        category: '습관',
-        duration: '매일',
-        title: '하루 한 번 소리내서 웃기',
-        content:
-            '일상에 지쳐 감정을 숨기는 당신! 하하하 웃어봅시다! 하하하하하하! 기분이 좋아질 거예요!',
-        userImg:
-            'https://img.freepik.com/free-photo/close-up-man-holding-his-adorable-dog-park_23-2148576983.jpg?t=st=1739203882~exp=1739207482~hmac=2d20dce3183aab48dc6deb711bffd5f5cc7b200273f2e252d057deea929de0de&w=1480',
-        nickname: '해피해피',
-        postDate: '2024-11-22T10:00:00',
-        postClicked: 99,
-        joinDate: '',
-        clgJoin: false,
-        clgDoing: true,
-        clgDone: false,
-    },
-    {
-        id: 3,
         authorId: 'test01@naver.com',
         category: '습관',
-        duration: '2주',
+        duration: '1개월',
         title: '커피 대신 따뜻한 차 마시기',
         content:
             '만성 피로에 매일 마셔댄 아아 때문에 위에 무리가 왔어요ㅠ 저와 함께 커피 대신 차를 마시며 몸을 챙겨봐요!',
@@ -68,10 +51,10 @@ export const userChallengeList = [
         clgDone: true,
     },
     {
-        id: 4,
+        id: 3,
         authorId: 'beawriter@gmail.com',
         category: '학습',
-        duration: '1주',
+        duration: '1개월',
         title: '매일 한 문장 글쓰기',
         content:
             '하루 한 문장씩 글을 쓰며 표현력을 길러보세요. 한 문장이 한 문단이 되고, 한 문단이 한 권의 책이 될지도 몰라요 :)',
@@ -87,10 +70,10 @@ export const userChallengeList = [
     },
 
     {
-        id: 5,
+        id: 4,
         authorId: 'noyasik@kakao.com',
         category: '식단',
-        duration: '1주',
+        duration: '3개월',
         title: '야식 먹지 않기',
         content:
             '*규칙: 저녁 8시 이후 음식 섭취 금지, 허기지면 물이나 허브티로 대체...! 알아요 쉽지 않다는 거... 그래서 딱 1주만 해보고... 다시 생각해볼까요? 이것만 기억합시다. 건강한 식습관 > 소화기 건강 개선 > 숙면 > 가벼운 아침 맞이',
@@ -106,10 +89,10 @@ export const userChallengeList = [
     },
 
     {
-        id: 6,
+        id: 5,
         authorId: 'corecore@gmail.com',
         category: '운동',
-        duration: '1개월',
+        duration: '6개월',
         title: '하루 30초 플랭크 챌린지',
         content:
             '처음에는 30초부터 시작해서 익숙해지면 점점 시간을 늘려봅시다! 코어 근육 강화 뿐만 아니라 전신 근력 향상과 바른 자세를 유지에도 도움이 됩니다. 자신을 위해 딱 30초만 투자하세요 :)',
@@ -124,10 +107,10 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 7,
+        id: 6,
         authorId: 'peacefulm2nd@gmail.com',
         category: '습관',
-        duration: '매일',
+        duration: '3개월',
         title: '매일 아침 5분간 명상하기',
         content:
             '오늘의 나를 정비하는 시간, 매일 아침 명상을 통해 이너피스를 찾아봅시다 :)',
@@ -142,7 +125,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 8,
+        id: 7,
         authorId: 'ecoclass@gmail.com',
         category: '학습',
         duration: '3개월',
@@ -159,9 +142,8 @@ export const userChallengeList = [
         clgDoing: false,
         clgDone: true,
     },
-
     {
-        id: 9,
+        id: 8,
         authorId: 'healthylife@kakao.com',
         category: '운동',
         duration: '1개월',
@@ -179,10 +161,10 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 10,
+        id: 9,
         authorId: 'veggie123@kakao.com',
         category: '식단',
-        duration: '1주',
+        duration: '3개월',
         title: '인스턴트 대신 신선한 음식 먹기',
         content:
             '패스트푸드를 피하고 자연 그대로의 식재료로 만든 음식을 먹어보자! 몸이 가벼워지는 걸 느낄 수 있을 것!',
@@ -197,7 +179,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 11,
+        id: 10,
         authorId: 'vloger@naver.com',
         category: '습관',
         duration: '3개월',
@@ -215,7 +197,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 12,
+        id: 11,
         authorId: '1mealathome@kakao.com',
         category: '습관',
         duration: '1개월',
@@ -227,13 +209,13 @@ export const userChallengeList = [
         nickname: '집밥박선생',
         postDate: '2024-12-13T10:00:00',
         postClicked: 52,
-        joinDate: '2025-01-16T01:00:00',
+        joinDate: '2025-01-12T01:00:00',
         clgJoin: true,
         clgDoing: false,
         clgDone: false,
     },
     {
-        id: 13,
+        id: 12,
         authorId: 'test01@naver.com',
         category: '운동',
         duration: '1개월',
@@ -251,7 +233,7 @@ export const userChallengeList = [
         clgDone: true,
     },
     {
-        id: 14,
+        id: 13,
         authorId: 'detoxic@kakao.com',
         category: '습관',
         duration: '1개월',
@@ -269,10 +251,10 @@ export const userChallengeList = [
         clgDone: true,
     },
     {
-        id: 15,
+        id: 14,
         authorId: '10page99@gmail.com',
         category: '학습',
-        duration: '매일',
+        duration: '3개월',
         title: '하루 10쪽 독서하기',
         content:
             '하루에 딱 10쪽만 읽어도 한 달이면 한 권을 완독! 작은 습관이 큰 변화를 만든다! 짧은 시간 투자로 지식을 쌓고, 사고의 깊이를 키울 수 있어요. 독서는 집중력을 높이고, 창의적인 사고를 자극하는 최고의 방법입니다. 오늘부터 가볍게 시작해보고, 어느새 독서가 일상이 되는 변화를 경험해보세요.',
@@ -287,7 +269,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 16,
+        id: 15,
         authorId: 'sugarlover@kakao.com',
         category: '식단',
         duration: '3개월',
@@ -306,7 +288,7 @@ export const userChallengeList = [
     },
 
     {
-        id: 17,
+        id: 16,
         authorId: 'luluralra@naver.com',
         category: '운동',
         duration: '6개월',
@@ -324,7 +306,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 18,
+        id: 17,
         authorId: '5000won@naver.com',
         category: '습관',
         duration: '1개월',
@@ -343,7 +325,7 @@ export const userChallengeList = [
     },
 
     {
-        id: 19,
+        id: 18,
         authorId: 'test01@naver.com',
         category: '학습',
         duration: '3개월',
@@ -357,11 +339,11 @@ export const userChallengeList = [
         postClicked: 358,
         joinDate: '2025-01-16T22:00:00',
         clgJoin: true,
-        clgDoing: false,
-        clgDone: true,
+        clgDoing: true,
+        clgDone: false,
     },
     {
-        id: 20,
+        id: 19,
         authorId: 'waterbank@naver.com',
         category: '습관',
         duration: '6개월',
@@ -379,10 +361,10 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 21,
+        id: 20,
         authorId: 'peacefulm2nd@gmail.com',
         category: '운동',
-        duration: '매일',
+        duration: '3개월',
         title: '출퇴근길 한 정거장 먼저 내려 걷기',
         content:
             '일상 속에서 운동량을 늘리는 가장 쉬운 방법! 계단 오르기를 하면 하체 근력 강화, 심폐 지구력 증가, 칼로리 소모 효과까지 있어요. 작은 습관이 쌓여 건강한 라이프스타일을 만들어봅시다!',
@@ -393,11 +375,11 @@ export const userChallengeList = [
         postClicked: 126,
         joinDate: '2025-01-17T13:00:00',
         clgJoin: true,
-        clgDoing: true,
-        clgDone: false,
+        clgDoing: false,
+        clgDone: true,
     },
     {
-        id: 22,
+        id: 21,
         authorId: 'test01@naver.com',
         category: '식단',
         duration: '3개월',
@@ -415,7 +397,7 @@ export const userChallengeList = [
         clgDone: true,
     },
     {
-        id: 23,
+        id: 22,
         authorId: 'english007@naver.com',
         category: '학습',
         duration: '3개월',
@@ -434,10 +416,10 @@ export const userChallengeList = [
     },
 
     {
-        id: 24,
+        id: 23,
         authorId: 'vloger@naver.com',
         category: '운동',
-        duration: '매일',
+        duration: '6개월',
         title: '엘레베이터 대신 계단 챌린지',
         content:
             '일상 속에서 운동량을 늘리는 가장 쉬운 방법! 계단 오르기를 하면 하체 근력 강화, 심폐 지구력 증가, 칼로리 소모 효과까지 있어요. 작은 습관이 쌓여 건강한 라이프스타일을 만들어봅시다!',
@@ -452,7 +434,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 25,
+        id: 24,
         authorId: '5000won@naver.com',
         category: '습관',
         duration: '1개월',
@@ -470,10 +452,10 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 26,
+        id: 25,
         authorId: 'walking10000@gmail.com',
         category: '운동',
-        duration: '매일',
+        duration: '2개월',
         title: '하루 10,000보 걷기',
         content:
             '가까운 거리는 걷기! 에스컬레이터 보단 계단! 10,000보를 채우는 재미를 느끼실 거예요.',
@@ -488,7 +470,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 27,
+        id: 26,
         authorId: 'veggie123@kakao.com',
         category: '식단',
         duration: '3개월',
@@ -506,7 +488,7 @@ export const userChallengeList = [
         clgDone: false,
     },
     {
-        id: 28,
+        id: 27,
         authorId: 'test01@naver.com',
         category: '습관',
         duration: '3개월',
