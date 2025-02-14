@@ -4,6 +4,7 @@ import {
     setMyPosts,
     toggleClgState,
     setSelectedChallenge,
+    getMyJoinedChallenge,
 } from '../../store/features/userChallengeSlice';
 import { BsDot } from 'react-icons/bs';
 import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
@@ -19,7 +20,8 @@ export default function UserChallengeList({ filteredChallenges }) {
 
     useEffect(() => {
         dispatch(setMyPosts());
-    }, [dispatch]);
+        dispatch(getMyJoinedChallenge()); // 삭제 후 목록 새로고침
+    }, [dispatch]); // `joinedChallenges`가 변경될 때마다 실행
 
     // 노출할 목록 선택
     const challengesToDisplay =
