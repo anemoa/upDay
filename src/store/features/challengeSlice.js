@@ -119,16 +119,16 @@ const challengeSlice = createSlice({
 
         // 챌린지 참여 액션
         joinChallenge: (state, action) => {
-            const challengeId = action.payload;
+            const {id} = action.payload;
 			const joinDate = new Date().toISOString().split('T')[0] // 현재 날짜
 
             // redux 스토어의 list 업데이트
             state.list = state.list.map((challenge) => {
-                if (challenge.id === challengeId) {
+                if (challenge.id === id) {
                     return {
                         ...challenge,
                         clgJoin: true,
-                        clgDoing: true,
+                        // clgDoing: true,
 						joinDate: joinDate
                     };
                 }
@@ -138,11 +138,12 @@ const challengeSlice = createSlice({
             // 로컬 스토리지 업데이트
 			const currentChallenges = getChallenges();
             const updatedChallenge = currentChallenges.map((challenge) => {
-                if (challenge.id === challengeId) {
+                if (challenge.id === id) {
                     return {
                         ...challenge,
                         clgJoin: true,
-                        clgDoing: true,
+                        // clgDoing: true,
+						joinDate: joinDate
                     };
                 }
                 return challenge;

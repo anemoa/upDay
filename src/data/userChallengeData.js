@@ -9,17 +9,9 @@ export const CATEGORY_IMAGES = {
     운동: exercise,
     습관: habit,
     default:
-        'https://blog.kakaocdn.net/dn/GHYFr/btrsSwcSDQV/UQZxkayGyAXrPACyf0MaV1/img.jpg',
+        '',
 };
 
-// export const CATEGORY_IMAGES = {
-//     식단: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMtt3aOrfYZ1KnQq4GK0vf9gkNBC07f72UWQ&s',
-//     학습: 'https://news.edupang.com/data/photos/20170939/art_1506413638434_4f048d.jpg',
-//     운동: 'https://www.noblesse.com/shop/data/m/editor_new/2021/09/09/89bf18216575225e3.jpg',
-//     습관: 'https://www.kbiznews.co.kr/news/photo/201901/48673_10396_236.jpg',
-//     default:
-//         'https://blog.kakaocdn.net/dn/GHYFr/btrsSwcSDQV/UQZxkayGyAXrPACyf0MaV1/img.jpg',
-// };
 
 export const userChallengeList = [
     {
