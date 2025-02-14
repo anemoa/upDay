@@ -117,6 +117,7 @@ export default function PersonalInfo() {
             setUserInfo((prev) => ({
                 ...prev,
                 profileImage: reader.result,
+				userImg: reader.result,
             }));
 
             // localStorage 즉시 업데이트
@@ -190,7 +191,9 @@ export default function PersonalInfo() {
                     return {
                         ...challenge,
                         nickname: newNickname,
-                        profileImage: userInfo.profileImage || challenge.profileImage, // 기존 이미지 유지
+                        // profileImage: userInfo.profileImage || challenge.profileImage, // 기존 이미지 유지
+						profileImage: userInfo.profileImage || challenge.profileImage,
+            			userImg: userInfo.profileImage || challenge.userImg
                     };
                 }
                 return challenge;

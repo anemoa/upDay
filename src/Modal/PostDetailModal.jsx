@@ -161,7 +161,7 @@ const PostDetailModal = () => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className='h-[384px] max-md:h-[280px] mb-4 max-md:mb-6 overflow-hidden rounded-2xl'
+                    className='h-[384px] max-md:h-[280px] mb-4 max-md:mb-3 overflow-hidden rounded-2xl'
                     style={{
                         backgroundColor: isViewMode
                             ? selectedChallenge?.category === '식단'

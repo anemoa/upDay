@@ -5,10 +5,10 @@ import { BsSearch } from 'react-icons/bs';
 
 const btnList = [
     { title: '전체', color: '#121212' },
-    { title: '식단', color: '#E3E3F4' },
-    { title: '학습', color: '#FEF2C8' },
-    { title: '운동', color: '#C5EBE6' },
-    { title: '습관', color: '#FBDCC3' },
+    { title: '식단', color: '#c5ebe6' },
+    { title: '학습', color: '#fef2c8' },
+    { title: '운동', color: '#e3e3f4' },
+    { title: '습관', color: '#ffdee7' },
 ];
 
 const ChallengeListSearchSection = ({

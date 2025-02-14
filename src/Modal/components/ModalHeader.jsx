@@ -72,11 +72,11 @@ const ModalHeader = ({
 
             {isMyPost && (
                 <div className='flex'>
-                    <button onClick={onUpdate} className='flex items-center mr-4 text-neutral-700'>
-                        <BsPencilSquare className='mr-2'/> 수정
+                    <button onClick={onUpdate} className='flex items-center mr-4 max-md:text-sm text-neutral-700'>
+                        <BsPencilSquare className='mr-2 max-md:mr-1'/> 수정
                     </button>
-                    <button onClick={onDelete} className='flex items-center text-red-400'>
-						<BsTrashFill className='mr-2'/> 삭제
+                    <button onClick={onDelete} className='flex items-center max-md:text-sm text-red-400'>
+						<BsTrashFill className='mr-2 max-md:mr-1'/> 삭제
 					</button>
                 </div>
             )}
