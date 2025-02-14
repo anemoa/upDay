@@ -38,9 +38,9 @@ const Intro = () => {
 
     return (
         <div className='snap-y snap-mandatory h-screen w-screen overflow-y-auto' style={{ scrollPaddingTop: '150px' }}>
-            <section className='h-screen snap-start'>
-                <div className='flex-grow flex-col items-center justify-center min-h-screen'>
-                    <div className='flex w-[80%] max-w-[1344px] mx-auto justify-between items-center'>
+            <section className='h-screen snap-start flex-grow flex-col items-center justify-center min-h-screen'>
+                {/* <div className=''> */}
+                    <div className='flex w-[80%] max-w-[1344px] mx-auto justify-between items-center relative'>
                         <div ref={(el) => sectionsRef.current.push(el)} className='fade-in flex flex-col items-start'>
                             <h1 className='text-5xl font-bold text-gray-800 leading-snug mb-4'>
                                 좋은 습관, <br />
@@ -73,7 +73,7 @@ const Intro = () => {
                             <img src={Arrow} alt='Arrow' className='mt-4' />
                         </div>
                     </div>
-                </div>
+                {/* </div> */}
             </section>
 
             <section className='h-screen snap-start'>

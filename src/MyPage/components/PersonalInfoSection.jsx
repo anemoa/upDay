@@ -1,6 +1,7 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { BsPersonCircle } from 'react-icons/bs';
-import {getChallenges} from '../../utils/localStorage';
 
 
 // 비밀번호 유효성 검사 함수
@@ -33,7 +34,6 @@ export default function PersonalInfo() {
     };
 
     const loggedInUserEmail = localStorage.getItem('loggedInUser');
-    const userInfoChang = localStorage.getItem('clglist'); // 값 가져옴
 
     const [users, setUsers] = useState(() => {
         try {
@@ -54,22 +54,7 @@ export default function PersonalInfo() {
         signupDate: '',
     });
 
-    const ProfileSection = ({ loggedInUser, editMode }) => {
-        const [aboutText, setAboutText] = useState('');
-
-        useEffect(() => {
-            if (loggedInUser?.abobut) {
-                setAboutText(loggedInUser.about);
-            }
-        }, [loggedInUser]);
-
-        const handleChange = (e) => {
-            setAboutText(e.target.value);
-        };
-    };
-    // 새로운 상태 변수
     const [passwordError, setPasswordError] = useState('');
-    // const [daysSinceSignup, setDaysSinceSignup] = useState(0);
     const [nicknameError, setNicknameError] = useState('');
     const [editMode, setEditMode] = useState(false);
 
@@ -85,15 +70,21 @@ export default function PersonalInfo() {
                     profileImage: loggedInUser.profileImage || null,
                     about: loggedInUser.about || '',
                 };
-                // 변경 사항이 없으면 상태 업데이트 방지
                 if (JSON.stringify(prev) === JSON.stringify(updatedInfo)) {
                     return prev;
                 }
                 return updatedInfo;
             });
-
         }
     }, [loggedInUser]);
+
+    const [challengeList, setChallengeList] = useState([]);
+
+    useEffect(() => {
+        const challenges = JSON.parse(localStorage.getItem('clglist')) || [];
+        setChallengeList(challenges);
+    }, []);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -104,7 +95,6 @@ export default function PersonalInfo() {
             setNicknameError(error || '');
         }
 
-        // 비밀번호 유효성 검사
         if (name === 'password') {
             const error = validatePassword(value);
             setPasswordError(error || '');
@@ -117,22 +107,31 @@ export default function PersonalInfo() {
                 setPasswordError('');
             }
         }
-        setUserInfo((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setUserInfo((prev) => ({
-                    ...prev,
-                    profileImage: reader.result,
-                }));
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            setUserInfo((prev) => ({
+                ...prev,
+                profileImage: reader.result,
+            }));
+
+            // localStorage 즉시 업데이트
+            const updatedUsers = users.map((user) =>
+                user.email === loggedInUserEmail
+                    ? { ...user, profileImage: reader.result }
+                    : user
+            );
+            localStorage.setItem('users', JSON.stringify(updatedUsers));
+            setUsers(updatedUsers);
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
 
     const handleImageDelete = () => {
         setUserInfo((prev) => ({ ...prev, profileImage: null }));
@@ -140,36 +139,34 @@ export default function PersonalInfo() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         let error = validateNickname(userInfo.nickname);
         if (error) {
             setNicknameError(error);
             return;
         }
+    
         const isNicknameTaken = users.some(
-            (user) =>
-                user.nickname === userInfo.nickname &&
-                user.email !== loggedInUserEmail
+            (user) => user.nickname === userInfo.nickname && user.email !== loggedInUserEmail
         );
         if (isNicknameTaken) {
             setNicknameError('이 닉네임은 이미 사용 중입니다.');
             return;
         }
-
+    
         if (passwordError) {
             alert(passwordError);
             return;
         }
-
+    
         if (userInfo.password !== userInfo.confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
         }
-
-
+    
         const currentUserId = loggedInUserEmail;
         const newNickname = userInfo.nickname;
-
+    
         const updatedUser = {
             email: userInfo.email,
             password: userInfo.password || loggedInUser.password, // 기존 비밀번호 유지
@@ -183,38 +180,32 @@ export default function PersonalInfo() {
         );
         localStorage.setItem('users', JSON.stringify(updatedUsers));
         setUsers(updatedUsers);
-        
-        let currentChallenges = getChallenges();
-
-if (currentChallenges) {
-    try {
-        currentChallenges = JSON.parse(currentChallenges);
-
+    
+        // 챌린지 목록 업데이트 (닉네임 & 프로필 이미지 변경)
+        const currentChallenges = JSON.parse(localStorage.getItem('clglist') || '[]');
+    
         if (Array.isArray(currentChallenges)) {
-            currentChallenges = currentChallenges.map(item => {
-                if (item.authorId === currentUserId) {
+            const updatedChallenges = currentChallenges.map(challenge => {
+                if (challenge.authorId === currentUserId) {
                     return {
-                        ...item,
-                        nickname: newNickname
-                    }
+                        ...challenge,
+                        nickname: newNickname,
+                        profileImage: userInfo.profileImage || challenge.profileImage, // 기존 이미지 유지
+                    };
                 }
-                return item;
-            })
-            localStorage.setItem('clglist', JSON.stringify(currentChallenges));
-      console.log("닉네임이 성공적으로 변경되었습니다.");
-    } else {
-      console.error("clglist는 배열 형식이어야 합니다.");
-    }
-  } catch (error) {
-    console.error("clglist를 파싱하는 중 오류가 발생했습니다:", error);
-  }
-} else {
-  console.log("clglist 데이터가 존재하지 않습니다.");
-}
-
+                return challenge;
+            });
+            localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
+            console.log("닉네임과 프로필 이미지가 성공적으로 변경되었습니다.");
+        } else {
+            console.error("clglist는 배열 형식이어야 합니다.");
+        }
+    
+        // 프로필 이미지 변경 후 화면 다시 렌더링
         handleRefresh();
-        setEditMode(false); // 수정 완료 후 수정 모드 비활성화
+        setEditMode(false);
     };
+    
 
     if (!loggedInUser) {
         return (
@@ -241,30 +232,33 @@ if (currentChallenges) {
                             <div className='mt-2 flex items-center gap-x-3'>
                                 {userInfo.profileImage ? (
                                     <div className='w-[25%] aspect-square overflow-hidden rounded-full flex-shrink-0'>
-                                    <img
-                                        src={userInfo.profileImage}
-                                        alt='프로필'
-                                        className='w-full h-full object-cover'
-                                    />
+                                        <img
+                                            src={userInfo.profileImage}
+                                            alt='프로필'
+                                            className='w-full h-full object-cover'
+                                        />
                                     </div>
                                 ) : (
-                                    <BsPersonCircle
-                                        aria-hidden='true'
-                                        className='w-[25%] aspect-square text-gray-300'
-                                    />
+                                    <div className='w-[25%] aspect-square overflow-hidden rounded-full flex-shrink-0 flex items-center justify-center bg-gray-200'>
+                                        <BsPersonCircle
+                                            aria-hidden='true'
+                                            className='w-full h-full aspect-square text-gray-300'
+                                        />
+                                    </div>
                                 )}
+
                                 <input
                                     type='file'
                                     accept='image/*'
                                     onChange={handleImageUpload}
                                     className='hidden'
                                     id='upload-photo'
-                                    disabled={!editMode} // 수정 모드에 따라 활성화/비활성화
+                                    disabled={!editMode}
                                 />
                                 <label
                                     htmlFor='upload-photo'
-                                    className={`px-4 py-2 rounded-full text-sm font-medium transition 
-                                        ${editMode ? 'bg-blue-400 hover:bg-blue-500 cursor-pointer' : ''} text-white`}
+                                    className={`btn 
+                                        ${editMode ? 'btn btn-primary' : ''} text-white`}
                                 >
                                     사진 올리기
                                 </label>
@@ -273,12 +267,12 @@ if (currentChallenges) {
                                     onClick={handleImageDelete}
                                     className='hidden'
                                     id='delete-photo'
-                                    disabled={!editMode} // 수정 모드에 따라 활성화/비활성화
+                                    disabled={!editMode}
                                 />
                                 <label
                                     htmlFor='delete-photo'
-                                    className={`px-4 py-2 rounded-full text-sm font-medium transition
-                                        ${editMode ? 'bg-neutral-600 hover:bg-red-400 cursor-pointer' : ''} text-white`}
+                                    className={`btn
+                                        ${editMode ? 'btn btn-secondary' : ''} text-white`}
                                 >
                                     삭제하기
                                 </label>
@@ -323,7 +317,7 @@ if (currentChallenges) {
                                     value={userInfo.nickname}
                                     onChange={handleChange}
                                     className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
-                                    disabled={!editMode} // 수정 모드에 따라 활성화/비활성화
+                                    disabled={!editMode}
                                 />
                                 {nicknameError && (
                                     <p className='text-red-500 text-sm'>
@@ -345,91 +339,89 @@ if (currentChallenges) {
                                     name='email'
                                     type='text'
                                     value={userInfo.email}
-                                    onChange={handleChange}
                                     className='input-field'
                                     readOnly
-                                    // disabled // 이메일은 항상 비활성화
                                 />
                             </div>
                         </div>
                         {editMode && (
                             <div className='sm:col-span-3'>
-                            <label
-                                htmlFor='password'
-                                className='block text-sm/6 font-medium'
-                            >
-                                변경할 비밀번호
-                            </label>
-                            <div className='mt-2'>
-                                <input
-                                    id='password'
-                                    name='password'
-                                    type='password'
-                                    value={userInfo.password}
-                                    onChange={handleChange}
-                                    className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
-                                    disabled={!editMode}
-                                />
-                                {passwordError && (
-                                    <p className='text-red-500 text-sm'>
-                                        {passwordError}
-                                    </p>
-                                )}
+                                <label
+                                    htmlFor='password'
+                                    className='block text-sm/6 font-medium'
+                                >
+                                    변경할 비밀번호
+                                </label>
+                                <div className='mt-2'>
+                                    <input
+                                        id='password'
+                                        name='password'
+                                        type='password'
+                                        value={userInfo.password}
+                                        onChange={handleChange}
+                                        className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
+                                        disabled={!editMode}
+                                    />
+                                    {passwordError && (
+                                        <p className='text-red-500 text-sm'>
+                                            {passwordError}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
                         )}
                         {editMode && (
                             <div className='sm:col-span-3'>
                                 <label
-                                htmlFor='confirmPassword'
-                                className='block texy-sm/6 font-medium'>
+                                    htmlFor='confirmPassword'
+                                    className='block text-sm/6 font-medium'
+                                >
                                     변경할 비밀번호 확인
-                            </label>
-                            <div className='mt-2'>
-                                <input
-                                    id='confirmPassword'
-                                    name='confirmPassword'
-                                    type='password'
-                                    value={userInfo.confirmPassword}
-                                    onChange={handleChange}
-                                    className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
-                                    disabled={!editMode} // 수정 모드에 따라 활성화/비활성화
-                                />
+                                </label>
+                                <div className='mt-2'>
+                                    <input
+                                        id='confirmPassword'
+                                        name='confirmPassword'
+                                        type='password'
+                                        value={userInfo.confirmPassword}
+                                        onChange={handleChange}
+                                        className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
+                                        disabled={!editMode}
+                                    />
+                                </div>
                             </div>
-                        </div>
                         )}
                     </div>
                 </div>
-
-                <div className='flex items-center justify-end gap-x-4'>
-                    {!editMode && (
+                <div className='flex justify-center gap-x-6'>
+                    {!editMode ? (
                         <button
                             type='button'
-                            className='btn btn-primary px-6 text-sm'
                             onClick={() => setEditMode(true)}
+                            className='rounded-xl bg-blue-500 px-12 py-2 text-base font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'
                         >
                             수정하기
                         </button>
-                    )}
-                    {editMode && (
-                        <>
+                    ) : (
+                        <div className='flex gap-x-6'>
                             <button
                                 type='button'
-                                className='btn btn-secondary text-sm'
-                                onClick={handleRefresh}
+                                onClick={() => setEditMode(false)}
+                                className='rounded-xl bg-red-500 px-12 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500'
                             >
                                 취소하기
                             </button>
                             <button
                                 type='submit'
-                                className='btn btn-primary px-6 text-sm'
+                                className='rounded-xl bg-blue-500 px-12 py-2 text-base font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'
                             >
                                 저장하기
                             </button>
-                        </>
+                        </div>
                     )}
                 </div>
             </form>
         </div>
     );
 }
+

@@ -4,7 +4,7 @@ import MyPageLayout from './components/MyPageLayout';
 const MyPage = () => {
     return (
         <>
-            <MyPageLayout />
+            <MyPageLayout className="mt-[200px]"/>
         </>
     );
 };
