@@ -83,7 +83,7 @@ const ChallengeListSearchSection = ({
                 ))}
             </ul>
 
-            <div className='flex justify-between input-field w-[40%] max-md:w-full'>
+            {/* <div className='flex justify-between input-field w-[40%] max-md:w-full'>
                 <input
                     type='text'
                     value={searchTerm}
@@ -94,6 +94,22 @@ const ChallengeListSearchSection = ({
                 />
                 <button onClick={handleSearch}>
                     <BsSearch />
+                </button>
+            </div> */}
+            <div className='relative flex flex-1 items-center'>
+                <input
+                    type='text'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder='검색어를 입력하시오'
+                    className='input-field text-xs/6 md:text-sm/7'
+                />
+                <button
+                    className='absolute right-0.5 md:right-1 w-8 h-8'
+                    onClick={handleSearch}
+                >
+                    <BsSearch className='text-blue-900 size-4 md:size-5' />
                 </button>
             </div>
         </section>
