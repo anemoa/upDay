@@ -1,27 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
 
+// 초기 챌린지 리스트 가져오기 (없으면 기본값 저장)
 const getInitialList = () => {
-    try {
-        const savedChallenges = localStorage.getItem('clglist');
-        if (savedChallenges) {
-            return JSON.parse(savedChallenges);
-        }
-    } catch (error) {
-        console.error('로컬 스토리지 파싱 오류:', error);
+    const savedChallenges = localStorage.getItem('clglist');
+
+    if (!savedChallenges) {
+        localStorage.setItem('clglist', JSON.stringify(userChallengeList));
+        return userChallengeList;
     }
-    return [];
+
+    return JSON.parse(savedChallenges); // localStorage 데이터만 사용
 };
 
-const saveChallengesToLocalStorage = (challenges) => {
+// 초기 참여한 챌린지 가져오기
+const getInitialJoinedChallenges = () =>
+    getChallenges().filter((challenge) => challenge.clgJoin);
+
+// 챌린지 데이터를 localStorage에 저장
+const saveChallengesToLocalStorage = (challenges) =>
     localStorage.setItem('clglist', JSON.stringify(challenges));
-};
 
 const userChallengeSlice = createSlice({
     name: 'myClgList',
     initialState: {
         myPosts: [], // 테스트계정이 작성한 챌린지 목록
-        joinedChallenges: [], // 테스트계정이 참여한 챌린지 목록
+        // joinedChallenges: [], // 테스트계정이 참여한 챌린지 목록
+        joinedChallenges: getInitialJoinedChallenges().filter(
+            (challenge) => challenge.clgJoin
+        ),
         selectedChallenge: null, // 현재 선택된 챌린지
         list: getInitialList(), // 초기 데이터,
     },
@@ -114,27 +122,21 @@ const userChallengeSlice = createSlice({
         },
 
         // 챌린지 삭제하는 액션
-
         deleteChallenge: (state, action) => {
             const challengeId = action.payload;
-            const currentChallenges = getChallenges();
-            const updatedList = currentChallenges.filter(
+            const updatedList = state.list.filter(
                 (challenge) => challenge.id !== challengeId
             );
 
-            saveChallengesToLocalStorage(updatedList);
-
+            // Redux 상태 업데이트
             state.list = updatedList;
             state.joinedChallenges = updatedList.filter(
                 (challenge) => challenge.clgJoin
             );
-            state.selectedChallenge =
-                state.selectedChallenge?.id === challengeId
-                    ? null
-                    : state.selectedChallenge;
-            state.myPosts = updatedList.filter(
-                (post) => post.authorId === localStorage.getItem('loggedInUser')
-            );
+
+            // 로컬 스토리지 업데이트
+            saveChallengesToLocalStorage(updatedList);
+            console.log('🔴로컬 업데이트 확인 ', saveChallengesToLocalStorage);
         },
     },
 });

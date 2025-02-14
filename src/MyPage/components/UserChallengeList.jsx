@@ -4,6 +4,7 @@ import {
     setMyPosts,
     toggleClgState,
     setSelectedChallenge,
+    getMyJoinedChallenge,
 } from '../../store/features/userChallengeSlice';
 import { BsDot } from 'react-icons/bs';
 import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
@@ -19,7 +20,8 @@ export default function UserChallengeList({ filteredChallenges }) {
 
     useEffect(() => {
         dispatch(setMyPosts());
-    }, [dispatch]);
+        dispatch(getMyJoinedChallenge()); // 삭제 후 목록 새로고침
+    }, [dispatch]); // `joinedChallenges`가 변경될 때마다 실행
 
     // 노출할 목록 선택
     const challengesToDisplay =
@@ -75,7 +77,7 @@ export default function UserChallengeList({ filteredChallenges }) {
 
     return (
         <>
-            <ul className='w-full h-[486px] md:h-[566px] text-xs md:text-sm overflow-scroll list-none'>
+            <ul className='w-full h-[486px] md:h-[566px] text-xs md:text-sm overflow-scroll scrollbar-none list-none'>
                 {filteredChallenges && filteredChallenges.length === 0 ? (
                     <li className='text-center text-gray-500 py-4'>
                         검색 결과가 없습니다.
@@ -106,7 +108,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                                     {challenge.title}
                                 </span>
                             </div>
-                            <div className='w-[48px] flex justify-between items-center'>
+                            <div className='w-14 flex justify-between items-center'>
                                 <button
                                     className={getClgDoingClass(
                                         challenge.clgDoing
@@ -115,7 +117,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                                         handleToggle(challenge.id, 'doing', e)
                                     }
                                 >
-                                    <HiFire />
+                                    <HiFire className='text-xl' />
                                 </button>
                                 <button
                                     className={getClgDoneClass(
@@ -125,7 +127,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                                         handleToggle(challenge.id, 'done', e)
                                     }
                                 >
-                                    <HiDocumentCheck />
+                                    <HiDocumentCheck className='text-xl' />
                                 </button>
                             </div>
                         </li>

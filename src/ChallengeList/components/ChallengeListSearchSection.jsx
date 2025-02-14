@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getChallenges } from '../../utils/localStorage';
+import { BsSearch } from 'react-icons/bs';
 
 const btnList = [
     { title: '전체', color: '#121212' },
@@ -27,16 +28,15 @@ const ChallengeListSearchSection = ({
 
     // 검색 로직
     const handleSearch = () => {
-
         if (!searchTerm.trim()) {
             setSearchResults(null); // 검색어가 없으면 검색 결과 초기화
             return;
         }
 
-		// 로컬 스토리지에 담긴 모든 챌린지 작성글
+        // 로컬 스토리지에 담긴 모든 챌린지 작성글
         const challenges = getChallenges();
 
-		// 검색어 필터링 하는 로직
+        // 검색어 필터링 하는 로직
         const results = challenges.filter(
             (challenges) =>
                 challenges.title
@@ -58,41 +58,44 @@ const ChallengeListSearchSection = ({
     };
 
     return (
-        <section className='flex mb-6'>
-            <ul className='flex'>
+        <section className='flex max-md:flex-wrap justify-between mb-6'>
+            <ul className='flex max-md:w-full max-md:justify-between max-md:mb-4'>
                 {btnList.map((ele, idx) => (
-                    <li className='pr-4' key={idx}>
+                    <li className='pr-4 max-md:pr-0 max-md:w-[18%]' key={idx}>
                         <button
                             onClick={() => handleCategoryClick(ele.title)}
-							style={{
-                                border: `1px solid ${ele.color}`,
+                            style={{
+                                border: `2px solid ${ele.color}`,
                                 backgroundColor:
                                     activeCategory === ele.title
                                         ? ele.color
                                         : 'white',
-								color: activeCategory === ele.title ? 'white' : 'black',
+                                color:
+                                    activeCategory === ele.title
+                                        ? 'white'
+                                        : 'black',
                             }}
-                            className='px-8 py-[10px] rounded-xl'
+                            className='max-md:w-full px-6 max-md:px-0 py-[10px] max-md:py-1 rounded-xl max-md:rounded-lg max-md:text-xs'
                         >
                             {ele.title}
                         </button>
                     </li>
                 ))}
             </ul>
-            <input
-                type='text'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder='검색어를 입력하시오'
-                className='rounded-xl'
-            />
-            <button
-                onClick={handleSearch}
-                className='px-8 py-[10px] rounded-xl bg-white'
-            >
-                검색버튼
-            </button>
+
+            <div className='flex justify-between input-field w-[40%] max-md:w-full'>
+                <input
+                    type='text'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder='검색어를 입력하시오'
+                    className='w-full'
+                />
+                <button onClick={handleSearch}>
+                    <BsSearch />
+                </button>
+            </div>
         </section>
     );
 };

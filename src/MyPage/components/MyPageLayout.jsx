@@ -10,11 +10,11 @@ import ModalForLogin from '../../common/ModalForLogin';
 const MyPageLayout = () => {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const { isModalOpen, openModal, closeModal } = useModal();
-    // const [challenges, setChallenges] = useState([]);
 
     const checkUserLogin = useCallback(() => {
         const storedUser = localStorage.getItem('loggedInUser');
-        if (!storedUser) {
+        const storedUsers = localStorage.getItem('users');
+        if (!storedUser || !storedUsers) {
             openModal();
         } else {
             try {
@@ -33,7 +33,7 @@ const MyPageLayout = () => {
     return (
         <main className='w-[90%] md:w-[80%] md:max-w-[1344px] mx-auto flex flex-col md:flex-row gap-4 justify-between'>
             <Helmet>
-                <title>마이페이지 | UpDay, 나의 일상을 업그레이드</title>
+                <title>마이페이지 - UpDay</title>
             </Helmet>
             {!loggedInUser ? (
                 <MyPageNonLogin />
