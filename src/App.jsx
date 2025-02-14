@@ -18,7 +18,9 @@ import NotFound from './NotFound/NotFound'; // 404 NotFound 페이지 추가
 
 function App() {
     return (
-        <div className='relative min-w-[390px] w-screen h-screen max-h-[969px] flex flex-col justify-between pt-[80px]'>
+
+        <div className='min-w-[390px] w-screen h-screen max-h-[969px] flex flex-col justify-between scrollbar-none'>
+
             <Header />
             <Routes>
                 <Route path='/' element={<Intro />} />
