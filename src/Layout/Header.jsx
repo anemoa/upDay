@@ -42,7 +42,7 @@ const Header = () => {
 
     return (
 
-        <header className="flex justify-between items-center w-full max-w-[1344px] mx-auto h-[80px] pb-[20px] pt-[12px] px-[10%] fixed top-0 z-[50] box-border bg-blue-100 no-scroll">
+        <header className="flex justify-between items-center w-[80%] mx-[10%] mx-auto h-[80px] pb-[20px] pt-[12px] fixed top-0 z-[50] box-border bg-blue-100 no-scroll">
             {/* 로고 */}
             <Link to="main" className="bagel-fat-one-regular h-[46px] text-[30px]">
                 UpDay
@@ -59,9 +59,9 @@ const Header = () => {
                     </span>
                 ) : (
                     <>
-                        <div className='w-6 h-1 bg-black mb-1'></div>
-                        <div className='w-6 h-1 bg-black mb-1'></div>
-                        <div className='w-6 h-1 bg-black'></div>
+                        <div className='w-6 h-1 bg-black mb-1 rounded-full'></div>
+                        <div className='w-6 h-1 bg-black mb-1 rounded-full'></div>
+                        <div className='w-6 h-1 bg-black rounded-full'></div>
                     </>
                 )}
             </button>
