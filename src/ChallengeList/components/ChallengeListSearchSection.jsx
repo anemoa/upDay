@@ -58,10 +58,10 @@ const ChallengeListSearchSection = ({
     };
 
     return (
-        <section className='flex justify-between mb-6'>
-            <ul className='flex'>
+        <section className='flex max-md:flex-wrap justify-between mb-6'>
+            <ul className='flex max-md:w-full max-md:justify-between max-md:mb-4'>
                 {btnList.map((ele, idx) => (
-                    <li className='pr-4' key={idx}>
+                    <li className='pr-4 max-md:pr-0 max-md:w-[18%]' key={idx}>
                         <button
                             onClick={() => handleCategoryClick(ele.title)}
                             style={{
@@ -75,7 +75,7 @@ const ChallengeListSearchSection = ({
                                         ? 'white'
                                         : 'black',
                             }}
-                            className='px-6 py-[10px] rounded-xl'
+                            className='max-md:w-full px-6 max-md:px-0 py-[10px] max-md:py-1 rounded-xl max-md:rounded-lg max-md:text-xs'
                         >
                             {ele.title}
                         </button>
@@ -83,7 +83,7 @@ const ChallengeListSearchSection = ({
                 ))}
             </ul>
 
-            <div className='flex justify-between input-field w-[40%]'>
+            <div className='flex justify-between input-field w-[40%] max-md:w-full'>
                 <input
                     type='text'
                     value={searchTerm}

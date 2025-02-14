@@ -50,7 +50,7 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
     }, [selectedCategory, challenges, searchResults]);
 
     return (
-        <section className='grid grid-cols-3 gap-6'>
+        <section className='grid grid-cols-3 max-md:grid-cols-2 gap-6 max-md:gap-4'>
             {filteredChallenges.length > 0 ? (
                 filteredChallenges.map((card) => (
 
