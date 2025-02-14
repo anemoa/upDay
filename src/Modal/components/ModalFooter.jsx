@@ -22,6 +22,10 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
 		!loggedInUser ? openModal() : dispatch(joinChallenge(challengeId));
 	}
 
+	const handleShare = ()=> {
+		alert('')
+	}
+
 	if(mode === 'create' || mode === 'edit'){
 		return (
 			<div className='flex justify-between'>

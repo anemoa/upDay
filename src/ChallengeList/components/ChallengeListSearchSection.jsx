@@ -75,7 +75,7 @@ const ChallengeListSearchSection = ({
                                         ? 'white'
                                         : 'black',
                             }}
-                            className='max-md:w-full px-6 max-md:px-0 py-[10px] max-md:py-1 rounded-xl max-md:rounded-lg max-md:text-xs'
+                            className='max-md:w-full px-6 max-md:px-0 py-[10px] max-md:py-1 rounded-xl max-md:rounded-lg max-md:text-xs whitespace-nowrap'
                         >
                             {ele.title}
                         </button>
