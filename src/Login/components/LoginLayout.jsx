@@ -6,7 +6,7 @@ import pic6 from '../img/Group 239.svg';
 
 const LoginLayout = ({ children, title }) => {
     return (
-        <div className='w-[80%] max-w-[1344px] mx-auto flex justify-center relative h-screen'>
+        <div className='w-[90%]  mx-auto flex justify-center relative h-[796px] md:w-[80%] md:max-w-[1344px]'>
             <img
                 src={pic3}
                 alt='왼쪽 배경'
