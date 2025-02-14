@@ -25,8 +25,8 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
 	if(mode === 'create' || mode === 'edit'){
 		return (
 			<div className='flex justify-between'>
-				<button onClick={onClose}>취소하기</button>
-				<button onClick={onSubmit}>
+				<button className='btn w-[35%] text-neutral-100 bg-neutral-300 hover:bg-neutral-400' onClick={onClose}>취소하기</button>
+				<button className='btn btn-primary w-[60%]' onClick={onSubmit}>
 					{mode === 'create' ? '등록하기' : '수정하기'}
 				</button>
 			</div>
@@ -34,21 +34,21 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
 	}
 
     return (
-        <div className='flex justify-between'>
+        <div className='flex justify-between w-[100%]'>
             <div className='flex items-center'>
                 <div className='w-8 h-8 overflow-hidden rounded-[50%]'>
-                    <img src={userImg} alt='' />
+                    <img src={userImg} alt={`${nickname} 사진`} className='w-full h-full object-cover' />
                 </div>
                 <p className='ml-2 text-sm font-light'>{nickname}</p>
             </div>
-            <div>
+            <div className='w-[50%]'>
                 {isMyPost ? (
-                    <button className='px-16 py-2 rounded-xl font-semibold btn-primary'>
+                    <button className='btn-primary btn w-[100%]'>
                         공유하기
                     </button>
                 ) : (
-                    <button onClick={handleJoin} className='px-16 py-2 rounded-xl font-semibold btn-primary'>
-                        {selectedChallenge ? '참여중' : '참여하기'}
+                    <button onClick={handleJoin} className='btn-primary btn w-[100%]'>
+                        {selectedChallenge?.clgJoin ? '참여중' : '참여하기'}
                     </button>
                 )}
             </div>

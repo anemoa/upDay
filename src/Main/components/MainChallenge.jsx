@@ -80,12 +80,9 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
 
     if (!isLoggedIn) {
         return (
-            <div className='relative bg-neutral-800 rounded-xl w-full md:w-[600px] bottom-[-440px]'>
+            <div className='relative bg-neutral-800 rounded-xl w-full md:w-[600px] md:bottom-[-440px] bottom-[-260px]'>
                 {/* 로그아웃 상태일 때 로그인 유도 화면 */}
-                <div
-                    className='flex flex-col items-center justify-center p-10 bg-white rounded-xl'
-                    style={{ minHeight: '300px' }}
-                >
+                <div className='flex flex-col items-center justify-center p-10 bg-white rounded-xl max-h-[200px] md:max-h-none md:min-h-[300px]'>
                     <h2 className='text-xl font-medium text-gray-700 mb-4'>
                         로그인이 필요한 서비스입니다!
                     </h2>
@@ -106,7 +103,7 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                 <h2 className='text-lg font-bold md:text-xl md:text-white relative md:left-4 top-2'>
                     도전 중인 챌린지
                 </h2>
-                <div className='relative flex gap-2 top-2 right-4 z-[999]'>
+                <div className='relative flex gap-2 top-2 right-4 z-[30]'>
                     <ArrowButton direction='left' onClick={handleLeftClick} />
                     <ArrowButton direction='right' onClick={handleRightClick} />
                 </div>

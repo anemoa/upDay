@@ -10,11 +10,11 @@ import ModalForLogin from '../../common/ModalForLogin';
 const MyPageLayout = () => {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const { isModalOpen, openModal, closeModal } = useModal();
-    // const [challenges, setChallenges] = useState([]);
 
     const checkUserLogin = useCallback(() => {
         const storedUser = localStorage.getItem('loggedInUser');
-        if (!storedUser) {
+        const storedUsers = localStorage.getItem('users');
+        if (!storedUser || !storedUsers) {
             openModal();
         } else {
             try {
