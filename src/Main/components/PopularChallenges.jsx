@@ -6,7 +6,6 @@ const PopularChallenges = ({ challenges }) => {
     const [currentChallenges, setCurrentChallenges] = useState([]);
     const [challengeIndex, setChallengeIndex] = useState(0);
 
-    // 초기 데이터 설정
     useEffect(() => {
         if (challenges && challenges.length > 0) {
             const sortedChallenges = [...challenges].sort((a, b) => b.postClicked - a.postClicked);
@@ -14,22 +13,12 @@ const PopularChallenges = ({ challenges }) => {
         }
     }, [challenges]);
 
-    // 3초마다 challengeIndex 업데이트
     useEffect(() => {
-        if (currentChallenges.length > 0) {
-            const interval = setInterval(() => {
-                setChallengeIndex((prevIndex) => (prevIndex + 1) % currentChallenges.length);
-            }, 3000);
-            return () => clearInterval(interval);
-        }
-    }, [currentChallenges]);
-
-    // 현재 챌린지를 가져오는 함수
-    const getChallenge = (offset) => {
-        if (currentChallenges.length === 0) return null;
-        const index = (challengeIndex + offset) % currentChallenges.length;
-        return currentChallenges[index];
-    };
+        const interval = setInterval(() => {
+            setChallengeIndex((prevIndex) => (prevIndex + 1) % currentChallenges.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [currentChallenges.length]);
 
     const handlePrevChallenge = () => {
         setChallengeIndex((prevIndex) => 
@@ -43,9 +32,10 @@ const PopularChallenges = ({ challenges }) => {
         );
     };
 
+    if (currentChallenges.length < 3) return null;
+
     return (
         <div className="relative w-full">
-            {/* 제목과 아이콘 */}
             <div className="relative z-10">
                 <img
                     src={ChallengeIcon}
@@ -57,30 +47,29 @@ const PopularChallenges = ({ challenges }) => {
                 </h2>
             </div>
 
-            {/* 챌린지 리스트 */}
-            <div className="relative z-10 flex gap-4 md:flex-col snap-mandatory scrollbar-hide top-[-145px] md:top-[0] md:mt-0">
+            <div className="relative z-10 flex gap-4 md:flex-col snap-mandatory scrollbar-hide top-[-145px] md:top-[0] md:mt-0 justify-center md:justify-start">
                 {[0, 1, 2].map((offset) => {
-                    const challenge = getChallenge(offset);
+                    const index = (challengeIndex + offset) % currentChallenges.length;
+                    const challenge = currentChallenges[index];
+                    const isHighlighted = offset === 0;
                     return (
                         <div
-                            key={offset}
-                            className={`bg-white p-4 rounded-xl md:text-lg font-semibold transform transition-all duration-500 ease-in-out 
-                                ${offset === 0 ? 'opacity-100' : 'opacity-50 md:opacity-100'} 
-                                w-[100%] md:w-full shrink-0 snap-center ${offset !== 0 ? 'hidden md:block' : ''}
-                                relative flex items-center justify-between`}
+                            key={index}
+                            className={`bg-white p-4 rounded-xl md:text-lg font-semibold transition-all duration-500 ease-in-out 
+                                ${isHighlighted ? 'opacity-100 scale-105' : 'opacity-50 scale-100'} 
+                                w-[95%] md:w-full shrink-0 snap-center
+                                relative flex items-center justify-between
+                                ${offset !== 0 ? 'hidden md:flex' : ''}`}
                         >
                             <button onClick={handlePrevChallenge} className="absolute left-2 md:hidden">
                                 <IoIosArrowBack size={24} />
                             </button>
                             <div className="w-full px-8">
-                                {challenge ? (
-                                    <>
-                                        <div>{challenge.title}</div>
-                                        <div>{challenge.description}</div>
-                                    </>
-                                ) : (
-                                    <div>데이터를 불러오는 중...</div>
-                                )}
+                                <div>
+                                    <span className="mr-2 font-bold">{index + 1}.</span>
+                                    {challenge.title}
+                                </div>
+                                <div className="text-sm text-gray-600">{challenge.description}</div>
                             </div>
                             <button onClick={handleNextChallenge} className="absolute right-2 md:hidden">
                                 <IoIosArrowForward size={24} />
