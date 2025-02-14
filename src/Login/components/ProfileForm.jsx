@@ -1,6 +1,6 @@
 import useProfileSetup from '../hooks/UseProfileSetup';
-import pic1 from '../img/Group 193.svg';
-import pic2 from '../img/Group 144.svg';
+import pic1 from '../img/Group 195.svg';
+import pic2 from '../img/Group 145.svg';
 
 const ProfileForm = () => {
     const {
@@ -64,7 +64,7 @@ const ProfileForm = () => {
                 <div className='fixed inset-0 flex items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm'>
                     <div
                         className='relative  flex items-center justify-center w-[360px] h-[411px]
-                        md:w-[615px] md:h-[640px]'
+                        md:w-[630px] md:h-[640px]'
                     >
                         <img
                             src={pic1}
@@ -90,7 +90,7 @@ const ProfileForm = () => {
                             </div>
                             <button
                                 onClick={closeModal}
-                                className='text-basic bg-blue-300 text-white rounded-lg mt-[3rem] px-4 py-1 md:mt-[4rem] md:px-6 md:py-2 md:rounded-xl md:text-xl '
+                                className='text-basic bg-blue-400 text-white rounded-lg mt-[1.5rem] px-4 py-1 md:mt-[4rem] md:px-6 md:py-2 md:rounded-xl md:text-xl '
                             >
                                 로그인 하러가기
                             </button>
