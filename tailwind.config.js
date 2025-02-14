@@ -79,5 +79,17 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        function ({ addUtilities }) {
+            addUtilities({
+                '.scrollbar-none': {
+                    '-ms-overflow-style': 'none' /* IE, Edge */,
+                    'scrollbar-width': 'none' /* Firefox */,
+                    '&::-webkit-scrollbar': {
+                        display: 'none' /* Chrome, Safari */,
+                    },
+                },
+            });
+        },
+    ],
 };
