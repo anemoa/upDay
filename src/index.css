@@ -12,11 +12,15 @@
 }
 
 @font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-        format('woff');
+    font-family: 'Pretendard';
+    src:
+        url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff2')
+            format('woff2'),
+        url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+            format('woff');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @layer components {
@@ -67,23 +71,33 @@
         @apply w-[100px] h-[32px] mt-[8px] rounded-t-xl bg-blue-300 text-sm font-semibold text-neutral-100 transition active:bg-blue-500 hover:bg-blue-500;
     }
     .doing-on {
-        @apply w-[20px] h-[20px] flex justify-center items-center rounded-full bg-orange-100 text-base text-orange-400;
+        @apply w-6 h-6 flex justify-center items-center rounded-full bg-orange-100 text-base text-orange-400;
     }
     .doing-off {
-        @apply w-[20px] h-[20px] flex justify-center items-center rounded-full bg-neutral-200 text-base text-neutral-300;
+        @apply w-6 h-6 flex justify-center items-center rounded-full bg-neutral-200 text-base text-neutral-300;
     }
     .done-on {
-        @apply w-[20px] h-[20px] flex justify-center items-center rounded-full bg-green-100 text-base text-green-400;
+        @apply w-6 h-6 flex justify-center items-center rounded-full bg-green-100 text-base text-green-400;
     }
     .done-off {
-        @apply w-[20px] h-[20px] flex justify-center items-center rounded-full bg-neutral-200 text-base text-neutral-300;
+        @apply w-6 h-6 flex justify-center items-center rounded-full bg-neutral-200 text-base text-neutral-300;
     }
 }
 
 body {
     background-color: #edf5fb;
     color: #121212;
-    font-family: 'Pretendard-Regular';
+    font-family:
+        'Pretendard',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a,

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
 
-// ✅ 초기 챌린지 리스트 가져오기 (없으면 기본값 저장)
+// 초기 챌린지 리스트 가져오기 (없으면 기본값 저장)
 const getInitialList = () => {
     const savedChallenges = localStorage.getItem('clglist');
 
@@ -14,11 +14,11 @@ const getInitialList = () => {
     return JSON.parse(savedChallenges); // localStorage 데이터만 사용
 };
 
-// ✅ 초기 참여한 챌린지 가져오기
+// 초기 참여한 챌린지 가져오기
 const getInitialJoinedChallenges = () =>
     getChallenges().filter((challenge) => challenge.clgJoin);
 
-// ✅ 챌린지 데이터를 localStorage에 저장
+// 챌린지 데이터를 localStorage에 저장
 const saveChallengesToLocalStorage = (challenges) =>
     localStorage.setItem('clglist', JSON.stringify(challenges));
 
