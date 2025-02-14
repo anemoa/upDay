@@ -123,7 +123,7 @@ export default function PersonalInfo() {
             // localStorage 즉시 업데이트
             const updatedUsers = users.map((user) =>
                 user.email === loggedInUserEmail
-                    ? { ...user, profileImage: reader.result }
+                    ? { ...user, profileImage: reader.result, userImg: reader.result,}
                     : user
             );
             localStorage.setItem('users', JSON.stringify(updatedUsers));
