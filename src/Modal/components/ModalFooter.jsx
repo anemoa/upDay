@@ -37,7 +37,7 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
         <div className='flex justify-between w-[100%]'>
             <div className='flex items-center'>
                 <div className='w-8 h-8 overflow-hidden rounded-[50%]'>
-                    <img src={userImg} alt='' />
+                    <img src={userImg} alt={`${nickname} 사진`} className='w-full h-full object-cover' />
                 </div>
                 <p className='ml-2 text-sm font-light'>{nickname}</p>
             </div>

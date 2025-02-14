@@ -16,7 +16,7 @@ const ModalHeader = ({
             <div className='flex justify-between items-center w-[100%] mb-4'>
                 <div className='flex items-center w-[60%]'>
                     <select
-                        className='input-field mr-4 w-[50%]'
+                        className='input-field mr-4 w-[50%] max-md:text-sm'
                         value={formData.category}
                         onChange={(e) =>
                             onChange({ ...formData, category: e.target.value })
@@ -30,17 +30,17 @@ const ModalHeader = ({
                     </select>
 
                     <select
-                        className='input-field w-[50%]'
+                        className='input-field w-[50%] max-md:text-sm'
                         value={formData.duration}
                         onChange={(e) =>
                             onChange({ ...formData, duration: e.target.value })
                         }
                     >
                         <option value=''>목표 기간</option>
-                        <option value='2주'>2주</option>
-                        <option value='4주'>4주</option>
-                        <option value='6주'>6주</option>
-                        <option value='8주'>8주</option>
+                        <option value='1개월'>1개월</option>
+                        <option value='2개월'>2개월</option>
+                        <option value='3개월'>3개월</option>
+                        <option value='6개월'>6개월</option>
                     </select>
                 </div>
             </div>
@@ -54,20 +54,20 @@ const ModalHeader = ({
                     style={{
                         backgroundColor:
                             category === '식단'
-                                ? '#E3E3F4'
+                                ? '#c5ebe6'
                                 : category === '학습'
-                                  ? '#FEF2C8'
+                                  ? '#fef2c8'
                                   : category === '운동'
-                                    ? '#C5EBE6'
+                                    ? '#e3e3f4'
                                     : category === '습관'
-                                      ? '#FBDCC3'
+                                      ? '#ffdee7'
                                       : '#F7F7F7',
                     }}
-                    className='mr-4 px-6 py-[6px] rounded-xl'
+                    className='mr-4 px-6 py-[6px] max-md:px-4 max-md:py-1 max-md:text-sm rounded-xl'
                 >
                     {category}
                 </span>
-                <span>목표기간 {duration}</span>
+                <span className='max-md:text-sm'>목표기간 {duration}</span>
             </div>
 
             {isMyPost && (

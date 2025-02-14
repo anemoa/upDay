@@ -15,7 +15,7 @@ const ChallengeListLayout = () => {
 	const [searchResults, setSearchResults] = useState(null)
 	
     return (
-    <main className="w-[80%] max-w-[1344px] mx-auto">
+    <main className="w-[80%] max-w-[1344px] mx-auto max-md:mx-auto max-md:w-[90%] max-md:mx-4">
 		{/* 상태 변경 함수가 필요하기에 setSelectedCategory 를 props로 전달 */}
         <ChallengeListSearchSection setSelectedCategory={setSelectedCategory} setSearchResults={setSearchResults} />
 		{/* 현재 값만 필요하기에 selectedCategory 을 props로 전달 */}

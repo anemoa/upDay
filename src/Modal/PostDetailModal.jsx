@@ -157,30 +157,30 @@ const PostDetailModal = () => {
         >
             {/* 모달 내부 클릭시 닫히지 않도록 하는 메소드 */}
             <div
-                className='w-[440px] p-6 rounded-2xl bg-neutral-100'
+                className='w-[440px] max-md:w-[90%] max-md:mx-4 p-6 max-md:p-4 rounded-2xl bg-neutral-100'
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className='h-[384px] mb-4 overflow-hidden rounded-2xl'
+                    className='h-[384px] max-md:h-[280px] mb-4 max-md:mb-6 overflow-hidden rounded-2xl'
                     style={{
                         backgroundColor: isViewMode
                             ? selectedChallenge?.category === '식단'
-                                ? '#E3E3F4'
+                                ? '#e6f4f2'
                                 : selectedChallenge?.category === '학습'
-                                  ? '#FEF2C8'
+                                  ? '#fff9e6'
                                   : selectedChallenge?.category === '운동'
-                                    ? '#C5EBE6'
+                                    ? '#f2f2ff'
                                     : selectedChallenge?.category === '습관'
-                                      ? '#FBDCC3'
+                                      ? '#fff1f5'
                                       : '#F7F7F7'
                             : formData.category === '식단'
-                              ? '#E3E3F4'
+                              ? '#c5ebe6'
                               : formData.category === '학습'
-                                ? '#FEF2C8'
+                                ? '#fef2c8'
                                 : formData.category === '운동'
-                                  ? '#C5EBE6'
+                                  ? '#e3e3f4'
                                   : formData.category === '습관'
-                                    ? '#FBDCC3'
+                                    ? '#ffdee7'
                                     : '#F7F7F7',
                     }}
                 >
