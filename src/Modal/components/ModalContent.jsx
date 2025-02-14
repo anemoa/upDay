@@ -26,9 +26,9 @@ const ModalContent = ({ title, content, mode, onChange, formData }) => {
     }
 
     return (
-        <div className='mb-4'>
-            <p className='mb-4 text-2xl font-semibold'>{title}</p>
-            <p>{content}</p>
+        <div className='mb-4 max-md:mb-3'>
+            <p className='mb-4 max-md:mb-2 text-2xl max-md:text-base font-semibold'>{title}</p>
+            <p className='max-md:text-xs'>{content}</p>
         </div>
     );
 };
