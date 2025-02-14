@@ -8,6 +8,9 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+    const isHighZIndexPage = ['/challengelist', '/'].includes(
+        location.pathname
+    );
 
     useEffect(() => {
         const handleStorageChange = () => {
@@ -40,12 +43,14 @@ const Header = () => {
     }, []);
 
     return (
-        <div className='w-full h-[80px] fixed top-0 z-[50] bg-blue-100 no-scroll'>
+        <div
+            className={`w-full h-[80px] fixed top-0 bg-blue-100 no-scroll ${isHighZIndexPage ? 'z-[50]' : ''}`}
+        >
             <header className='flex justify-between items-center w-[90%] md:w-[80%] md:max-w-[1344px] mx-auto pb-[20px] pt-[12px]'>
                 {/* 로고 */}
                 <Link
                     to='main'
-                    className='bagel-fat-one-regular h-[46px] text-[30px]'
+                    className='bagel-fat-one-regular h-[46px] text-[30px]/9 '
                 >
                     UpDay
                 </Link>
@@ -68,31 +73,37 @@ const Header = () => {
                 </button>
 
                 {/* (데스크톱) */}
-                <nav className='mt-[22px] items-center justify-center hidden md:text-[20px] md:block h-full '>
+                <nav className='flex items-center justify-center hidden md:text-[20px] md:block h-full '>
                     <ul className='flex space-x-10'>
-                        <li className='w-[130px] h-[46px] text-end'>
+                        <li>
                             <Link
                                 to='/challengelist'
-                                className='hover:font-black'
+                                className='hover:font-black flex items-center w-[130px] h-[46px] text-end'
                             >
                                 챌린지 둘러보기
                             </Link>
                         </li>
-                        <li className='w-[90px] h-[46px] text-end'>
-                            <Link to='/mypage' className='hover:font-black'>
+                        <li>
+                            <Link
+                                to='/mypage'
+                                className='hover:font-black flex items-center w-[88px] h-[46px] text-end'
+                            >
                                 마이페이지
                             </Link>
                         </li>
-                        <li className='w-[70px] h-[46px] text-start'>
+                        <li>
                             {loggedInUser ? (
                                 <button
                                     onClick={handleLogout}
-                                    className='hover:font-black'
+                                    className='hover:font-black flex items-center w-[70px] h-[46px] text-end'
                                 >
                                     로그아웃
                                 </button>
                             ) : (
-                                <Link to='/login' className='hover:font-black'>
+                                <Link
+                                    to='/login'
+                                    className='hover:font-black flex items-center w-[70px] h-[46px] text-end'
+                                >
                                     로그인
                                 </Link>
                             )}
