@@ -14,7 +14,8 @@ const MyPageLayout = () => {
 
     const checkUserLogin = useCallback(() => {
         const storedUser = localStorage.getItem('loggedInUser');
-        if (!storedUser) {
+        const storedUsers = localStorage.getItem('users');
+        if (!storedUser || !storedUsers) {
             openModal();
         } else {
             try {
