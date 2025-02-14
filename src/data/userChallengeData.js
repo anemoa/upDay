@@ -9,7 +9,7 @@ export const CATEGORY_IMAGES = {
     운동: exercise,
     습관: habit,
     default:
-        'https://blog.kakaocdn.net/dn/GHYFr/btrsSwcSDQV/UQZxkayGyAXrPACyf0MaV1/img.jpg',
+        '',
 };
 
 export const userChallengeList = [

@@ -4,7 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import { addChallenge, deleteChallenge, updateChallenge } from '../store/features/challengeSlice';
+import {
+    addChallenge,
+    deleteChallenge,
+    updateChallenge,
+} from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
 
 const PostDetailModal = () => {
@@ -31,16 +35,16 @@ const PostDetailModal = () => {
         duration: '',
     });
 
-	useEffect(() => {
-		if(isEditMode && selectedChallenge){
-			setFormData({
-				title: selectedChallenge.title,
-				content: selectedChallenge.content,
-				category: selectedChallenge.category,
-				duration: selectedChallenge.duration,
-			});
-		}
-	}, [isEditMode, selectedChallenge]) // isEditMode 혹은 selectedChallenge가 변경될 때마다 재렌더링
+    useEffect(() => {
+        if (isEditMode && selectedChallenge) {
+            setFormData({
+                title: selectedChallenge.title,
+                content: selectedChallenge.content,
+                category: selectedChallenge.category,
+                duration: selectedChallenge.duration,
+            });
+        }
+    }, [isEditMode, selectedChallenge]); // isEditMode 혹은 selectedChallenge가 변경될 때마다 재렌더링
 
     // 존재하지 않는 글을 보려고 할 때 빈 화면을 보여주는 안전장치
     if (isViewMode && !selectedChallenge) {
@@ -52,50 +56,57 @@ const PostDetailModal = () => {
         return CATEGORY_IMAGES[category] || CATEGORY_IMAGES.default;
     };
 
-	// 로그인 한 유저인지 확인하는 로직
-    const isMyPost = isCreateMode || loggedInUser === selectedChallenge?.authorId;
+    // 로그인 한 유저인지 확인하는 로직
+    const isMyPost =
+        isCreateMode || loggedInUser === selectedChallenge?.authorId;
 
-	// 창 닫기
+    // 창 닫기
     const handleClose = () => {
         navigate('/challengelist');
     };
 
-	// 수정 버튼 클릭시 수정하는 모달 상태창으로 변경하는 로직
-	const handleUpdate = () => {
-		navigate(`/challengelist/${selectedChallenge.id}/edit`);
-	}
+    // 수정 버튼 클릭시 수정하는 모달 상태창으로 변경하는 로직
+    const handleUpdate = () => {
+        navigate(`/challengelist/${selectedChallenge.id}/edit`);
+    };
 
-
-	// 글 작성하는 로직
+    // 글 작성하는 로직
     const handleSubmit = () => {
         if (isCreateMode) {
-			// 1. 로컬 스토리지의 챌린지 가져오기
-			const existingStorageChallenges = JSON.parse(localStorage.getItem('clglist') || '[]');
+            // 1. 로컬 스토리지의 챌린지 가져오기
+            const existingStorageChallenges = JSON.parse(
+                localStorage.getItem('clglist') || '[]'
+            );
 
-			// 2. 더미 데이터 챌린지와 로컬 스토리지에 저장된 챌린지 합치기
-			const allChallenges = [...userChallengeList, ...existingStorageChallenges];
+            // 2. 더미 데이터 챌린지와 로컬 스토리지에 저장된 챌린지 합치기
+            const allChallenges = [
+                ...userChallengeList,
+                ...existingStorageChallenges,
+            ];
 
-            // 3. 합쳐진 챌린지들 중에서 가장 큰 id 값 찾은 후에 + 1 하기 
-			const maxId = Math.max(...allChallenges.map((challenge) => challenge.id), 0) + 1;
-            
-			// users 정보 다 가져오기
+            // 3. 합쳐진 챌린지들 중에서 가장 큰 id 값 찾은 후에 + 1 하기
+            const maxId =
+                Math.max(...allChallenges.map((challenge) => challenge.id), 0) +
+                1;
+
+            // users 정보 다 가져오기
             const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-			// 현재 로그인한 유저 구별하기
-			const userInfo = users.find((user) => user.email === loggedInUser);
-	
+            // 현재 로그인한 유저 구별하기
+            const userInfo = users.find((user) => user.email === loggedInUser);
+
             const newChallenge = {
                 ...formData,
                 id: maxId,
                 authorId: loggedInUser,
                 userImg: userInfo?.profileImage || '',
                 nickname: userInfo?.nickname || '기본 닉네임',
-				postDate: new Date().toISOString().slice(0, 19),
-				postClicked: 0,
-				joinDate: new Date().toISOString().split('T')[0], // 작성자는 자동으로 참여
-				clgJoin: true,  // 추가: 처음에는 참여한 상태
-    			clgDoing: true, // 추가: 처음에는 진행한 상태
-    			clgDone: false,   // 추가: 처음에는 완료하지 않은 상태,
+                postDate: new Date().toISOString().slice(0, 19),
+                postClicked: 0,
+                joinDate: new Date().toISOString().split('T')[0], // 작성자는 자동으로 참여
+                clgJoin: true, // 추가: 처음에는 참여한 상태
+                clgDoing: true, // 추가: 처음에는 진행한 상태
+                clgDone: false, // 추가: 처음에는 완료하지 않은 상태,
             };
             // 필수 입력 체크
             if (
@@ -110,31 +121,34 @@ const PostDetailModal = () => {
 
             dispatch(addChallenge(newChallenge));
             navigate('/challengelist');
-        } else if(isEditMode){
+        } else if (isEditMode) {
+            // 필수 입력 체크
+            if (
+                !formData.title ||
+                !formData.content ||
+                !formData.duration ||
+                !formData.category
+            ) {
+                alert('모든 항목을 입력하시오');
+                return;
+            }
 
-			// 필수 입력 체크
-			if(!formData.title || !formData.content || !formData.duration || !formData.category){
-				alert('모든 항목을 입력하시오');
-				return;
-			}
+            // 수정된 내용 저장하는 로직
+            const updatedChallenge = {
+                ...selectedChallenge,
+                ...formData,
+            };
 
-			// 수정된 내용 저장하는 로직
-			const updatedChallenge = {
-				...selectedChallenge,
-				...formData
-			};
-
-			dispatch(updateChallenge(updatedChallenge));
-			navigate('/challengelist');
-		}
+            dispatch(updateChallenge(updatedChallenge));
+            navigate('/challengelist');
+        }
     };
 
-	// 글 삭제하는 로직
-	const handleDelete = (id) => {
-		dispatch(deleteChallenge(id));
-		navigate('/challengelist');
-	}
-
+    // 글 삭제하는 로직
+    const handleDelete = (id) => {
+        dispatch(deleteChallenge(id));
+        navigate('/challengelist');
+    };
 
     return (
         <div
@@ -146,9 +160,32 @@ const PostDetailModal = () => {
                 className='w-[440px] p-6 rounded-2xl bg-neutral-100'
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className='mb-4 overflow-hidden rounded-2xl'>
+                <div
+                    className='h-[384px] mb-4 overflow-hidden rounded-2xl'
+                    style={{
+                        backgroundColor: isViewMode
+                            ? selectedChallenge?.category === '식단'
+                                ? '#E3E3F4'
+                                : selectedChallenge?.category === '학습'
+                                  ? '#FEF2C8'
+                                  : selectedChallenge?.category === '운동'
+                                    ? '#C5EBE6'
+                                    : selectedChallenge?.category === '습관'
+                                      ? '#FBDCC3'
+                                      : '#F7F7F7'
+                            : formData.category === '식단'
+                              ? '#E3E3F4'
+                              : formData.category === '학습'
+                                ? '#FEF2C8'
+                                : formData.category === '운동'
+                                  ? '#C5EBE6'
+                                  : formData.category === '습관'
+                                    ? '#FBDCC3'
+                                    : '#F7F7F7',
+                    }}
+                >
                     <img
-                        className='w-full'
+                        className='h-full mx-auto p-[1rem]'
                         src={
                             isViewMode
                                 ? getCategoryImage(selectedChallenge?.category)
@@ -176,15 +213,21 @@ const PostDetailModal = () => {
                     isMyPost={isMyPost}
                     onChange={setFormData}
                     formData={formData}
-					onDelete={ () => handleDelete(selectedChallenge.id)}
-					onUpdate={handleUpdate}
+                    onDelete={() => handleDelete(selectedChallenge.id)}
+                    onUpdate={handleUpdate}
                 />
                 <ModalContent
                     mode={
                         isCreateMode ? 'create' : isEditMode ? 'edit' : 'view'
                     }
-                    title={isViewMode ? selectedChallenge?.title : formData.title}
-                    content={isViewMode ? selectedChallenge?.content : formData.content}
+                    title={
+                        isViewMode ? selectedChallenge?.title : formData.title
+                    }
+                    content={
+                        isViewMode
+                            ? selectedChallenge?.content
+                            : formData.content
+                    }
                     onChange={setFormData}
                     formData={formData}
                 />
@@ -192,12 +235,16 @@ const PostDetailModal = () => {
                     mode={
                         isCreateMode ? 'create' : isEditMode ? 'edit' : 'view'
                     }
-                    userImg={isViewMode ? selectedChallenge?.userImg : 'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg'}
+                    userImg={
+                        isViewMode
+                            ? selectedChallenge?.userImg
+                            : 'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg'
+                    }
                     nickname={isViewMode ? selectedChallenge?.nickname : ''}
                     isMyPost={isMyPost}
                     onSubmit={handleSubmit}
-					onClose={handleClose}
-					challengeId={selectedChallenge?.id}
+                    onClose={handleClose}
+                    challengeId={selectedChallenge?.id}
                 />
             </div>
         </div>

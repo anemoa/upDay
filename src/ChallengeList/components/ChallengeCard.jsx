@@ -34,8 +34,15 @@ const ChallengeCard = ({ cardData }) => {
     // 로그인 한 유저의 아이디
     const loggedInUser = localStorage.getItem('loggedInUser');
 
-    // 내가 작성한 글이 아닌 겨우
-    const canJoin = loggedInUser !== authorId;
+	// 로그인한 유저 정보 가져오기 (users 배열에서)
+	const userString = localStorage.getItem('users');
+	const users = userString ? JSON.parse(userString) : [];
+
+	// 현재 로그인한 유저 정보 찾기
+	const currentUser = users.find(user => user.email === loggedInUser);
+
+    // 내가 작성한 글이 아니고, 로그인한 유저가 있는 경우에만 참여 가능
+    const canJoin = loggedInUser && loggedInUser !== authorId && currentUser;
 
 	// 참여하기 버튼 핸들링
     const handleJoin = (e) => {
@@ -45,7 +52,7 @@ const ChallengeCard = ({ cardData }) => {
 		if(!loggedInUser){
 			openModal();
 		}else{
-			dispatch(joinChallenge(id));
+			dispatch(joinChallenge({id}));
 		}
     };
 
@@ -89,7 +96,14 @@ const ChallengeCard = ({ cardData }) => {
             </div>
 
             {/* 기본 제공 이미지 */}
-            <div className='h-72 mb-4 rounded-2xl overflow-hidden'>
+            <div className='h-72 mb-4 p-[16px] rounded-2xl overflow-hidden' style={{
+					backgroundColor: 
+					category === '식단' ? '#E3E3F4' :
+					category === '학습' ? '#FEF2C8' :
+					category === '운동' ? '#C5EBE6' :
+					category === '습관' ? '#FBDCC3' :
+					'#FBDCC3'
+				}}>
                 <img
                     src={getCategoryImage(cardData.category)}
                     className='h-full mx-auto'
@@ -99,8 +113,8 @@ const ChallengeCard = ({ cardData }) => {
 
             {/* 챌린지 제목 & 내용 */}
             <div className='mb-4'>
-                <p className='mb-1 text-xl font-semibold'>{title}</p>
-                <p className='text-sm font-light'>{content}</p>
+                <p className='h-[4rem] mb-1 text-xl font-semibold'>{title}</p>
+                <p className='h-[100px] text-sm font-light overflow-hidden text-ellipsis'>{content}</p>
             </div>
 
             {/* 유저 닉네임 & 사진 */}

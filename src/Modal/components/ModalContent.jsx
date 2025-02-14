@@ -6,6 +6,7 @@ const ModalContent = ({ title, content, mode, onChange, formData }) => {
             <div className='mb-4'>
                 <input
                     type='text'
+					className='input-field mb-4'
                     placeholder='제목 입력하시오'
                     value={formData.title}
                     onChange={(e) =>
@@ -13,7 +14,8 @@ const ModalContent = ({ title, content, mode, onChange, formData }) => {
                     }
                 />
                 <textarea
-                    placeholder='목표 입력하시오'
+					className='block textarea-field h-[10rem]'
+                    placeholder='내용을 입력하시오'
                     value={formData.content}
                     onChange={(e) =>
                         onChange({ ...formData, content: e.target.value })
