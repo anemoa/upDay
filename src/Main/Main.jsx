@@ -129,7 +129,7 @@ const Main = () => {
                             alt='챌린지 아이콘'
                             className='absolute z-0 top-[-7px] left-[-3px] w-[100px] md:w-[180px] mt-5 hidden md:block'
                         />
-                        <h2 className='ml-1 text-lg font-bold md:text-white md:text-xl md:font-medium mb-1 flex items-center gap-2 relative z-100 top-[28px] md:left-[18px]'>
+                        <h2 className='ml-1 text-lg font-bold md:text-white md:text-xl md:font-medium mb-1 flex items-center gap-2 relative z-100 top-[20px] md:left-[18px]'>
                             챌린지 카테고리
                         </h2>
                         <div className='grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 gap-5 mt-[50px] md:grid-cols-2'>
