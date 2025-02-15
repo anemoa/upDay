@@ -152,7 +152,7 @@ const PostDetailModal = () => {
 
     return (
         <div
-            className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-20'
+            className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]'
             onClick={handleClose}
         >
             {/* 모달 내부 클릭시 닫히지 않도록 하는 메소드 */}

@@ -86,7 +86,7 @@ export default function UserChallengeSearch({
                         className='pointer-events-none col-start-1 row-start-1 mr-3 self-center justify-self-end text-neutral-100 size-2 md:size-3'
                     />
                 </div>
-                <div className='relative flex flex-1 items-center'>
+                <div className='relative flex flex-1 items-center z-[0]'>
                     <input
                         id='search'
                         name='search'

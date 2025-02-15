@@ -120,6 +120,15 @@ const handleImageUpload = (e) => {
                 ...prev,
                 profileImage: reader.result,
             }));
+
+            // localStorage 즉시 업데이트
+            const updatedUsers = users.map((user) =>
+                user.email === loggedInUserEmail
+                    ? { ...user, profileImage: reader.result }
+                    : user
+            );
+            localStorage.setItem('users', JSON.stringify(updatedUsers));
+            setUsers(updatedUsers);
         };
         reader.readAsDataURL(file);
     }

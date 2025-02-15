@@ -5,7 +5,7 @@ import { BsSearch, BsDot } from 'react-icons/bs';
 
 export default function MyPageNonLogin() {
     return (
-        <main className='w-[90%] md:w-[80%] md:max-w-[1344px] mx-auto flex flex-col md:flex-row gap-4 justify-between'>
+        <main className='w-full mx-auto flex flex-col md:flex-row gap-4 justify-between'>
             <section className='flex flex-col w-full md:w-[48%] gap-4 md:gap-6'>
                 <div className='flex flex-col gap-2'>
                     <h1 className='text-xl md:text-2xl font-semibold'>

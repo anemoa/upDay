@@ -35,6 +35,7 @@ const LoginForm = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                {error && <div className='text-red-400'>{error}</div>}
                 <button
                     type='submit'
                     className='btn-black w-[18rem] h-[2.8rem] rounded-lg mt-[3rem]
@@ -43,7 +44,6 @@ const LoginForm = () => {
                     로그인
                 </button>
             </form>
-            {error && <div className='text-red-400'>{error}</div>}
             <div className='w-full max-w-[288px] pt-[1.5rem] pb-[1.5rem] md:max-w-none flex items-center justify-center text-gray-700 text-xs font-medium'>
                 <span className='flex-1 border-b border-neutral-800'></span>
                 <span className='mx-6 leading-none'>또는</span>

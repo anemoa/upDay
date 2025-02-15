@@ -22,6 +22,10 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
 		!loggedInUser ? openModal() : dispatch(joinChallenge(challengeId));
 	}
 
+	const handleShare = ()=> {
+		alert('준비중입니다')
+	}
+
 	if(mode === 'create' || mode === 'edit'){
 		return (
 			<div className='flex justify-between'>
@@ -43,7 +47,7 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
             </div>
             <div className='w-[50%]'>
                 {isMyPost ? (
-                    <button className='btn-primary btn w-[100%]'>
+                    <button onClick={handleShare} className='btn-primary btn w-[100%]'>
                         공유하기
                     </button>
                 ) : (
