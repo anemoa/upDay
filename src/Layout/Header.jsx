@@ -50,7 +50,7 @@ const Header = () => {
                 {/* 로고 */}
                 <Link
                     to='main'
-                    className='bagel-fat-one-regular h-[46px] text-[30px]/9 '
+                    className='bagel-fat-one-regular h-[46px] text-[30px]/9  z-[40]'
                 >
                     UpDay
                 </Link>
@@ -60,7 +60,7 @@ const Header = () => {
                     onClick={() => setIsMenuOpen((prev) => !prev)}
                 >
                     {isMenuOpen ? (
-                        <span className='text-4xl font-bold text-black absolute '>
+                        <span className='text-4xl font-bold text-black absolute'>
                             ✖
                         </span>
                     ) : (
