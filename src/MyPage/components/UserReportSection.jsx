@@ -9,7 +9,7 @@ export default function UserReport() {
     const TEST_ACCOUNT_EMAIL = 'test01@naver.com'; // 테스트 계정 이메일 고정
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [users, setUsers] = useState([]);
-    const [isTestAccount, setIsTestAccount] = useState(true);
+    const [isTestAccount, setIsTestAccount] = useState(false);
     const joinedChallenges =
         useSelector((state) => state.myClgList.joinedChallenges) || [];
 

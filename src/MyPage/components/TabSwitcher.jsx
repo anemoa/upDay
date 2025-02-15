@@ -8,7 +8,7 @@ export default function TabSwitcher() {
     const users = JSON.parse(localStorage.getItem('users'));
 
     const TEST_ACCOUNT_EMAIL = 'test01@naver.com'; // 테스트 계정 이메일 고정
-    const [isTestAccount, setIsTestAccount] = useState(true);
+    const [isTestAccount, setIsTestAccount] = useState(false);
     const [activeTab, setActiveTab] = useState(1); // 기본값으로 1번 탭을 활성화
 
     // 테스트 계정 여부 확인
@@ -21,6 +21,9 @@ export default function TabSwitcher() {
 
     // 테스트 계정이 아니면 activeTab(2)로 설정
     useEffect(() => {
+        if (isTestAccount) {
+            setActiveTab(1);
+        }
         if (!isTestAccount) {
             setActiveTab(2);
         }
@@ -45,12 +48,7 @@ export default function TabSwitcher() {
             </div>
 
             {/* 활성화된 탭에 맞는 컴포넌트 렌더링 */}
-            {activeTab === 1 && (
-                <UserChallenge
-                // challenges={challenges}
-                // setChallenges={setChallenges}
-                />
-            )}
+            {activeTab === 1 && <UserChallenge />}
             {activeTab === 2 && <PersonalInfo />}
         </section>
     );
