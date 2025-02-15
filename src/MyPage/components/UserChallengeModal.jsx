@@ -11,7 +11,7 @@ import ModalContent from '../../Modal/components/ModalContent';
 import ModalFooter from '../../Modal/components/ModalFooter';
 import { CATEGORY_IMAGES } from '../../data/userChallengeData';
 
-const UserChallengeModal = ({ isOpen, onClose }) => {
+const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -67,12 +67,20 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
         navigate('/mypage');
     };
 
+    // 배경 누르면 창 닫기
+    const handleBackgroundClick = (e) => {
+        if (stopPropagation) {
+            e.stopPropagation();
+        }
+        onClose(e);
+    };
+
     // 수정 버튼 클릭시 수정하는 모달 상태창으로 변경하는 로직
     const handleUpdate = () => {
         navigate(`/mypage/${selectedChallenge.id}/edit`);
     };
 
-    // 글 작성하는 로직
+    // 글 수정하는 로직
     const handleSubmit = () => {
         if (!isEditMode || !selectedChallenge) return;
 
@@ -109,7 +117,7 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
     return (
         <div
             className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]'
-            onClick={handleClose}
+            onClick={handleBackgroundClick}
         >
             {/* 모달 내부 클릭시 닫히지 않도록 하는 메소드 */}
             <div
