@@ -75,18 +75,14 @@ const PopularChallenges = ({ challenges }) => {
                                 <IoIosArrowBack size={24} />
                             </button>
                             <div className='w-full px-8'>
-                                <div className='flex items-center'>
+                                <div>
                                     <span className='mr-2 font-bold'>
                                         {index + 1}.
                                     </span>
-                                    <span className='truncate md:whitespace-normal'>
-                                        {challenge.title}
-                                    </span>
+                                    {challenge.title}
                                 </div>
                                 <div className='text-sm text-gray-600'>
-                                    <p className='truncate md:whitespace-normal'>
-                                        {challenge.description}
-                                    </p>
+                                    {challenge.description}
                                 </div>
                             </div>
                             <button

@@ -7,7 +7,7 @@ import ChallengeIcon from './images/challenge-2.svg';
 import ButtonIcon from './images/button.svg';
 import SpoonIcon from '../assets/images/common/spoon.svg';
 import DustIcon from '../assets/images/common/dust.svg';
-import LampIcon from '../assets/images/common/Lamp.svg'; // 대소문자 확인 필수
+import LampIcon from '../assets/images/common/Lamp.svg';
 import HeartIcon from '../assets/images/common/heart.svg';
 import MainFlower from './images/main_logo.svg';
 import { userChallengeList } from '../data/userChallengeData';
@@ -18,7 +18,6 @@ const Main = () => {
     const [challengeDays, setChallengeDays] = useState(0);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // 로그인 상태 확인 및 사용자 정보 설정
     useEffect(() => {
         const loggedInUserEmail = localStorage.getItem('loggedInUser');
         const usersData = localStorage.getItem('users');
@@ -38,7 +37,7 @@ const Main = () => {
                         const diffDays = Math.floor(
                             (today - signUpDate) / (1000 * 60 * 60 * 24)
                         );
-                        setChallengeDays(diffDays + 1); // 하루 더해서 설정
+                        setChallengeDays(diffDays + 1);
                     }
                     setIsLoggedIn(true);
                 }
@@ -48,14 +47,12 @@ const Main = () => {
         }
     }, []);
 
-    // 진행 중인 챌린지 필터링 (useMemo로 최적화)
     const filteredChallenges = useMemo(() => {
         return Array.isArray(userChallengeList)
             ? userChallengeList.filter((challenge) => challenge.clgDoing)
             : [];
     }, []);
 
-    // 인기 챌린지 정렬 (원본 배열을 수정하지 않도록 slice() 추가)
     const sortedChallenges = useMemo(() => {
         return Array.isArray(userChallengeList)
             ? [...userChallengeList]
@@ -64,7 +61,6 @@ const Main = () => {
             : [];
     }, []);
 
-    // 챌린지 카테고리 데이터
     const categories = [
         {
             name: '식단',
@@ -94,7 +90,10 @@ const Main = () => {
 
     return (
         <MainLayout>
-            <div className='flex flex-col md:flex-row gap-6 md:gap-[90px]'>
+            <div className="w-full mx-auto flex flex-col md:flex-row gap-6 md:gap-[90px] 
+    md:max-w-[90%] lg:max-w-[80%] xl:max-w-[1200px] 2xl:max-w-[1400px]">
+
+
                 {/* 왼쪽 콘텐츠 */}
                 <div className='w-full sm:w-full md:w-[600px] flex flex-col items-center relative'>
                     <div className='absolute top-[-20px] z-10 w-full text-center'>
@@ -110,7 +109,6 @@ const Main = () => {
                         />
                     </div>
                     <div className='w-full mt-[100px]'>
-                        {/* 진행 중인 챌린지 컴포넌트 */}
                         <OngoingChallenges
                             userChallengeData={filteredChallenges}
                             isLoggedIn={isLoggedIn}
@@ -118,59 +116,45 @@ const Main = () => {
                     </div>
                 </div>
 
-                {/* 오른쪽 콘텐츠 */}
-                <div className='w-full sm:w-full md:w-[650px] mt-20'>
-                    {/* 인기 챌린지 컴포넌트 */}
-                    <PopularChallenges challenges={sortedChallenges} />
+                <div className="w-full sm:w-full md:w-[650px] mt-20">
+    <PopularChallenges challenges={sortedChallenges} />
+    
+    <div className="mt-10 relative">
+        <img
+            src={ChallengeIcon}
+            alt="챌린지 아이콘"
+            className="absolute z-0 top-[-7px] left-[-3px] w-[100px] md:w-[180px] mt-5 hidden md:block"
+        />
+        <h2 className="ml-1 text-lg font-bold md:text-white md:text-xl md:font-semibold mb-1 flex items-center gap-2 relative z-100 top-[21px] md:left-[18px]">
+            챌린지 카테고리
+        </h2>
+        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 gap-5 mt-[50px] md:grid-cols-2">
+            {categories.map((category, index) => (
+                <Link
+                    key={index}
+                    to={category.path}
+                    className={`p-4 rounded-xl ${category.color} flex flex-col justify-between relative`}
+                    style={{ height: '180px' }}
+                >
+                    <span className="text-2xl font-semibold">
+                        {category.name}
+                    </span>
+                    <img
+                        src={ButtonIcon}
+                        alt="Button"
+                        className="absolute bottom-4 left-4 w-8 h-8"
+                    />
+                    <img
+                        src={category.icon}
+                        alt={`${category.name} icon`}
+                        className="absolute bottom-4 right-8 object-contain h-[100px] sm:h-[100px] md:h-[70%] lg:h-[70%] xl:h-[70%]"
+                    />
+                </Link>
+            ))}
+        </div>
+    </div>
+</div>
 
-                    <div className='mt-10 relative'>
-                        <img
-                            src={ChallengeIcon}
-                            alt='챌린지 아이콘'
-                            className='absolute z-0 top-[-7px] left-[-3px] w-[100px] md:w-[180px] mt-5 hidden md:block'
-                        />
-                        <h2 className='ml-1 text-lg font-bold md:text-white md:text-xl md:font-medium mb-1 flex items-center gap-2 relative z-100 top-[20px] md:left-[18px]'>
-                            챌린지 카테고리
-                        </h2>
-                        <div className='grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 gap-5 mt-[50px] md:grid-cols-2'>
-                            {categories.map((category, index) => (
-                                <Link
-                                    key={index}
-                                    to={category.path}
-                                    className={`p-4 rounded-xl ${category.color} flex flex-col justify-between relative`}
-                                    style={{ height: '180px' }}
-                                >
-                                    <span className='text-2xl font-semibold'>
-                                        {category.name}
-                                    </span>
-                                    <img
-                                        src={ButtonIcon}
-                                        alt='Button'
-                                        className='absolute bottom-4 left-4 w-8 h-8'
-                                    />
-                                    <img
-                                        src={category.icon}
-                                        alt={`${category.name} icon`}
-                                        className='absolute bottom-4 right-8 object-contain'
-                                        style={{
-                                            height:
-                                                window.innerWidth <= 512
-                                                    ? '100px'
-                                                    : category.name === '식단'
-                                                      ? '80%'
-                                                      : category.name === '학습'
-                                                        ? '70%'
-                                                        : category.name ===
-                                                            '운동'
-                                                          ? '70%'
-                                                          : '70%',
-                                        }}
-                                    />
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </div>
             </div>
         </MainLayout>
     );
