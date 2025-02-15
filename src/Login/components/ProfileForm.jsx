@@ -48,14 +48,14 @@ const ProfileForm = () => {
                     placeholder='닉네임'
                     value={nickname}
                     onChange={(e) => setNicknameState(e.target.value)}
-                    className='input-field rounded-xl w-[18rem] h-[2.8rem] mb-3 mt-[1rem]
-                    md:w-80 md:h-12 md:mb-4 md:mb-3 md:pl-3 md:mt-[2rem]'
+                    className='input-field w-[18rem] h-[2.8rem] mb-3 mt-[1rem]
+                    md:w-80 md:mb-4 md:mb-3 md:pl-3 md:mt-[2rem]'
                 />
                 {error && <div className='text-red-400'>{error}</div>}
                 <button
                     type='submit'
-                    className='btn-black w-[18rem] h-[2.8rem] rounded-lg mt-[2rem]
-                    md:w-[20rem] md:py-3 md:mt-[2.5rem] md:mb-[2.1258rem] md:rounded-xl'
+                    className='btn btn-black w-[18rem] h-[2.8rem] mt-[2rem]
+                    md:w-[20rem] md:py-3 md:mt-[2.5rem] md:mb-[2.1258rem]'
                 >
                     설정 완료
                 </button>
