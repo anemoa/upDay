@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../../index';
+
 
 const ArrowButton = ({ direction, onClick }) => {
     return (
@@ -88,7 +90,7 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                     </h2>
                     <button
                         onClick={() => navigate('/login')}
-                        className='btn-key px-8 py-3 rounded-lg text-medium font-semibold'
+                        className='btn btn-key px-8 py-3 rounded-lg text-medium font-semibold'
                     >
                         로그인 하러 가기
                     </button>
