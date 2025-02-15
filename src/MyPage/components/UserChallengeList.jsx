@@ -8,7 +8,7 @@ import {
 } from '../../store/features/userChallengeSlice';
 import { BsDot } from 'react-icons/bs';
 import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
-import UserChallengeCard from './UserChallengeCard';
+import UserChallengeModal from './UserChallengeModal';
 
 export default function UserChallengeList({ filteredChallenges }) {
     const dispatch = useDispatch();
@@ -139,7 +139,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                 )}
             </ul>
             {/* 모달 컴포넌트 */}
-            <UserChallengeCard
+            <UserChallengeModal
                 isOpen={isModalOpen}
                 onClose={() => setModalOpen(false)}
             />

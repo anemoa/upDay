@@ -46,9 +46,11 @@ export default function UserChallengeSection() {
 
     // 테스트 계정 여부 확인
     useEffect(() => {
-        setIsTestAccount(users.length === 0 || loggedInUser === users[0].email);
+        if (users.length > 0 && loggedInUser) {
+            setIsTestAccount(loggedInUser === users[0].email);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [loggedInUser, users]);
 
     // 검색에 따른 목록 노출
     useEffect(() => {
