@@ -3,11 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
     setMyPosts,
-    toggleClgState,
     deleteChallenge,
     updateChallenge,
 } from '../../store/features/userChallengeSlice';
-import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
 import ModalHeader from '../../Modal/components/ModalHeader';
 import ModalContent from '../../Modal/components/ModalContent';
 import ModalFooter from '../../Modal/components/ModalFooter';
@@ -50,41 +48,15 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
                 duration: selectedChallenge.duration || '',
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditMode, selectedChallenge?.id]); // id가 변경될 때만 실행
 
     if (!isOpen || !selectedChallenge) return null;
 
-    const { id, category, title, clgDoing, clgDone, authorId } =
-        selectedChallenge;
+    const { id, authorId } = selectedChallenge;
 
     // 내가 작성한 챌린지인지 확인
     const isMyPost = loggedInUser === authorId;
-
-    // 챌린지 카테고리별 뱃지 클래스 설정
-    const badgeClasses = {
-        식단: 'badge-meal',
-        학습: 'badge-study',
-
-        운동: 'badge-sport',
-        습관: 'badge-habit',
-    };
-    const getBadgeClass = (category) =>
-        badgeClasses[category] || 'badge-default';
-
-    // 챌린지 상태에 따른 동적 클래스 설정
-    const getClgTitleClass = (doing, done) => {
-        if (!doing && done) return 'line-through';
-        if (!doing && !done) return 'line-through text-neutral-500';
-        return '';
-    };
-    const getClgDoingClass = (doing) => (doing ? 'doing-on' : 'doing-off');
-    const getClgDoneClass = (done) => (done ? 'done-on' : 'done-off');
-
-    // 챌린지 상태 토글 함수
-    const handleToggle = (type) => {
-        if (!selectedChallenge) return;
-        dispatch(toggleClgState({ id: selectedChallenge.id, type }));
-    };
 
     // 카테고리별 이미지를 가져오는 함수 추가
     const getCategoryImage = (category) => {
