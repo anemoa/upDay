@@ -111,20 +111,18 @@ const Header = () => {
                     </ul>
                 </nav>
 
-                {isMenuOpen && (
-                    <div className='fixed inset-0 bg-white flex flex-col items-center justify-center h-screen w-screen z-[40]'>
-                        {/* 메뉴 리스트 */}
-                        <nav className='text-center space-y-10'>
-                            <ul className='text-2xl font-semibold w-full'>
-                                <li className='block py-4 text-center w-full'>
-                                    <Link to='/challengelist'>
-                                        챌린지 둘러보기
-                                    </Link>
-                                </li>
+            {isMenuOpen && (
+                <div className='fixed inset-0 bg-white flex flex-col items-center justify-center h-screen w-screen z-[40]'>
+                    {/* 메뉴 리스트 */}
+                    <nav className='text-center space-y-10'>
+                        <ul className='text-2xl font-semibold w-full'>
+                            <li className='block py-4 text-center w-full'>
+                                <Link to='/challengelist'>챌린지 둘러보기</Link>
+                            </li>
                                 <li className='block py-4 text-center w-full'>
                                     <Link to='/mypage'>마이페이지</Link>
                                 </li>
-                                <li className='block py-4 text-center w-full'>
+                                <li className='block py-4 text-center '>
                                     {loggedInUser ? (
                                         <button onClick={handleLogout}>
                                             로그아웃
@@ -132,7 +130,6 @@ const Header = () => {
                                     ) : (
                                         <Link
                                             to='/login'
-                                            className='block py-4'
                                         >
                                             로그인
                                         </Link>

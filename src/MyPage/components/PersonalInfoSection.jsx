@@ -87,6 +87,7 @@ export default function PersonalInfo() {
     
 
     const handleChange = (e) => {
+        e.preventDefault();
         const { name, value } = e.target;
         setUserInfo((prev) => ({ ...prev, [name]: value }));
 
@@ -109,7 +110,8 @@ export default function PersonalInfo() {
         }
     };
 
-    const handleImageUpload = (e) => {
+const handleImageUpload = (e) => {
+    e.preventDefault();
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
@@ -117,13 +119,12 @@ export default function PersonalInfo() {
             setUserInfo((prev) => ({
                 ...prev,
                 profileImage: reader.result,
-				userImg: reader.result,
             }));
 
             // localStorage 즉시 업데이트
             const updatedUsers = users.map((user) =>
                 user.email === loggedInUserEmail
-                    ? { ...user, profileImage: reader.result, userImg: reader.result,}
+                    ? { ...user, profileImage: reader.result }
                     : user
             );
             localStorage.setItem('users', JSON.stringify(updatedUsers));
@@ -132,6 +133,7 @@ export default function PersonalInfo() {
         reader.readAsDataURL(file);
     }
 };
+
 
 
     const handleImageDelete = () => {
@@ -407,19 +409,19 @@ export default function PersonalInfo() {
                         </button>
                     ) : (
                         <div className='flex gap-x-6'>
-                            <button
+                            <label
                                 type='button'
                                 onClick={() => setEditMode(false)}
-                                className='rounded-xl bg-red-500 px-12 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500'
+                                className='btn btn-secondary'
                             >
                                 취소하기
-                            </button>
-                            <button
+                            </label>
+                            <label
                                 type='submit'
-                                className='rounded-xl bg-blue-500 px-12 py-2 text-base font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'
+                                className='btn btn-primary'
                             >
                                 저장하기
-                            </button>
+                            </label>
                         </div>
                     )}
                 </div>

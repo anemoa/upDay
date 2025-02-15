@@ -123,3 +123,15 @@ button {
     opacity: 1 !important;
     transform: translateY(0) !important;
 }
+
+.snap-y {
+    scroll-snap-type: y mandatory; /* 또는 proximity */
+    overflow-y: auto;
+}
+
+.snap-start {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  
