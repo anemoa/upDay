@@ -7,23 +7,22 @@ export default function TabSwitcher() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     const users = JSON.parse(localStorage.getItem('users'));
 
+    const TEST_ACCOUNT_EMAIL = 'test01@naver.com'; // 테스트 계정 이메일 고정
     const [isTestAccount, setIsTestAccount] = useState(true);
     const [activeTab, setActiveTab] = useState(1); // 기본값으로 1번 탭을 활성화
 
-    // 테스트 계정 여부 체크
+    // 테스트 계정 여부 확인
     useEffect(() => {
-        if (users && users.length > 0 && users[0].email !== loggedInUser) {
-            setIsTestAccount(false);
-        } else {
-            setIsTestAccount(true);
+        if (users.length > 0 && loggedInUser) {
+            setIsTestAccount(loggedInUser === TEST_ACCOUNT_EMAIL);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [loggedInUser]);
 
     // 테스트 계정이 아니면 activeTab(2)로 설정
     useEffect(() => {
         if (!isTestAccount) {
-            setActiveTab(2); // 테스트 계정이 아니면 개인정보 관리 탭을 활성화
+            setActiveTab(2);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

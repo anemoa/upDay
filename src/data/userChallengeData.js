@@ -8,8 +8,7 @@ export const CATEGORY_IMAGES = {
     학습: study,
     운동: exercise,
     습관: habit,
-    default:
-        '',
+    default: '',
 };
 
 export const userChallengeList = [
@@ -41,7 +40,7 @@ export const userChallengeList = [
         content:
             '만성 피로에 매일 마셔댄 아아 때문에 위에 무리가 왔어요ㅠ 저와 함께 커피 대신 차를 마시며 몸을 챙겨봐요!',
         userImg:
-            'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg',
+            'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
         nickname: '데이메이커',
         postDate: '2024-11-30T12:00:00',
         postClicked: 164,
@@ -223,7 +222,7 @@ export const userChallengeList = [
         content:
             '식사 후 산책은 혈당조절에도 도움이 되고, 소화를 돕는다고 합니다. 추워도 굴하지 않고 걸어요!!',
         userImg:
-            'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg',
+            'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
         nickname: '데이메이커',
         postDate: '2025-01-01T08:00:00',
         postClicked: 119,
@@ -333,7 +332,7 @@ export const userChallengeList = [
         content:
             '숏폼에 빠져 책을 멀리하게 된 제 자신이 참... 근데 여러분도 그렇죠? 일단 얇은 책 부터 시작해서 책 읽는 재미를 들이고, 다음 책을 읽을 설렘이 생길 수 있도록 도전해봐요!',
         userImg:
-            'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg',
+            'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
         nickname: '데이메이커',
         postDate: '2025-01-14T22:00:00',
         postClicked: 358,
@@ -387,7 +386,7 @@ export const userChallengeList = [
         content:
             '자극적인 음식에 중독되어 자꾸 집밥을 피하게 되네요... 돈도 아끼고 건강도 챙기고 일석이조 챌린지',
         userImg:
-            'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg',
+            'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
         nickname: '데이메이커',
         postDate: '2025-01-18T12:00:00',
         postClicked: 25,
@@ -496,7 +495,7 @@ export const userChallengeList = [
         content:
             '무소식이 희소식이다 하고 살다보니 어느새 멀어진 것만 같은 친구들, 바쁜데 괜히 귀찮아할까 걱정하지 마세요. 분명 기뻐할 거예요. 사랑은 나누는 거랍니다 :)',
         userImg:
-            'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg',
+            'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
         nickname: '데이메이커',
         postDate: '2025-02-13T19:00:00',
         postClicked: 153,

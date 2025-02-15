@@ -26,7 +26,6 @@ const userChallengeSlice = createSlice({
     name: 'myClgList',
     initialState: {
         myPosts: [], // 테스트계정이 작성한 챌린지 목록
-        // joinedChallenges: [], // 테스트계정이 참여한 챌린지 목록
         joinedChallenges: getInitialJoinedChallenges().filter(
             (challenge) => challenge.clgJoin
         ),
@@ -110,7 +109,14 @@ const userChallengeSlice = createSlice({
 
             // 선택된 챌린지의 상태 업데이트
             state.selectedChallenge = updatedChallenge;
+            state.myPosts = state.list.filter(
+                (post) => post.authorId === localStorage.getItem('loggedInUser')
+            );
+            state.joinedChallenges = state.list.filter(
+                (challenge) => challenge.clgJoin
+            );
 
+            saveChallengesToLocalStorage(state.list);
             // 로컬 스토리지 상태 업데이트
             const currentChallenges = getChallenges();
             const updatedChallenges = currentChallenges.map((challenge) =>
@@ -136,7 +142,6 @@ const userChallengeSlice = createSlice({
 
             // 로컬 스토리지 업데이트
             saveChallengesToLocalStorage(updatedList);
-            console.log('🔴로컬 업데이트 확인 ', saveChallengesToLocalStorage);
         },
     },
 });

@@ -8,6 +8,7 @@ export default function UserChallengeSection() {
     const dispatch = useDispatch();
     const joinedChallenges =
         useSelector((state) => state.myClgList.joinedChallenges) || [];
+    const TEST_ACCOUNT_EMAIL = 'test01@naver.com'; // 테스트 계정 이메일 고정
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [isTestAccount, setIsTestAccount] = useState(true);
@@ -29,6 +30,14 @@ export default function UserChallengeSection() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // 테스트 계정 여부 확인
+    useEffect(() => {
+        if (users.length > 0 && loggedInUser) {
+            setIsTestAccount(loggedInUser === TEST_ACCOUNT_EMAIL);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loggedInUser]);
+
     // localStorage 값 가져올 때 예외 처리
     useEffect(() => {
         try {
@@ -44,14 +53,6 @@ export default function UserChallengeSection() {
         }
     }, []);
 
-    // 테스트 계정 여부 확인
-    useEffect(() => {
-        if (users.length > 0 && loggedInUser) {
-            setIsTestAccount(loggedInUser === users[0].email);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedInUser, users]);
-
     // 검색에 따른 목록 노출
     useEffect(() => {
         let filtered = [...joinedChallenges];
@@ -61,7 +62,6 @@ export default function UserChallengeSection() {
                 (challenge) => challenge.category === categoryFilter
             );
         }
-
         if (searchTerm.trim() !== '') {
             const lowerSearchTerm = searchTerm.toLowerCase();
             filtered = filtered.filter(
@@ -76,11 +76,9 @@ export default function UserChallengeSection() {
                 (challenge) => challenge.authorId === loggedInUser
             );
         }
-
         if (isDoingClg) {
             filtered = filtered.filter((challenge) => challenge.clgDoing);
         }
-
         if (isDoneClg) {
             filtered = filtered.filter((challenge) => challenge.clgDone);
         }
