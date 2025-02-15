@@ -16,6 +16,7 @@ const Header = () => {
         '/',
         '/main',
         '/mypage',
+        '/login',
     ].includes(location.pathname);
 
     useEffect(() => {
