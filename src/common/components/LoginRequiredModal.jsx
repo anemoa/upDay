@@ -24,8 +24,8 @@ const LoginRequiredModal = ({
                 className='card flex flex-col justify-between items-center min-w-80 w-[82%] max-w-96 p-6 pt-9 md:w-96 h-48 md:p-6'
                 onClick={(e) => e.stopPropagation()} // 내부 클릭 시 모달 닫히지 않도록 방지
             >
-                <h2 className='text-lg md:text-xl font-semibold m-6'>
-                    로그인이 필요한 페이지입니다.
+                <h2 className='text-lg md:text-xl font-semibold text-neutral-700 m-6'>
+                    로그인이 필요한 기능입니다.
                 </h2>
                 <button
                     onClick={onNavigate}

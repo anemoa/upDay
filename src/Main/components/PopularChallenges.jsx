@@ -21,6 +21,7 @@ const PopularChallenges = ({ challenges }) => {
                 (prevIndex) => (prevIndex + 1) % currentChallenges.length
             );
         }, 3000);
+
         return () => clearInterval(interval);
     }, [currentChallenges.length]);
 
@@ -41,19 +42,19 @@ const PopularChallenges = ({ challenges }) => {
     if (currentChallenges.length < 3) return null;
 
     return (
-        <div className='relative w-full'>
-            <div className='relative z-10'>
+        <div className='w-full'>
+            <div className='relative mb-4 -mt-10 md:mt-4'>
                 <img
                     src={ChallengeIcon}
                     alt='챌린지 아이콘'
-                    className='absolute w-[170px] top-[-12px] left-[-5px] hidden md:block'
+                    className='hidden md:block w-[180px]'
                 />
-                <h2 className='relative text-lg md:text-xl font-bold md:text-white mb-6 z-20 top-[-135px] md:top-[-5px] md:left-[12px]'>
+                <h2 className='md:absolute md:top-[6px] md:left-[24px] z-20 font-bold text-lg md:text-xl md:text-neutral-100 md:mb-6'>
                     인기 있는 챌린지
                 </h2>
             </div>
 
-            <div className='relative z-10 flex gap-4 md:flex-col snap-mandatory scrollbar-hide top-[-145px] md:top-[0] md:mt-0 justify-center md:justify-start'>
+            <div className='relative z-10 flex gap-4 md:flex-col snap-mandatory scrollbar-hide md:top-[0] md:mt-0 justify-center md:justify-start '>
                 {[0, 1, 2].map((offset) => {
                     const index =
                         (challengeIndex + offset) % currentChallenges.length;
@@ -65,17 +66,17 @@ const PopularChallenges = ({ challenges }) => {
                             className={`bg-white p-4 rounded-xl md:text-lg font-semibold transition-all duration-500 ease-in-out 
                                 ${isHighlighted ? 'opacity-100 scale-105' : 'opacity-50 scale-100'} 
                                 w-[95%] md:w-full shrink-0 snap-center
-                                relative flex items-center justify-between
+                                relative flex items-center justify-between 
                                 ${offset !== 0 ? 'hidden md:flex' : ''}`}
                         >
                             <button
                                 onClick={handlePrevChallenge}
-                                className='absolute left-2 md:hidden'
+                                className='absolute z-20 left-2 md:hidden'
                             >
-                                <IoIosArrowBack size={24} />
+                                <IoIosArrowBack size={18} />
                             </button>
                             <div className='w-full px-8'>
-                                <div>
+                                <div className='overflow-hidden text-ellipsis whitespace-nowrap'>
                                     <span className='mr-2 font-bold'>
                                         {index + 1}.
                                     </span>
@@ -87,9 +88,9 @@ const PopularChallenges = ({ challenges }) => {
                             </div>
                             <button
                                 onClick={handleNextChallenge}
-                                className='absolute right-2 md:hidden'
+                                className='absolute z-20 right-2 md:hidden'
                             >
-                                <IoIosArrowForward size={24} />
+                                <IoIosArrowForward size={18} />
                             </button>
                         </div>
                     );
