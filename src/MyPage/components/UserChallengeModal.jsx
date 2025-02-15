@@ -9,10 +9,7 @@ import {
 import ModalHeader from '../../Modal/components/ModalHeader';
 import ModalContent from '../../Modal/components/ModalContent';
 import ModalFooter from '../../Modal/components/ModalFooter';
-import {
-    CATEGORY_IMAGES,
-    userChallengeList,
-} from '../../data/userChallengeData';
+import { CATEGORY_IMAGES } from '../../data/userChallengeData';
 
 const UserChallengeModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
@@ -21,6 +18,7 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
     const selectedChallenge = useSelector(
         (state) => state.myClgList.selectedChallenge
     );
+    const myChallenges = useSelector((state) => state.myClgList.challenges);
     const loggedInUser = localStorage.getItem('loggedInUser');
 
     // 현재 모드 확인
@@ -37,7 +35,7 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         dispatch(setMyPosts()); // 새로고침해도 유지되도록 불러오기
-    }, [dispatch]);
+    }, [myChallenges]);
 
     useEffect(() => {
         if (isEditMode && selectedChallenge) {
@@ -49,7 +47,7 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEditMode, selectedChallenge?.id]); // id가 변경될 때만 실행
+    }, [isEditMode, selectedChallenge]); // id가 변경될 때만 실행
 
     if (!isOpen || !selectedChallenge) return null;
 
@@ -61,11 +59,6 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
     // 카테고리별 이미지를 가져오는 함수 추가
     const getCategoryImage = (category) => {
         return CATEGORY_IMAGES[category] || CATEGORY_IMAGES.default;
-    };
-
-    // 수정 버튼 클릭 시 수정 페이지로 이동
-    const handleEdit = () => {
-        navigate(`/mypage/${id}/edit`);
     };
 
     // 창 닫기
@@ -92,7 +85,14 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
             return;
         }
 
-        dispatch(updateChallenge({ ...selectedChallenge, ...formData }));
+        // 수정된 내용 저장하는 로직
+        const updatedChallenge = {
+            ...selectedChallenge,
+            ...formData,
+        };
+
+        dispatch(updateChallenge(updatedChallenge));
+        dispatch(setMyPosts());
         navigate('/mypage');
         onClose();
     };

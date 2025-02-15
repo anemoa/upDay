@@ -6,6 +6,7 @@ import { getMyJoinedChallenge } from '../../store/features/userChallengeSlice';
 
 export default function UserReport() {
     const dispatch = useDispatch();
+    const TEST_ACCOUNT_EMAIL = 'test01@naver.com'; // 테스트 계정 이메일 고정
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [isTestAccount, setIsTestAccount] = useState(true);
@@ -15,6 +16,14 @@ export default function UserReport() {
     useEffect(() => {
         dispatch(getMyJoinedChallenge());
     }, [dispatch]);
+
+    // 테스트 계정 여부 확인
+    useEffect(() => {
+        if (users.length > 0 && loggedInUser) {
+            setIsTestAccount(loggedInUser === TEST_ACCOUNT_EMAIL);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loggedInUser]);
 
     // localStorage 값 가져올 때 예외 처리
     useEffect(() => {
@@ -30,14 +39,6 @@ export default function UserReport() {
             setUsers([]);
         }
     }, []);
-
-    // 테스트 계정 여부 확인
-    useEffect(() => {
-        if (users.length > 0 && loggedInUser) {
-            setIsTestAccount(loggedInUser === users[0].email);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedInUser, users]);
 
     // 내가 참여한 챌린지 상태 값
     const numClgDoing = joinedChallenges.filter((clg) => clg.clgDoing).length;
