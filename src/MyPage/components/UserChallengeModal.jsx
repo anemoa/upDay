@@ -35,6 +35,7 @@ const UserChallengeModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         dispatch(setMyPosts()); // 새로고침해도 유지되도록 불러오기
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [myChallenges]);
 
     useEffect(() => {

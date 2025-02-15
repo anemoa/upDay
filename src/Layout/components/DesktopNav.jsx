@@ -1,29 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const DesktopNav = () => {
-    const [loggedInUser, setLoggedInUser] = useState(
-        localStorage.getItem('loggedInUser')
-    );
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const handleStorageChange = () => {
-            setLoggedInUser(localStorage.getItem('loggedInUser'));
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
-
-    const handleLogout = () => {
-        localStorage.removeItem('loggedInUser');
-        setLoggedInUser(null);
-        navigate('/');
-    };
-
+const DesktopNav = ({ loggedInUser, handleLogout }) => {
     return (
-        <nav className='hidden md:flex items-center justify-center md:text-[20px] '>
+        <nav className='hidden md:flex items-center justify-center text-[20px] h-full'>
             <ul className='flex space-x-10'>
                 <li>
                     <Link
