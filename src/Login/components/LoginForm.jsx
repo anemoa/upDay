@@ -39,7 +39,7 @@ const LoginForm = () => {
                 <button
                     type='submit'
                     className='btn btn-black w-[18rem] h-[2.8rem] mt-[3rem]
-                    md:w-[20rem] md:px-[136.5px] md:py-3'
+                    md:w-[20rem] md:px-[136.5px]'
                 >
                     로그인
                 </button>
