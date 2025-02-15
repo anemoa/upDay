@@ -28,8 +28,8 @@ const SignupForm = () => {
                             placeholder='ㅇㅇㅇ@example.com'
                             value={email}
                             onChange={(e) => setEmailState(e.target.value)}
-                            className='input-field rounded-xl w-[18rem] h-[2.8rem] mb-3 pl-3
-                            md:w-80 md:h-12 md:mb-4 '
+                            className='input-field w-[18rem] h-[2.8rem] mb-3 pl-3
+                            md:w-80 md:mb-4 '
                         />
                         {emailError && (
                             <div className='text-red-400'>{emailError}</div>
@@ -46,8 +46,8 @@ const SignupForm = () => {
                             placeholder='8자 이상 특수문자 포함'
                             value={password}
                             onChange={(e) => setPasswordState(e.target.value)}
-                            className='input-field rounded-xl w-[18rem] h-[2.8rem] mb-3 pl-3
-                            md:w-80 md:h-12 md:mb-4 '
+                            className='input-field w-[18rem] h-[2.8rem] mb-3 pl-3
+                            md:w-80 md:mb-4 '
                         />
                         {pwError && (
                             <div className='text-red-400'>{pwError}</div>
@@ -65,8 +65,8 @@ const SignupForm = () => {
                             onChange={(e) =>
                                 setPasswordConfirmState(e.target.value)
                             }
-                            className='input-field rounded-xl w-[18rem] h-[2.8rem] mb-3 pl-3
-                            md:w-80 md:h-12 md:mb-4 '
+                            className='input-field w-[18rem] h-[2.8rem] mb-3 pl-3
+                            md:w-80 md:mb-4 '
                         />
                         {pwConfirmError && (
                             <div className='text-red-400'>{pwConfirmError}</div>
@@ -75,8 +75,8 @@ const SignupForm = () => {
 
                     <button
                         type='submit'
-                        className='btn-black w-[18rem] h-[2.8rem] rounded-lg mt-[2.5rem]
-                        md:w-[20rem] md:mt-[2.5rem] md:mb-[2.1258rem] md:rounded-xl'
+                        className='btn btn-black w-[18rem] h-[2.8rem] mt-[2.5rem]
+                        md:w-[20rem] md:mt-[2.5rem] md:mb-[2.1258rem] '
                     >
                         회원가입
                     </button>

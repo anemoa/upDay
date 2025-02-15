@@ -23,7 +23,7 @@ const LoginForm = () => {
                     type='email'
                     placeholder='이메일'
                     className='input-field w-[18rem] h-[2.8rem] mb-3 pl-3
-                    md:mb-4 md:pl-6 md:w-80 md:h-12 md:rounded-xl'
+                    md:mb-4 md:pl-6 md:w-80'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
@@ -31,15 +31,15 @@ const LoginForm = () => {
                     type='password'
                     placeholder='비밀번호'
                     className='input-field w-[18rem] h-[2.8rem] mb-3 pl-3
-                    md:mb-4 md:pl-6 md:w-80 md:h-12 md:rounded-xl'
+                    md:mb-4 md:pl-6 md:w-80'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 {error && <div className='text-red-400'>{error}</div>}
                 <button
                     type='submit'
-                    className='btn-black w-[18rem] h-[2.8rem] rounded-lg mt-[3rem]
-                    md:w-[20rem] md:h-[3rem] md:px-[136.5px] md:py-3  md:rounded-xl '
+                    className='btn btn-black w-[18rem] h-[2.8rem] mt-[3rem]
+                    md:w-[20rem] md:px-[136.5px] md:py-3'
                 >
                     로그인
                 </button>
