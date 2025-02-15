@@ -109,13 +109,13 @@ const Header = () => {
                             <li className='block py-4 text-center w-full'>
                                 <Link to='/mypage'>마이페이지</Link>
                             </li>
-                            <li className='block py-4 text-center w-full'>
+                            <li className='block py-4 text-center'>
                                 {loggedInUser ? (
                                     <button onClick={handleLogout}>
                                         로그아웃
                                     </button>
                                 ) : (
-                                    <Link to='/login' className='block py-4'>
+                                    <Link to='/login'>
                                         로그인
                                     </Link>
                                 )}
