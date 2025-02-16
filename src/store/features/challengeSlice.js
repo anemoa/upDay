@@ -135,6 +135,14 @@ const challengeSlice = createSlice({
                 return challenge;
             });
 
+			// selectedChallenge도 업데이트
+			if (state.selectedChallenge && state.selectedChallenge.id === id) {
+				state.selectedChallenge = {
+					...state.selectedChallenge,
+					clgJoin: true
+				};
+			}
+
             // 로컬 스토리지 업데이트
 			const currentChallenges = getChallenges();
             const updatedChallenge = currentChallenges.map((challenge) => {
