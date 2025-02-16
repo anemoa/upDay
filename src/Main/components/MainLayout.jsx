@@ -49,10 +49,13 @@ const MainLayout = () => {
     }, []);
 
     const filteredChallenges = useMemo(() => {
-        return Array.isArray(userChallengeList)
-            ? userChallengeList.filter((challenge) => challenge.clgDoing)
-            : [];
-    }, []);
+        const loggedInUserEmail = localStorage.getItem('loggedInUser') || '';
+        if (!isLoggedIn || loggedInUserEmail !== 'test01@naver.com') {
+            return [];
+        }
+        return userChallengeList.filter((challenge) => challenge.clgDoing);
+     }, [isLoggedIn]);
+    
 
     const sortedChallenges = useMemo(() => {
         return Array.isArray(userChallengeList)
