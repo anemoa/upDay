@@ -16,7 +16,7 @@ const ChallengeList = () => {
     return (
         <>
             <Helmet>
-                <title>챌린지 둘러보기 - upDay</title>
+                <title>챌린지 둘러보기 - UpDay</title>
             </Helmet>
             <ChallengeListLayout />
             <Outlet />
