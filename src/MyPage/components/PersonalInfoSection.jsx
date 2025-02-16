@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import img1 from '../img/1.svg';
 import img2 from '../img/2.svg';
 import img3 from '../img/3.svg';
@@ -57,7 +57,8 @@ export default function PersonalInfo() {
     const [passwordError, setPasswordError] = useState('');
     const [nicknameError, setNicknameError] = useState('');
     const [editMode, setEditMode] = useState(false);
-    const defaultImages = [img1, img2, img3, img4]
+    const defaultImages = useMemo (() => [img1, img2, img3, img4],
+    []);
     const [originalUserInfo, setOriginalUserInfo] = useState(null);
     const uploadPhotoInput = useRef(null);
 
