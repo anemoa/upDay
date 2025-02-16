@@ -1,10 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import pic1 from './Group 223.png';
 
 const NotFound = () => {
     return (
         <div className='w-[90%] mx-auto flex flex-col justify-center items-center relative h-[796px] md:w-[80%] md:max-w-[1344px]'>
+            <Helmet>
+                <title>404 - 페이지를 찾을 수 없습니다</title>
+            </Helmet>
+
             <img
                 src={pic1}
                 alt='Not Found'
@@ -35,4 +40,3 @@ const NotFound = () => {
 };
 
 export default NotFound;
-
