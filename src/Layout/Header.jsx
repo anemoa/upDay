@@ -10,12 +10,14 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+
     // 특정 페이지에만 z-index 높게 설정
     const isHighZIndexPage = [
         '/challengelist',
         '/',
         '/main',
         '/mypage',
+        '/login',
     ].includes(location.pathname);
 
     useEffect(() => {
@@ -50,7 +52,9 @@ const Header = () => {
 
     return (
         <div
-            className={`w-full h-[80px] fixed top-0 bg-blue-100 no-scroll  ${isHighZIndexPage ? 'z-50' : ''}`}
+            className={`w-full h-[80px] fixed top-0 bg-blue-100 no-scroll ${
+                isMenuOpen ? 'z-50' : isHighZIndexPage ? 'z-40' : 'z-10'
+            }`}
         >
             <header className='flex justify-between items-center w-[90%] md:w-[80%] md:max-w-[1344px] mx-auto pb-[20px] pt-[12px]'>
                 {/* 로고 */}

@@ -55,7 +55,7 @@ const ProfileForm = () => {
                 <button
                     type='submit'
                     className='btn btn-black w-[18rem] h-[2.8rem] mt-[2rem]
-                    md:w-[20rem] md:py-3 md:mt-[2.5rem] md:mb-[2.1258rem]'
+                    md:w-[20rem] md:mt-[2.5rem] md:mb-[2.1258rem]'
                 >
                     설정 완료
                 </button>

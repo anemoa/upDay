@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getChallenges } from '../../utils/localStorage';
 import { BsSearch } from 'react-icons/bs';
 
@@ -11,13 +11,21 @@ const btnList = [
     { title: '습관', color: '#ffdee7' },
 ];
 
-const ChallengeListSearchSection = ({
-    setSelectedCategory,
-    setSearchResults,
-}) => {
+const ChallengeListSearchSection = ({ setSelectedCategory, setSearchResults }) => {
     const navigate = useNavigate();
-    const [activeCategory, setActiveCategory] = useState('전체');
+	const {category} = useParams();
+	
+	// 초기 상태를 url 파라미터 값으로 설정
+    const [activeCategory, setActiveCategory] = useState(category || '전체');
     const [searchTerm, setSearchTerm] = useState('');
+
+	// url에서 카테고리가 변경될 때마다 상태 업데이트  
+	useEffect(() => {
+		if(category){
+			setActiveCategory(category);
+			setSelectedCategory(category);
+		}
+	}, [category, setSelectedCategory])
 
     const handleCategoryClick = (category) => {
         setActiveCategory(category);
@@ -82,20 +90,6 @@ const ChallengeListSearchSection = ({
                     </li>
                 ))}
             </ul>
-
-            {/* <div className='flex justify-between input-field w-[40%] max-md:w-full'>
-                <input
-                    type='text'
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder='검색어를 입력하시오'
-                    className='w-full'
-                />
-                <button onClick={handleSearch}>
-                    <BsSearch />
-                </button>
-            </div> */}
             <div className='relative flex flex-1 items-center'>
                 <input
                     type='text'
