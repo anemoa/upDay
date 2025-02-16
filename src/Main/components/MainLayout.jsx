@@ -49,14 +49,12 @@ const MainLayout = () => {
     }, []);
 
     const filteredChallenges = useMemo(() => {
-        const loggedInUserEmail = localStorage.getItem("loggedInUser");
-    
-        if (!isLoggedIn || loggedInUserEmail !== "test01@naver.com") {
-            return []; // ✅ test01@naver.com이 아니면 챌린지 목록 숨김
+        const loggedInUserEmail = localStorage.getItem('loggedInUser') || '';
+        if (!isLoggedIn || loggedInUserEmail !== 'test01@naver.com') {
+            return [];
         }
-    
         return userChallengeList.filter((challenge) => challenge.clgDoing);
-    }, [isLoggedIn, userChallengeList]);
+     }, [isLoggedIn]);
     
 
     const sortedChallenges = useMemo(() => {
