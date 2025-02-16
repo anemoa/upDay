@@ -11,7 +11,7 @@ const SearchBar = () => {
                  <input
                     type='type'
                     placeholder='원하는 챌린지를 검색해보세요!'
-                    className='w-full bg-transparent outline-none text-xl text-gray-700 placeholder-gray-400 cursor-pointer '
+                    className='w-full bg-transparent outline-none text-base sm:text-xl text-gray-700 placeholder-gray-400 cursor-pointer '
                     read0nly
                 />
                 <Search className='text-gray-400 cursor-pointer hover:text-gray-600 ' size={20}/>
