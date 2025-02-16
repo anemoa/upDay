@@ -1,8 +1,8 @@
-
-
-import React, { useState, useEffect } from 'react';
-import { BsPersonCircle } from 'react-icons/bs';
-
+import React, { useState, useEffect, useRef } from 'react';
+import img1 from '../img/1.svg';
+import img2 from '../img/2.svg';
+import img3 from '../img/3.svg';
+import img4 from '../img/4.svg';
 
 // 비밀번호 유효성 검사 함수
 const validatePassword = (password) => {
@@ -57,17 +57,27 @@ export default function PersonalInfo() {
     const [passwordError, setPasswordError] = useState('');
     const [nicknameError, setNicknameError] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const defaultImages = [img1, img2, img3, img4]
+    const [originalUserInfo, setOriginalUserInfo] = useState(null);
+    const uploadPhotoInput = useRef(null);
 
     useEffect(() => {
         if (loggedInUser) {
             setUserInfo((prev) => {
+                let initialProfileImage = loggedInUser.profileImage;
+
+                // 프로필 이미지가 없는 경우 랜덤 이미지 설정
+                if (!initialProfileImage) {
+                    initialProfileImage = defaultImages[Math.floor(Math.random() * defaultImages.length)];
+                }
+
                 const updatedInfo = {
                     ...prev,
                     email: loggedInUser.email || '',
                     password: '',
                     nickname: loggedInUser.nickname || '',
                     signupDate: loggedInUser.signupDate || '',
-                    profileImage: loggedInUser.profileImage || null,
+                    profileImage: initialProfileImage,
                     about: loggedInUser.about || '',
                 };
                 if (JSON.stringify(prev) === JSON.stringify(updatedInfo)) {
@@ -76,7 +86,8 @@ export default function PersonalInfo() {
                 return updatedInfo;
             });
         }
-    }, [loggedInUser]);
+    }, [loggedInUser, defaultImages]);
+
 
     const [challengeList, setChallengeList] = useState([]);
 
@@ -134,11 +145,22 @@ const handleImageUpload = (e) => {
     }
 };
 
-
-
     const handleImageDelete = () => {
-        setUserInfo((prev) => ({ ...prev, profileImage: null }));
+        // 랜덤 이미지 선택
+        const randomImage = defaultImages[Math.floor(Math.random() * defaultImages.length)];
+
+        // userInfo 상태 업데이트 및 localStorage 업데이트
+        setUserInfo((prev) => ({ ...prev, profileImage: randomImage }));
+
+        const updatedUsers = users.map((user) =>
+            user.email === loggedInUserEmail
+                ? { ...user, profileImage: randomImage }
+                : user
+        );
+        localStorage.setItem('users', JSON.stringify(updatedUsers));
+        setUsers(updatedUsers);
     };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -193,7 +215,6 @@ const handleImageUpload = (e) => {
                     return {
                         ...challenge,
                         nickname: newNickname,
-                        // profileImage: userInfo.profileImage || challenge.profileImage, // 기존 이미지 유지
 						profileImage: userInfo.profileImage || challenge.profileImage,
             			userImg: userInfo.profileImage || challenge.userImg
                     };
@@ -211,6 +232,22 @@ const handleImageUpload = (e) => {
         setEditMode(false);
     };
     
+    const handleEditMode = () => {
+        setOriginalUserInfo({ ...userInfo });
+        setEditMode(true);
+    };
+
+    const handleCancel = () => {
+        setUserInfo(originalUserInfo); // Reset userInfo to the original values
+        setEditMode(false);
+        setPasswordError('');
+        setNicknameError('');
+
+        // If a new photo was selected but not saved, clear the input
+        if (uploadPhotoInput.current) {
+            uploadPhotoInput.current.value = ""; // Clear the file input
+        }
+    };
 
     if (!loggedInUser) {
         return (
@@ -245,10 +282,11 @@ const handleImageUpload = (e) => {
                                     </div>
                                 ) : (
                                     <div className='w-[25%] aspect-square overflow-hidden rounded-full flex-shrink-0 flex items-center justify-center bg-gray-200'>
-                                        <BsPersonCircle
-                                            aria-hidden='true'
-                                            className='w-full h-full aspect-square text-gray-300'
-                                        />
+                                        <img
+                                         src={defaultImages[Math.floor(Math.random() * defaultImages.length)]}
+                                         alt='기본 프로필'
+                                         className='w-full h-full object-cover'
+                                     />
                                     </div>
                                 )}
 
@@ -259,11 +297,14 @@ const handleImageUpload = (e) => {
                                     className='hidden'
                                     id='upload-photo'
                                     disabled={!editMode}
+                                    ref={uploadPhotoInput}
                                 />
                                 <label
                                     htmlFor='upload-photo'
                                     className={`btn 
-                                        ${editMode ? 'btn btn-primary' : ''} text-white`}
+                                        ${editMode 
+                                            ? 'btn btn-black text-white' 
+                                            : 'opacity-0 cursor-default'} `}
                                 >
                                     사진 올리기
                                 </label>
@@ -277,7 +318,9 @@ const handleImageUpload = (e) => {
                                 <label
                                     htmlFor='delete-photo'
                                     className={`btn
-                                        ${editMode ? 'btn btn-secondary' : ''} text-white`}
+                                        ${editMode 
+                                            ? 'btn btn-negative text-white' 
+                                            : 'opacity-0 cursor-default'} `}
                                 >
                                     삭제하기
                                 </label>
@@ -403,25 +446,25 @@ const handleImageUpload = (e) => {
                         <button
                             type='button'
                             onClick={() => setEditMode(true)}
-                            className='rounded-xl bg-blue-500 px-12 py-2 text-base font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'
+                            className='btn btn-key w-full'
                         >
                             수정하기
                         </button>
                     ) : (
-                        <div className='flex gap-x-6'>
-                            <label
+                        <div className='flex w-full gap-x-6'>
+                            <button
                                 type='button'
                                 onClick={() => setEditMode(false)}
-                                className='btn btn-secondary'
+                                className='btn btn-negative flex-1 text-center'
                             >
                                 취소하기
-                            </label>
-                            <label
+                            </button>
+                            <button
                                 type='submit'
-                                className='btn btn-primary'
+                                className='btn btn-primary flex-1 text-center'
                             >
                                 저장하기
-                            </label>
+                            </button>
                         </div>
                     )}
                 </div>

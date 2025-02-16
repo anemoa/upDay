@@ -1,55 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import Pic from '../img/up-logo.png';
 import { differenceInDays } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import img1 from '../img/1.svg';
+import img2 from '../img/2.svg';
+import img3 from '../img/3.svg';
+import img4 from '../img/4.svg';
 
 const UserProfile = () => {
-    // 유저 데이터 상태 관리
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [daysSinceSignup, setDaysSinceSignup] = useState(0);
-
+    const defaultImages = [img1, img2, img3, img4];
     const navigate = useNavigate();
 
     useEffect(() => {
-        const loggedInUserEmail = localStorage.getItem('loggedInUser');
-        const usersData = localStorage.getItem('users');
-        if (!loggedInUserEmail) {
-            navigate('/login');
-            return;
-        }
-        if (usersData) {
-            try {
-                const users = JSON.parse(usersData);
-                const foundUser = users.find(
-                    (user) => user.email === loggedInUserEmail
-                );
-                // 기존 상태와 다를 때만 업데이트
-                setLoggedInUser((prevUser) => {
-                    if (
-                        !prevUser ||
-                        JSON.stringify(prevUser) !== JSON.stringify(foundUser)
-                    ) {
-                        return foundUser || null;
-                    }
-                    return prevUser; // 상태 변경 없음
-                });
+        const fetchLoggedInUser = () => {
+            const loggedInUserEmail = localStorage.getItem('loggedInUser');
+            const usersData = localStorage.getItem('users');
 
-                if (foundUser && foundUser.signupDate) {
-                    const signupDate = new Date(foundUser.signupDate);
-                    const today = new Date();
-                    const days = differenceInDays(today, signupDate);
-                    setDaysSinceSignup(days + 1);
-                }
-            } catch (error) {
-                console.error('로컬 스토리지 데이터 파싱 오류:', error);
+            if (!loggedInUserEmail) {
+                navigate('/login');
+                return;
             }
-        }
+
+            if (usersData) {
+                try {
+                    const users = JSON.parse(usersData);
+                    const foundUser = users.find(user => user.email === loggedInUserEmail);
+
+                    if (foundUser) {
+                        setLoggedInUser(foundUser);
+                        const signupDate = new Date(foundUser.signupDate);
+                        const today = new Date();
+                        const days = differenceInDays(today, signupDate);
+                        setDaysSinceSignup(days + 1);
+                    }
+                } catch (error) {
+                    console.error('로컬 스토리지 데이터 파싱 오류:', error);
+                }
+            }
+        };
+
+        fetchLoggedInUser();
     }, [navigate]);
 
-    // 유저 정보가 없을 때 메시지 출력
     if (!loggedInUser) {
         return null;
     }
+
 
     return (
         <div className='flex flex-col gap-2'>
@@ -66,10 +63,12 @@ const UserProfile = () => {
                         ) : (
                             <img
                                 alt='기본 프로필 이미지'
-                                src={Pic}
+                                src={defaultImages[Math.floor(Math.random() * defaultImages.length)]}
                                 className='w-full h-full object-cover rounded-full ring-2 ring-neutral-300 overflow-hidden'
                             />
                         )}
+
+
                     </div>
                     <div className='flex flex-col h-[200px] justify-evenly'>
                         <div className='flex flex-col gap-2'>
