@@ -223,7 +223,6 @@ const handleImageUpload = (e) => {
                 return challenge;
             });
             localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
-            console.log("닉네임과 프로필 이미지가 성공적으로 변경되었습니다.");
         } else {
             console.error("clglist는 배열 형식이어야 합니다.");
         }
@@ -239,7 +238,7 @@ const handleImageUpload = (e) => {
     };
 
     const handleCancel = () => {
-        setUserInfo(originalUserInfo); // Reset userInfo to the original values
+        setUserInfo(userInfo); // Reset userInfo to the original values
         setEditMode(false);
         setPasswordError('');
         setNicknameError('');
@@ -473,4 +472,3 @@ const handleImageUpload = (e) => {
         </div>
     );
 }
-

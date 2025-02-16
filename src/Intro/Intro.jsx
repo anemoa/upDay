@@ -1,11 +1,11 @@
+import { Helmet } from 'react-helmet';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Charac from './img/character-bulb.svg';
 import Arrow from './img/arrow-text.svg';
 import Bg from './img/bg-element.svg';
-import ChatL from './img/spechbubble.svg';
-import ChatR from './img/speechbubble-R.svg';
 import List from './img/CardList.svg';
+import ListMobile from './img/CardListMobile.svg'
 import SearchBar from './components/SearchBar';
 import FadeInSection from './components/FadeInSection';
 import SpeechBubble from './components/SpeechBubble';
@@ -25,6 +25,9 @@ const Intro = () => {
 
     return (
         <div className='snap-y snap-mandatory h-screen w-screen overflow-y-auto'>
+            <Helmet>
+                <title>소개 페이지 - UpDay</title>
+            </Helmet>
             <div className='h-screen snap-start flex-grow flex-col items-center justify-center '>
                 <div className='flex w-[80%] max-w-[1344px] mx-auto justify-between items-center relative pt-[80px]'>
                     <div className='fade-in flex flex-col items-start'>
@@ -82,7 +85,7 @@ const Intro = () => {
                     <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-[2] z-10 relative mt-10 md:mt-12 lg:mt-30 animate-slide-up">
                     <span className='text-3xl text-blue-600 font-bold'>
                                 Up Day
-                            </span>는 같은 목표를 가진 사람들이
+                            </span>는 같은 목표를 <br className='md:hidden'/> 가진 사람들이
                     </h1>
 
                     <div className='h-5'></div>
@@ -137,7 +140,7 @@ const Intro = () => {
                     <p className='text-2xl font-bold text-center leading-relaxed animate-slide-up'>
                         현재 진행중인 챌린지
                     </p>
-                    <p className='text-5xl font-bold text-center leading-relaxed animate-slide-up -mt-3 text-blue-600'>
+                    <p className='text-5xl font-bold text-center leading-relaxed -mt-3 text-blue-600'>
                         1,200개</p>
                 </FadeInSection>
                 <FadeInSection>
@@ -149,7 +152,9 @@ const Intro = () => {
                     <div className='flex justify-center mt-8 w-[80%] max-w-[1344px] mx-auto pt-10 pb-10'>
                     <SearchBar />
                 </div>
-                <img src={List} alt='ChartList' className='w-[80%] pt-10 animate-slide-up pb-10'></img>
+                <img src={List} alt='ChartList' className='w-[80%] pt-10 pb-10 hidden md:block' onClick={handleClick2}></img>
+                <img src={ListMobile} alt="ListMobile" className='w-[80%] pt-10 pb-10 md:hidden' onClick={handleClick2}/>
+
                 <button className='btn btn-key item-center justify-center w-[80%] h-14 mt-10 '
                         onClick={handleClick2}>
                         챌린지 시작하러가기
