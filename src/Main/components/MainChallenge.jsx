@@ -164,9 +164,9 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                     </ul>
                 </>
             ) : (
-                <div className='w-full h-[100px] md:h-[240px] card md:rounded-t-none flex flex-col items-center justify-between p-3 md:p-6 md:pt-20'>
+                <div className='w-full h-[100px] md:h-[240px] card md:rounded-t-none flex md:flex-col items-center justify-between p-5 md:p-6 md:pt-20'>
                     {/* 로그아웃 상태일 때 로그인 유도 화면 */}
-                    <h2 className='text-lg md:text-xl font-semibold text-neutral-700'>
+                    <h2 className='text-sm md:text-base font-semibold text-neutral-700 ml-[3%]'>
                         로그인이 필요한 기능입니다.
                     </h2>
                     <button

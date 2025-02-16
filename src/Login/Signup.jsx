@@ -6,7 +6,7 @@ const Signup = () => {
     return (
         <>
             <Helmet>
-                <title>회원가입 - upDay</title>
+                <title>회원가입 - UpDay</title>
             </Helmet>
             <LoginLayout title="회원가입">
                 <SignupForm />

@@ -78,7 +78,7 @@ export const userChallengeList = [
             '*규칙: 저녁 8시 이후 음식 섭취 금지, 허기지면 물이나 허브티로 대체...! 알아요 쉽지 않다는 거... 그래서 딱 1주만 해보고... 다시 생각해볼까요? 이것만 기억합시다. 건강한 식습관 > 소화기 건강 개선 > 숙면 > 가벼운 아침 맞이',
         userImg:
             'https://img.freepik.com/free-photo/front-view-smiley-man-with-sunglasses-city_23-2148682678.jpg?t=st=1739201514~exp=1739205114~hmac=c2197d8edea9268127367aca4c34215ba5dc718ca21124b0f949c798298498fb&w=1480',
-        nickname: '야식끊기1일차',
+        nickname: '야식러버',
         postDate: '2024-12-01T02:00:00',
         postClicked: 158,
         joinDate: '',
@@ -115,7 +115,7 @@ export const userChallengeList = [
             '오늘의 나를 정비하는 시간, 매일 아침 명상을 통해 이너피스를 찾아봅시다 :)',
         userImg:
             'https://img.freepik.com/free-photo/man-posing-indoors-black-white-medium-shot_23-2149652002.jpg?t=st=1739201595~exp=1739205195~hmac=1ca3c994cf289903e8e5f4e17d404dbf649a66c2a6f14a1c194933b0044b9e97&w=900',
-        nickname: '부지러니',
+        nickname: '부지런2',
         postDate: '2024-12-01T13:00:00',
         postClicked: 140,
         joinDate: '2025-01-02T22:00:00',
@@ -133,7 +133,7 @@ export const userChallengeList = [
             '경제 흐름을 이해하는 가장 쉬운 방법! 하루 한 개의 경제 뉴스를 읽고 한 줄로 요약해보세요.',
         userImg:
             'https://img.freepik.com/free-photo/happy-dog-having-fun-park_23-2147997356.jpg?t=st=1739204011~exp=1739207611~hmac=48fa62508a9e88e7eee585b5649c67509b4ccbd6a12ebe0d1f23ac6270e2aed7&w=1480',
-        nickname: '이코노미클래스',
+        nickname: '이코노미야끼',
         postDate: '2024-12-01T19:00:00',
         postClicked: 205,
         joinDate: '2025-01-05T20:00:00',
@@ -369,7 +369,7 @@ export const userChallengeList = [
             '일상 속에서 운동량을 늘리는 가장 쉬운 방법! 계단 오르기를 하면 하체 근력 강화, 심폐 지구력 증가, 칼로리 소모 효과까지 있어요. 작은 습관이 쌓여 건강한 라이프스타일을 만들어봅시다!',
         userImg:
             'https://img.freepik.com/free-photo/shiba-inu-dog-taking-walk_23-2149478698.jpg?t=st=1739203725~exp=1739207325~hmac=0683b09f8f576e2cc4b54c6fd33410cba37791de29c96ed94a47414d62e694c4&w=1480',
-        nickname: '부지러니',
+        nickname: '부지런2',
         postDate: '2025-01-16T13:00:00',
         postClicked: 126,
         joinDate: '2025-01-17T13:00:00',
@@ -405,7 +405,7 @@ export const userChallengeList = [
             '매년 다짐만 하는 영어공부, 제대로 습관을 들이자!!! 단어 외우기? 문법? 이런 거 신경쓰지 말고 미드/영드 자막 없이 보기, 영어권 팟캐스트 듣기 등 자유롭게 공부해봐요!',
         userImg:
             'https://img.freepik.com/free-photo/owner-petting-adorable-cat_23-2148740483.jpg?t=st=1739203665~exp=1739207265~hmac=af0bc96c86dc97f7f4dbc390937ff93ce5d8795fff54d97539c55fa531dd9a14&w=1480',
-        nickname: '아인파인땡큐앤유',
+        nickname: '아임파인땡큐',
         postDate: '2025-01-21T13:00:00',
         postClicked: 372,
         joinDate: '2025-01-21T13:00:00',
