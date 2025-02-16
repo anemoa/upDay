@@ -238,7 +238,7 @@ const PostDetailModal = () => {
                     userImg={
                         isViewMode
                             ? selectedChallenge?.userImg
-                            : 'https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg'
+                            : 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
                     }
                     nickname={isViewMode ? selectedChallenge?.nickname : ''}
                     isMyPost={isMyPost}
