@@ -19,7 +19,7 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
     };
 
 	const handleJoin = () => {
-		!loggedInUser ? openModal() : dispatch(joinChallenge(challengeId));
+		!loggedInUser ? openModal() : dispatch(joinChallenge({ id: challengeId }));
 	}
 
 	const handleShare = ()=> {
@@ -29,7 +29,7 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
 	if(mode === 'create' || mode === 'edit'){
 		return (
 			<div className='flex justify-between'>
-				<button className='btn w-[35%] text-neutral-100 bg-neutral-300 hover:bg-neutral-400' onClick={onClose}>취소하기</button>
+				<button className='btn btn-negative w-[35%]' onClick={onClose}>취소하기</button>
 				<button className='btn btn-primary w-[60%]' onClick={onSubmit}>
 					{mode === 'create' ? '등록하기' : '수정하기'}
 				</button>
