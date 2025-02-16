@@ -6,7 +6,7 @@ const Login = () => {
     return (
         <>
             <Helmet>
-                <title>로그인 - upDay</title>
+                <title>로그인 - UpDay</title>
             </Helmet>
             <LoginLayout title="로그인 / 회원가입">
                 <LoginForm />
