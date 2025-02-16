@@ -5,8 +5,11 @@ import MainChallenge from './MainChallenge';
 
 const OngoingChallenges = ({ userChallengeData, isLoggedIn }) => {
     return (
-        <div>
-            <MainChallenge userChallengeData={userChallengeData} isLoggedIn={isLoggedIn} />
+        <div className=''>
+            <MainChallenge
+                userChallengeData={userChallengeData}
+                isLoggedIn={isLoggedIn}
+            />
         </div>
     );
 };
