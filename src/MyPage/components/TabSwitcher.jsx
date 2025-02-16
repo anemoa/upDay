@@ -28,7 +28,7 @@ export default function TabSwitcher() {
             setActiveTab(2);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isTestAccount]);
 
     return (
         <section className='w-full md:w-[48%]'>
