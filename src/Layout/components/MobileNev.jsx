@@ -29,14 +29,16 @@ const MobileNav = ({
                                         챌린지 둘러보기
                                     </Link>
                                 </li>
-                                <li className='block py-6 text-center w-full'>
-                                    <Link
-                                        to='/mypage'
-                                        onClick={() => setIsMenuOpen(false)}
-                                    >
-                                        마이페이지
-                                    </Link>
-                                </li>
+                                {loggedInUser && (
+                                    <li className='block py-6 text-center w-full'>
+                                        <Link
+                                            to='/mypage'
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            마이페이지
+                                        </Link>
+                                    </li>
+                                )}
                                 <li className='block py-6 text-center w-full'>
                                     {loggedInUser ? (
                                         <button onClick={handleLogout}>
