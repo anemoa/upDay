@@ -7,7 +7,7 @@ const ProfileSetup = () => {
     return (
         <>
             <Helmet>
-                <title>프로필 설정 - upDay</title>
+                <title>프로필 설정 - UpDay</title>
             </Helmet>
             <LoginLayout title='프로필 설정'>
                 <ProfileForm />

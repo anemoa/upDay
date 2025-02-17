@@ -109,12 +109,12 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                                                     {challenge.title}
                                                 </span>
                                                 <span className='text-[12px] md:text-sm text-gray-500'>
-                                                    도전{' '}
+                                                    도전
                                                     <span className='ml-1'>
                                                         {calculateDaysPassed(
                                                             challenge.joinDate
                                                         )}
-                                                    </span>{' '}
+                                                    </span>
                                                     일 째
                                                 </span>
                                             </>
@@ -145,6 +145,8 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                                                         {calculateDaysPassed(
                                                             challenge.joinDate
                                                         )}
+                                                    </span>
+
                                                     </span>
                                                     일 째
                                                 </span>

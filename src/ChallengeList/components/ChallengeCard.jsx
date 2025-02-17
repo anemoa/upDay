@@ -1,10 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {
-    joinChallenge,
-    setSelectedChallenge,
-} from '../../store/features/challengeSlice';
+import { joinChallenge, setSelectedChallenge } from '../../store/features/challengeSlice';
 import { CATEGORY_IMAGES } from '../../data/userChallengeData';
 import LoginRequiredModal from '../../common/components/LoginRequiredModal';
 import useModal from '../../common/hooks/useModal';
@@ -42,7 +39,10 @@ const ChallengeCard = ({ cardData }) => {
     const currentUser = users.find((user) => user.email === loggedInUser);
 
     // 내가 작성한 글이 아니고, 로그인한 유저가 있는 경우에만 참여 가능
-    const canJoin = loggedInUser && loggedInUser !== authorId && currentUser;
+    // const canJoin = loggedInUser && loggedInUser !== authorId && currentUser;
+	// 로그인한 유저인지 확인
+	const isLoggedIn = loggedInUser && currentUser;
+	const isAuthor = loggedInUser === authorId;
 
     // 참여하기 버튼 핸들링
     const handleJoin = (e) => {
@@ -144,16 +144,25 @@ const ChallengeCard = ({ cardData }) => {
                 </div>
 
                 {/* 버튼 */}
-                {canJoin && (
+                {/* {canJoin && (
                     <button
                         type='button'
-                        className='max-md:w-[40%] px-4 py-[6px] max-md:px-1 max-md:py-1 text-[#0B4E7A] border-[2px] border-solid border-[#0B4E7A] rounded-xl max-md:text-xs'
+                        className='btn btn-primary w-[40%] max-md:text-xs'
                         onClick={handleJoin}
                         disabled={clgJoin}
                     >
                         {clgJoin ? '참여중' : '참여하기'}
                     </button>
-                )}
+                )} */}
+				{isLoggedIn && (
+    <button
+        type='button'
+        className='btn btn-primary w-[40%] max-md:text-xs'
+        onClick={handleJoin}
+    >
+        {isAuthor || clgJoin ? '참여중' : '참여하기'}
+    </button>
+)}
                 <LoginRequiredModal
                     isOpen={isModalOpen}
                     onClose={closeModal}
