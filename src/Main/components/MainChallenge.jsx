@@ -108,13 +108,13 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                                                 <span className='text-medium font-semibold text-gray-700 truncate'>
                                                     {challenge.title}
                                                 </span>
-                                                <span className='text-sm text-gray-500'>
-                                                    도전{' '}
+                                                <span className='text-[12px] md:text-sm text-gray-500'>
+                                                    도전
                                                     <span className='ml-1'>
                                                         {calculateDaysPassed(
                                                             challenge.joinDate
                                                         )}
-                                                    </span>{' '}
+                                                    </span>
                                                     일 째
                                                 </span>
                                             </>
@@ -139,13 +139,15 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                                                 <span className='text-lg font-semibold text-gray-700 truncate w-2/3 ml-4'>
                                                     {challenge.title}
                                                 </span>
-                                                <span className='flex text-sm text-neutral-500 mr-4 whitespace-nowrap'>
-                                                    도전{' '}
+                                                <span className='flex text-[10px] md:text-sm text-neutral-500 mr-4 whitespace-nowrap'>
+                                                    도전
                                                     <span className='ml-1'>
                                                         {calculateDaysPassed(
                                                             challenge.joinDate
                                                         )}
-                                                    </span>{' '}
+                                                    </span>
+
+                                                    </span>
                                                     일 째
                                                 </span>
                                             </>
