@@ -92,80 +92,76 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
             </div>
 
             {isLoggedIn ? (
-                <>
-                    <div className='flex flex-wrap gap-3 md:py-2 md:mt-5 md:hidden w-full justify-start'>
-                        {[...Array(3)].map((_, index) => {
-                            const challenge =
-                                filteredChallenges[startIndex + index];
-                            return (
-                                <div
-                                    key={index}
-                                    className='w-[calc(33.333%-0.5rem)] h-[100px] bg-white rounded-xl p-4 flex flex-col justify-between'
-                                >
-                                    {challenge ? (
-                                        <>
-                                            <span className='text-medium font-semibold text-gray-700 truncate'>
-                                                {challenge.title}
-                                            </span>
-                                            <span className='text-sm text-gray-500'>
-                                                도전
-                                                <span className='ml-1'>
-                                                    {calculateDaysPassed(
-                                                        challenge.joinDate
-                                                    )}
+                filteredChallenges.length > 0 ? (
+                    <>
+                        <div className='flex flex-wrap gap-3 md:py-2 md:mt-5 md:hidden w-full justify-start'>
+                            {[...Array(3)].map((_, index) => {
+                                const challenge =
+                                    filteredChallenges[startIndex + index];
+                                return (
+                                    <div
+                                        key={index}
+                                        className='w-[calc(33.333%-0.5rem)] h-[100px] bg-white rounded-xl p-4 flex flex-col justify-between'
+                                    >
+                                        {challenge ? (
+                                            <>
+                                                <span className='text-medium font-semibold text-gray-700 truncate'>
+                                                    {challenge.title}
                                                 </span>
-                                                일 째
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <span className='text-lg font-semibold text-gray-300'>
-                                            챌린지를 더 늘려보세요!
-                                        </span>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                                                <span className='text-[12px] md:text-sm text-gray-500'>
+                                                    도전{' '}
+                                                    <span className='ml-1'>
+                                                        {calculateDaysPassed(
+                                                            challenge.joinDate
+                                                        )}
+                                                    </span>{' '}
+                                                    일 째
+                                                </span>
+                                            </>
+                                        ) : null}
+                                    </div>
+                                );
+                            })}
+                        </div>
 
-                    {/* 데스크탑에서는 기존 ul 형식 유지 */}
-                    <ul className='hidden md:block'>
-                        {[...Array(challengesPerPage)].map((_, index) => {
-                            const challenge =
-                                filteredChallenges[startIndex + index];
-                            return (
-                                <li
-                                    key={index}
-                                    className={`py-4 bg-white border flex justify-between items-center ${index === challengesPerPage - 1 ? 'rounded-b-3xl' : ''} mb-0`}
-                                    style={{ height: '60px' }}
-                                >
-                                    {challenge ? (
-                                        <>
-                                            <span className='text-lg font-semibold text-gray-700 truncate w-2/3 ml-4'>
-                                                {challenge.title}
-                                            </span>
-                                            <span className='flex text-sm text-neutral-500 mr-4 whitespace-nowrap'>
-                                                도전
-                                                <span className='ml-1'>
-                                                    {calculateDaysPassed(
-                                                        challenge.joinDate
-                                                    )}
+                        <ul className='hidden md:block'>
+                            {[...Array(challengesPerPage)].map((_, index) => {
+                                const challenge =
+                                    filteredChallenges[startIndex + index];
+                                return (
+                                    <li
+                                        key={index}
+                                        className={`py-4 bg-white border flex justify-between items-center ${index === challengesPerPage - 1 ? 'rounded-b-3xl' : ''} mb-0`}
+                                        style={{ height: '60px' }}
+                                    >
+                                        {challenge ? (
+                                            <>
+                                                <span className='text-lg font-semibold text-gray-700 truncate w-2/3 ml-4'>
+                                                    {challenge.title}
                                                 </span>
-                                                일 째
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <span className='text-lg font-semibold text-gray-300 ml-4'>
-                                            챌린지를 더 늘려보세요!
-                                        </span>
-                                    )}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </>
+                                                <span className='flex text-[10px] md:text-sm text-neutral-500 mr-4 whitespace-nowrap'>
+                                                    도전
+                                                    <span className='ml-1'>
+                                                        {calculateDaysPassed(
+                                                            challenge.joinDate
+                                                        )}
+                                                    </span>
+                                                    일 째
+                                                </span>
+                                            </>
+                                        ) : null}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                ) : (
+                    <div className='text-center text-gray-500 py-6 font-semibold md:min-h-[250px] md:bg-neutral-100 md:rounded-b-3xl bg-neutral-100 rounded-xl'>
+                        진행 중인 챌린지가 없습니다.
+                    </div>
+                )
             ) : (
                 <div className='w-full h-[100px] md:h-[240px] card md:rounded-t-none flex md:flex-col items-center justify-between p-5 md:p-6 md:pt-20'>
-                    {/* 로그아웃 상태일 때 로그인 유도 화면 */}
                     <h2 className='text-sm md:text-base font-semibold text-neutral-700 ml-[3%]'>
                         로그인이 필요한 기능입니다.
                     </h2>
