@@ -30,19 +30,24 @@ const PostDetailModal = () => {
     );
 
     const loggedInUser = localStorage.getItem('loggedInUser');
+    
+	// 로그인하지 않은 상태로 글 작성 시도할 경우 로그인 모달 표시하는 함수
+    const checkLoginStatus = React.useCallback(() => {
+        if (isCreateMode && !loggedInUser) {
+            openModal();
+        }
+    }, [isCreateMode, loggedInUser, openModal]);
+
+	// 글 작성 시도 시 로그인 상태 확인
+    useEffect(() => {
+        checkLoginStatus();
+    }, [checkLoginStatus]);
 
     // 로그인 페이지로 이동하는 핸들러
     const handleNavigateToLogin = () => {
         closeModal();
         navigate('/login');
     };
-
-    // 글 생성 모드일때 로그인 체크
-    useEffect(() => {
-        if (isCreateMode && !loggedInUser) {
-            openModal();
-        }
-    }, [isCreateMode, loggedInUser]);
 
     // 챌린지 생성 & 수정 모드일 때 사용할 상태
     const [formData, setFormData] = useState({
@@ -176,7 +181,7 @@ const PostDetailModal = () => {
                         closeModal();
                         navigate('/challengelist');
                     }}
-					onNavigate={handleNavigateToLogin}
+                    onNavigate={handleNavigateToLogin}
                 />
             ) : (
                 <div
