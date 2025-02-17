@@ -10,11 +10,15 @@ import {
     updateChallenge,
 } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
+import useModal from '../common/hooks/useModal';
+import LoginRequiredModal from '../common/components/LoginRequiredModal';
 
 const PostDetailModal = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
+    // useModal 훅
+    const { isModalOpen, openModal, closeModal } = useModal();
 
     // 현재 모드 확인
     const isCreateMode = pathname.endsWith('/create');
@@ -26,6 +30,19 @@ const PostDetailModal = () => {
     );
 
     const loggedInUser = localStorage.getItem('loggedInUser');
+
+    // 로그인 페이지로 이동하는 핸들러
+    const handleNavigateToLogin = () => {
+        closeModal();
+        navigate('/login');
+    };
+
+    // 글 생성 모드일때 로그인 체크
+    useEffect(() => {
+        if (isCreateMode && !loggedInUser) {
+            openModal();
+        }
+    }, [isCreateMode, loggedInUser]);
 
     // 챌린지 생성 & 수정 모드일 때 사용할 상태
     const [formData, setFormData] = useState({
@@ -151,103 +168,136 @@ const PostDetailModal = () => {
     };
 
     return (
-        <div
-            className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]'
-            onClick={handleClose}
-        >
-            {/* 모달 내부 클릭시 닫히지 않도록 하는 메소드 */}
-            <div
-                className='w-[440px] max-md:w-[90%] max-md:mx-4 p-6 max-md:p-4 rounded-2xl bg-neutral-100'
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div
-                    className='h-[384px] max-md:h-[280px] mb-4 max-md:mb-3 overflow-hidden rounded-2xl'
-                    style={{
-                        backgroundColor: isViewMode
-                            ? selectedChallenge?.category === '식단'
-                                ? '#e6f4f2'
-                                : selectedChallenge?.category === '학습'
-                                  ? '#fff9e6'
-                                  : selectedChallenge?.category === '운동'
-                                    ? '#f2f2ff'
-                                    : selectedChallenge?.category === '습관'
-                                      ? '#fff1f5'
-                                      : '#F7F7F7'
-                            : formData.category === '식단'
-                              ? '#c5ebe6'
-                              : formData.category === '학습'
-                                ? '#fef2c8'
-                                : formData.category === '운동'
-                                  ? '#e3e3f4'
-                                  : formData.category === '습관'
-                                    ? '#ffdee7'
-                                    : '#F7F7F7',
+        <>
+            {isCreateMode && !loggedInUser ? (
+                <LoginRequiredModal
+                    isOpen={isModalOpen}
+                    onClose={() => {
+                        closeModal();
+                        navigate('/challengelist');
                     }}
+					onNavigate={handleNavigateToLogin}
+                />
+            ) : (
+                <div
+                    className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]'
+                    onClick={handleClose}
                 >
-                    <img
-                        className='h-full mx-auto p-[1rem]'
-                        src={
-                            isViewMode
-                                ? getCategoryImage(selectedChallenge?.category)
-                                : formData.category
-                                  ? getCategoryImage(formData.category)
-                                  : CATEGORY_IMAGES.default
-                        }
-                        alt=''
-                    />
+                    {/* 모달 내부 클릭시 닫히지 않도록 하는 메소드 */}
+                    <div
+                        className='w-[440px] max-md:w-[90%] max-md:mx-4 p-6 max-md:p-4 rounded-2xl bg-neutral-100'
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div
+                            className='h-[384px] max-md:h-[280px] mb-4 max-md:mb-3 overflow-hidden rounded-2xl'
+                            style={{
+                                backgroundColor: isViewMode
+                                    ? selectedChallenge?.category === '식단'
+                                        ? '#e6f4f2'
+                                        : selectedChallenge?.category === '학습'
+                                          ? '#fff9e6'
+                                          : selectedChallenge?.category ===
+                                              '운동'
+                                            ? '#f2f2ff'
+                                            : selectedChallenge?.category ===
+                                                '습관'
+                                              ? '#fff1f5'
+                                              : '#F7F7F7'
+                                    : formData.category === '식단'
+                                      ? '#c5ebe6'
+                                      : formData.category === '학습'
+                                        ? '#fef2c8'
+                                        : formData.category === '운동'
+                                          ? '#e3e3f4'
+                                          : formData.category === '습관'
+                                            ? '#ffdee7'
+                                            : '#F7F7F7',
+                            }}
+                        >
+                            <img
+                                className='h-full mx-auto p-[1rem]'
+                                src={
+                                    isViewMode
+                                        ? getCategoryImage(
+                                              selectedChallenge?.category
+                                          )
+                                        : formData.category
+                                          ? getCategoryImage(formData.category)
+                                          : CATEGORY_IMAGES.default
+                                }
+                                alt=''
+                            />
+                        </div>
+                        <ModalHeader
+                            mode={
+                                isCreateMode
+                                    ? 'create'
+                                    : isEditMode
+                                      ? 'edit'
+                                      : 'view'
+                            }
+                            category={
+                                isViewMode
+                                    ? selectedChallenge?.category
+                                    : formData.category
+                            }
+                            duration={
+                                isViewMode
+                                    ? selectedChallenge?.duration
+                                    : formData.duration
+                            }
+                            isMyPost={isMyPost}
+                            onChange={setFormData}
+                            formData={formData}
+                            onDelete={() => handleDelete(selectedChallenge.id)}
+                            onUpdate={handleUpdate}
+                        />
+                        <ModalContent
+                            mode={
+                                isCreateMode
+                                    ? 'create'
+                                    : isEditMode
+                                      ? 'edit'
+                                      : 'view'
+                            }
+                            title={
+                                isViewMode
+                                    ? selectedChallenge?.title
+                                    : formData.title
+                            }
+                            content={
+                                isViewMode
+                                    ? selectedChallenge?.content
+                                    : formData.content
+                            }
+                            onChange={setFormData}
+                            formData={formData}
+                        />
+                        <ModalFooter
+                            mode={
+                                isCreateMode
+                                    ? 'create'
+                                    : isEditMode
+                                      ? 'edit'
+                                      : 'view'
+                            }
+                            userImg={
+                                isViewMode
+                                    ? selectedChallenge?.userImg
+                                    : 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
+                            }
+                            nickname={
+                                isViewMode ? selectedChallenge?.nickname : ''
+                            }
+                            isMyPost={isMyPost}
+                            onSubmit={handleSubmit}
+                            onClose={handleClose}
+                            challengeId={selectedChallenge?.id}
+                        />
+                    </div>
                 </div>
-                <ModalHeader
-                    mode={
-                        isCreateMode ? 'create' : isEditMode ? 'edit' : 'view'
-                    }
-                    category={
-                        isViewMode
-                            ? selectedChallenge?.category
-                            : formData.category
-                    }
-                    duration={
-                        isViewMode
-                            ? selectedChallenge?.duration
-                            : formData.duration
-                    }
-                    isMyPost={isMyPost}
-                    onChange={setFormData}
-                    formData={formData}
-                    onDelete={() => handleDelete(selectedChallenge.id)}
-                    onUpdate={handleUpdate}
-                />
-                <ModalContent
-                    mode={
-                        isCreateMode ? 'create' : isEditMode ? 'edit' : 'view'
-                    }
-                    title={
-                        isViewMode ? selectedChallenge?.title : formData.title
-                    }
-                    content={
-                        isViewMode
-                            ? selectedChallenge?.content
-                            : formData.content
-                    }
-                    onChange={setFormData}
-                    formData={formData}
-                />
-                <ModalFooter
-                    mode={
-                        isCreateMode ? 'create' : isEditMode ? 'edit' : 'view'
-                    }
-                    userImg={
-                        isViewMode
-                            ? selectedChallenge?.userImg
-                            : 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
-                    }
-                    nickname={isViewMode ? selectedChallenge?.nickname : ''}
-                    isMyPost={isMyPost}
-                    onSubmit={handleSubmit}
-                    onClose={handleClose}
-                    challengeId={selectedChallenge?.id}
-                />
-            </div>
-        </div>
+            )}
+        </>
     );
 };
 
