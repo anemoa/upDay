@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useModal from '../../common/hooks/useModal';
 import { joinChallenge } from '../../store/features/challengeSlice';
-import LoginRequiredModal from '../../common/components/LoginRequiredModal';
 import { useNavigate } from 'react-router-dom';
+import ModalForLogin from '../../common/ModalForLogin';
 
 const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, challengeId }) => {
 
@@ -56,7 +56,7 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
                     </button>
                 )}
             </div>
-			<LoginRequiredModal isOpen={isModalOpen} onClose={closeModal} stopPropagation={true} onNavigate={handleNavigateToLogin} />
+			<ModalForLogin isOpen={isModalOpen} onClose={closeModal} stopPropagation={true} onNavigate={handleNavigateToLogin} />
         </div>
     );
 };
