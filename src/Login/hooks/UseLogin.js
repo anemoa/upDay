@@ -7,7 +7,7 @@ import { userData } from '../../data/userData';
 const useLogin = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation(); 
+    const location = useLocation();
 
     const defaultEmail = 'test01@naver.com';
     const defaultPassword = 'test123^';
