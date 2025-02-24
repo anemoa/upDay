@@ -25,7 +25,9 @@ const UserProfile = () => {
             if (usersData) {
                 try {
                     const users = JSON.parse(usersData);
-                    const foundUser = users.find(user => user.email === loggedInUserEmail);
+                    const foundUser = users.find(
+                        (user) => user.email === loggedInUserEmail
+                    );
 
                     if (foundUser) {
                         setLoggedInUser(foundUser);
@@ -47,7 +49,6 @@ const UserProfile = () => {
         return null;
     }
 
-
     return (
         <div className='flex flex-col gap-2'>
             <h1 className='text-xl md:text-2xl font-semibold'>내 프로필</h1>
@@ -63,12 +64,16 @@ const UserProfile = () => {
                         ) : (
                             <img
                                 alt='기본 프로필 이미지'
-                                src={defaultImages[Math.floor(Math.random() * defaultImages.length)]}
+                                src={
+                                    defaultImages[
+                                        Math.floor(
+                                            Math.random() * defaultImages.length
+                                        )
+                                    ]
+                                }
                                 className='w-full h-full object-cover rounded-full ring-2 ring-neutral-300 overflow-hidden'
                             />
                         )}
-
-
                     </div>
                     <div className='flex flex-col h-[200px] justify-evenly'>
                         <div className='flex flex-col gap-2'>

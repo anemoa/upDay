@@ -11,21 +11,24 @@ const btnList = [
     { title: '습관', color: '#ffdee7' },
 ];
 
-const ChallengeListSearchSection = ({ setSelectedCategory, setSearchResults }) => {
+const ChallengeListSearchSection = ({
+    setSelectedCategory,
+    setSearchResults,
+}) => {
     const navigate = useNavigate();
-	const {category} = useParams();
-	
-	// 초기 상태를 url 파라미터 값으로 설정
+    const { category } = useParams();
+
+    // 초기 상태를 url 파라미터 값으로 설정
     const [activeCategory, setActiveCategory] = useState(category || '전체');
     const [searchTerm, setSearchTerm] = useState('');
 
-	// url에서 카테고리가 변경될 때마다 상태 업데이트  
-	useEffect(() => {
-		if(category){
-			setActiveCategory(category);
-			setSelectedCategory(category);
-		}
-	}, [category, setSelectedCategory])
+    // url에서 카테고리가 변경될 때마다 상태 업데이트
+    useEffect(() => {
+        if (category) {
+            setActiveCategory(category);
+            setSelectedCategory(category);
+        }
+    }, [category, setSelectedCategory]);
 
     const handleCategoryClick = (category) => {
         setActiveCategory(category);
