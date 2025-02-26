@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEmail, setPassword } from '../../store/features/UserSlice';
+import { setEmail, setPassword } from '../../store/features/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 const useSignup = () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNickname, setProfileImage } from '../../store/features/UserSlice';
+import { setNickname, setProfileImage } from '../../store/features/userSlice';
 import { useNavigate } from 'react-router-dom';
 import img1 from '../img/1.svg';
 import img2 from '../img/2.svg';
