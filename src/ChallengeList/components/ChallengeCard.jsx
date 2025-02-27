@@ -6,24 +6,15 @@ import {
     setSelectedChallenge,
 } from '../../store/features/challengeSlice';
 import { CATEGORY_IMAGES } from '../../data/userChallengeData';
-import LoginRequiredModal from '../../common/components/LoginRequiredModal';
-import useModal from '../../common/hooks/useModal';
+import useLoginModal from '../../common/hooks/useLoginModal';
+
 
 const ChallengeCard = ({ cardData }) => {
     // cardData 구조분해할당
-    const {
-        id,
-        category,
-        duration,
-        title,
-        content,
-        userImg,
-        nickname,
-        authorId,
-        clgJoin,
-    } = cardData;
+    const { id, category, duration, title, content, userImg, nickname, authorId, clgJoin } = cardData;
 
-    const { isModalOpen, openModal, closeModal } = useModal();
+	// 로그인 모달 커스텀 훅 사용
+	const {openLoginModal, renderLoginModal} = useLoginModal();
 
     // 라우터 이동을 위한 navigate 함수
     const navigate = useNavigate();
@@ -53,17 +44,13 @@ const ChallengeCard = ({ cardData }) => {
         e.preventDefault(); // 기본 동작 방지
 
         if (!loggedInUser) {
-            openModal();
+            openLoginModal(); // 로그인 된 상태 아니면 모달 열기
         } else {
             dispatch(joinChallenge({ id }));
         }
     };
 
-    // 모달창 닫고 로그인 페이지로 이동하는 로직
-    const handleNavigateToLogin = () => {
-        closeModal();
-        navigate('/login');
-    };
+
 
     // 카드 클릭시 모달을 띄우는 이벤트 핸들러
     const handleCardClick = () => {
@@ -156,16 +143,6 @@ const ChallengeCard = ({ cardData }) => {
                 </div>
 
                 {/* 버튼 */}
-                {/* {canJoin && (
-                    <button
-                        type='button'
-                        className='btn btn-primary w-[40%] max-md:text-xs'
-                        onClick={handleJoin}
-                        disabled={clgJoin}
-                    >
-                        {clgJoin ? '참여중' : '참여하기'}
-                    </button>
-                )} */}
                 {isLoggedIn && (
                     <button
                         type="button"
@@ -175,12 +152,7 @@ const ChallengeCard = ({ cardData }) => {
                         {isAuthor || clgJoin ? '참여중' : '참여하기'}
                     </button>
                 )}
-                <LoginRequiredModal
-                    isOpen={isModalOpen}
-                    onClose={closeModal}
-                    onNavigate={handleNavigateToLogin}
-                    stopPropagation={true}
-                />
+				{renderLoginModal()}
             </div>
         </div>
     );
