@@ -4,21 +4,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import {
-    addChallenge,
-    deleteChallenge,
-    updateChallenge,
-} from '../store/features/challengeSlice';
+import {addChallenge, deleteChallenge, updateChallenge } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
-import useModal from '../common/hooks/useModal';
-import LoginRequiredModal from '../common/components/LoginRequiredModal';
+import useLoginModal from '../common/hooks/useLoginModal';
 
 const PostDetailModal = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    // useModal 훅
-    const { isModalOpen, openModal, closeModal } = useModal();
+	// 로그인 모달 커스텀 훅
+	const {openLoginModal, renderLoginModal} = useLoginModal();
 
     // 현재 모드 확인
     const isCreateMode = pathname.endsWith('/create');
@@ -34,20 +29,14 @@ const PostDetailModal = () => {
 	// 로그인하지 않은 상태로 글 작성 시도할 경우 로그인 모달 표시하는 함수
     const checkLoginStatus = React.useCallback(() => {
         if (isCreateMode && !loggedInUser) {
-            openModal();
+            openLoginModal();
         }
-    }, [isCreateMode, loggedInUser, openModal]);
+    }, [isCreateMode, loggedInUser, openLoginModal]);
 
 	// 글 작성 시도 시 로그인 상태 확인
     useEffect(() => {
         checkLoginStatus();
     }, [checkLoginStatus]);
-
-    // 로그인 페이지로 이동하는 핸들러
-    const handleNavigateToLogin = () => {
-        closeModal();
-        navigate('/login');
-    };
 
     // 챌린지 생성 & 수정 모드일 때 사용할 상태
     const [formData, setFormData] = useState({
@@ -108,8 +97,7 @@ const PostDetailModal = () => {
 
             // 3. 합쳐진 챌린지들 중에서 가장 큰 id 값 찾은 후에 + 1 하기
             const maxId =
-                Math.max(...allChallenges.map((challenge) => challenge.id), 0) +
-                1;
+                Math.max(...allChallenges.map((challenge) => challenge.id), 0) + 1;
 
             // users 정보 다 가져오기
             const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -175,14 +163,7 @@ const PostDetailModal = () => {
     return (
         <>
             {isCreateMode && !loggedInUser ? (
-                <LoginRequiredModal
-                    isOpen={isModalOpen}
-                    onClose={() => {
-                        closeModal();
-                        navigate('/challengelist');
-                    }}
-                    onNavigate={handleNavigateToLogin}
-                />
+                renderLoginModal()
             ) : (
                 <div
                     className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]'
@@ -234,23 +215,9 @@ const PostDetailModal = () => {
                             />
                         </div>
                         <ModalHeader
-                            mode={
-                                isCreateMode
-                                    ? 'create'
-                                    : isEditMode
-                                      ? 'edit'
-                                      : 'view'
-                            }
-                            category={
-                                isViewMode
-                                    ? selectedChallenge?.category
-                                    : formData.category
-                            }
-                            duration={
-                                isViewMode
-                                    ? selectedChallenge?.duration
-                                    : formData.duration
-                            }
+                            mode={ isCreateMode ? 'create' : isEditMode ? 'edit' : 'view' }
+                            category={ isViewMode ? selectedChallenge?.category : formData.category }
+                            duration={ isViewMode ? selectedChallenge?.duration : formData.duration }
                             isMyPost={isMyPost}
                             onChange={setFormData}
                             formData={formData}
@@ -258,18 +225,8 @@ const PostDetailModal = () => {
                             onUpdate={handleUpdate}
                         />
                         <ModalContent
-                            mode={
-                                isCreateMode
-                                    ? 'create'
-                                    : isEditMode
-                                      ? 'edit'
-                                      : 'view'
-                            }
-                            title={
-                                isViewMode
-                                    ? selectedChallenge?.title
-                                    : formData.title
-                            }
+                            mode={ isCreateMode ? 'create' : isEditMode ? 'edit' : 'view' }
+                            title={ isViewMode ? selectedChallenge?.title : formData.title }
                             content={
                                 isViewMode
                                     ? selectedChallenge?.content
@@ -280,20 +237,11 @@ const PostDetailModal = () => {
                         />
                         <ModalFooter
                             mode={
-                                isCreateMode
-                                    ? 'create'
-                                    : isEditMode
-                                      ? 'edit'
-                                      : 'view'
-                            }
-                            userImg={
-                                isViewMode
-                                    ? selectedChallenge?.userImg
+                                isCreateMode ? 'create' : isEditMode ? 'edit' : 'view' }
+                            userImg={ isViewMode ? selectedChallenge?.userImg
                                     : 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
                             }
-                            nickname={
-                                isViewMode ? selectedChallenge?.nickname : ''
-                            }
+                            nickname={ isViewMode ? selectedChallenge?.nickname : '' }
                             isMyPost={isMyPost}
                             onSubmit={handleSubmit}
                             onClose={handleClose}

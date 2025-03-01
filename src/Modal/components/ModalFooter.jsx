@@ -1,25 +1,19 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useModal from '../../common/hooks/useModal';
 import { joinChallenge } from '../../store/features/challengeSlice';
 import { useNavigate } from 'react-router-dom';
-import ModalForLogin from '../../common/ModalForLogin';
+import useLoginModal from '../../common/hooks/useLoginModal';
 
 const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, challengeId }) => {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const loggedInUser = localStorage.getItem('loggedInUser');
-	const {isModalOpen, openModal, closeModal} = useModal();
+	const {openLoginModal, renderLoginModal} = useLoginModal();
 	const selectedChallenge = useSelector(state => state.challenge.selectedChallenge);
 
-	const handleNavigateToLogin = () => {
-        navigate('/login'); // 로그인 페이지로 리디렉션
-        onClose(); // 모달 닫기
-    };
-
 	const handleJoin = () => {
-		!loggedInUser ? openModal() : dispatch(joinChallenge({ id: challengeId }));
+		!loggedInUser ? openLoginModal() : dispatch(joinChallenge({ id: challengeId }));
 	}
 
 	const handleShare = ()=> {
@@ -56,7 +50,7 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
                     </button>
                 )}
             </div>
-			<ModalForLogin isOpen={isModalOpen} onClose={closeModal} stopPropagation={true} onNavigate={handleNavigateToLogin} />
+			{renderLoginModal()}
         </div>
     );
 };
