@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import ModalForLogin from '../../common/ModalForLogin';
 import useLoginModal from '../../common/hooks/useLoginModal';
 
 const SearchBar = () => {
