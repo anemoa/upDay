@@ -28,20 +28,20 @@ export const userChallengeList = [
         joinDate: '',
 		participants: [
             {
-                userId: 'healthylife@kakao.com',
+                authorId: 'healthylife@kakao.com',
                 nickname: '짐브로',
                 userImg: 'https://img.freepik.com/...',
                 joinDate: '2024-11-20T12:00:00',
                 status: 'doing',
             },
             {
-                userId: 'user123@gmail.com',
+                authorId: 'user123@gmail.com',
                 nickname: '건강챙김이',
                 userImg: 'https://example.com/profile.jpg',
                 joinDate: '2024-11-21T15:30:00',
                 status: 'doing',
             },{
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg:  'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-02-23T15:30:00',
@@ -66,13 +66,13 @@ export const userChallengeList = [
         joinDate: '2024-11-30T12:00:00',
 		participants: [
             {
-                userId: 'beawriter@gmail.com',
+                authorId: 'beawriter@gmail.com',
                 nickname: '작가지망생',
                 userImg: 'https://img.freepik.com/free-photo/census-information-town-composition_23-2148993118.jpg?t=st=1739202716~exp=1739206316~hmac=f796e92f98204fa64a14de7ec608484cc1ae0cf65ff3b080e3017758c7e39f65&w=900',
                 joinDate: '2025-01-20T12:00:00',
                 status: 'done',
             },{
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg:  'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-02-20T15:30:00',
@@ -95,13 +95,13 @@ export const userChallengeList = [
         postClicked: 75,
         participants: [
             {
-                userId: 'noyasik@kakao.com',
+                authorId: 'noyasik@kakao.com',
                 nickname: '야식러버',
             	userImg: 'https://img.freepik.com/free-photo/front-view-smiley-man-with-sunglasses-city_23-2148682678.jpg?t=st=1739201514~exp=1739205114~hmac=c2197d8edea9268127367aca4c34215ba5dc718ca21124b0f949c798298498fb&w=1480',
                 joinDate: '2025-01-20T12:00:00',
                 status: 'done',
             },{
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg:  'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-02-20T15:33:00',
@@ -125,13 +125,13 @@ export const userChallengeList = [
         postClicked: 158,
         participants: [
             {
-                userId: 'veggie123@kakao.com',
+                authorId: 'veggie123@kakao.com',
                 nickname: '건강집착러',
 				userImg: 'https://img.freepik.com/free-photo/middle-age-woman-smiling-having-good-time_23-2149218572.jpg?t=st=1739204125~exp=1739207725~hmac=9a4224bbd83418f763da7cf1740f4ef8fe63518e5bac3c6b43256fa2cb7c9e9b&w=1480',
 				joinDate: '2025-01-22T12:00:00',
                 status: 'done',
             },{
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-02-20T15:33:00',
@@ -155,13 +155,13 @@ export const userChallengeList = [
         postClicked: 194,
 		participants: [
             {
-                userId: 'peacefulm2nd@gmail.com',
+                authorId: 'peacefulm2nd@gmail.com',
                 nickname: '부지런2',
 				userImg: 'https://img.freepik.com/free-photo/man-posing-indoors-black-white-medium-shot_23-2149652002.jpg?t=st=1739201595~exp=1739205195~hmac=1ca3c994cf289903e8e5f4e17d404dbf649a66c2a6f14a1c194933b0044b9e97&w=900',
 				joinDate: '2025-02-05T15:33:00',
                 status: 'done',
             },{
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-02-20T15:33:00',
@@ -184,13 +184,13 @@ export const userChallengeList = [
         postClicked: 140,
         participants: [
             {
-                userId: 'ecoclass@gmail.com',
+                authorId: 'ecoclass@gmail.com',
                 nickname: '이코노미',
 				userImg: 'https://img.freepik.com/free-photo/man-posing-indoors-black-white-medium-shot_23-2149652002.jpg?t=st=1739201595~exp=1739205195~hmac=1ca3c994cf289903e8e5f4e17d404dbf649a66c2a6f14a1c194933b0044b9e97&w=900',
 				joinDate: '2025-02-06T15:33:00',
                 status: 'done',
             },{
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-02-28T15:33:00',
@@ -213,7 +213,7 @@ export const userChallengeList = [
         postClicked: 205,
         participants: [
             {
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-01-28T15:33:00',
@@ -236,7 +236,7 @@ export const userChallengeList = [
         postClicked: 252,
         participants: [
             {
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-01-24T14:33:00',
@@ -259,7 +259,7 @@ export const userChallengeList = [
         postClicked: 208,
         participants: [
             {
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-01-23T11:33:00',
@@ -282,7 +282,7 @@ export const userChallengeList = [
         postClicked: 411,
 		participants: [
             {
-				userId: 'test01@naver.com',
+				authorId: 'test01@naver.com',
                 nickname: '데이메이커',
                 userImg: 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900',
                 joinDate: '2025-01-29T18:33:00',

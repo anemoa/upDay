@@ -119,18 +119,33 @@ const challengeSlice = createSlice({
 
         // 챌린지 참여 액션
         joinChallenge: (state, action) => {
-            const {id} = action.payload;
+            const {id, authorId, nickname, userImg} = action.payload;
 			const joinDate = new Date().toISOString().split('T')[0] // 현재 날짜
 
             // redux 스토어의 list 업데이트
             state.list = state.list.map((challenge) => {
                 if (challenge.id === id) {
-                    return {
-                        ...challenge,
-                        clgJoin: true,
-                        // clgDoing: true,
-						joinDate: joinDate
-                    };
+					// participants 배열이 없으면 생성하기
+                    const participants = challenge.participants || [];
+					
+					// 이미 참여중인지 확인하기
+					const isAlreadyJoined = participants.some(p => p.authorId === authorId)
+
+					if(!isAlreadyJoined){
+						// 새 참여자 추가
+						return {
+							...challenge,
+							participants: [
+								...participants, {
+									authorId,
+									nickname,
+									userImg,
+									joinDate,
+									status: 'doing'
+								}
+							]
+						};
+					}
                 }
                 return challenge;
             });
