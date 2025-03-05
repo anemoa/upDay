@@ -122,40 +122,41 @@ const challengeSlice = createSlice({
             const {id, authorId, nickname, userImg} = action.payload;
 			const joinDate = new Date().toISOString().split('T')[0] // 현재 날짜
 
-            // redux 스토어의 list 업데이트
-            state.list = state.list.map((challenge) => {
-                if (challenge.id === id) {
-					// participants 배열이 없으면 생성하기
-                    const participants = challenge.participants || [];
-					
-					// 이미 참여중인지 확인하기
-					const isAlreadyJoined = participants.some(p => p.authorId === authorId)
 
-					if(!isAlreadyJoined){
-						// 새 참여자 추가
-						return {
-							...challenge,
-							participants: [
-								...participants, {
-									authorId,
-									nickname,
-									userImg,
-									joinDate,
-									status: 'doing'
-								}
-							]
-						};
-					}
-                }
-                return challenge;
-            });
+			const addParticipantToChallenge = (challenge) => {
+				if(challenge.id !== id) return challenge;
+
+				// participants 배열이 없으면 생성하기
+				const participants = challenge.participants || [];
+
+				// 이미 참여중인지 확인하기
+				const isAlreadyJoined = participants.some(p => p.authorId === authorId);
+
+				if(!isAlreadyJoined){
+					// 새 참여자 추가
+					return {
+						...challenge,
+						participants: [
+							...participants, {
+								authorId,
+								nickname,
+								userImg,
+								joinDate,
+								status: 'doing'
+							}
+						]
+					};
+				}
+				return challenge;
+			}
+
+
+            // redux 스토어의 list 업데이트
+            state.list = state.list.map(addParticipantToChallenge);
 
 			// selectedChallenge도 업데이트
 			if (state.selectedChallenge && state.selectedChallenge.id === id) {
-				state.selectedChallenge = {
-					...state.selectedChallenge,
-					clgJoin: true
-				};
+				state.selectedChallenge = addParticipantToChallenge(state.selectedChallenge)
 			}
 
             // 로컬 스토리지 업데이트
