@@ -1,22 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
 
-// 초기 챌린지 리스트 가져오기 (없으면 기본값 저장)
-const getInitialList = () => {
-    const savedChallenges = localStorage.getItem('clglist');
-
-    if (!savedChallenges) {
-        localStorage.setItem('clglist', JSON.stringify(userChallengeList));
-        return userChallengeList;
-    }
-
-    return JSON.parse(savedChallenges); // localStorage 데이터만 사용
-};
-
 // 초기 참여한 챌린지 가져오기
-const getInitialJoinedChallenges = () =>
-    getChallenges().filter((challenge) => challenge.clgJoin);
+const getInitialJoinedChallenges = () => {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    return getChallenges().filter(
+        (challenge) =>
+            challenge.participants &&
+            challenge.participants.some((p) => p.authorId === loggedInUser)
+    );
+};
 
 // 챌린지 데이터를 localStorage에 저장
 const saveChallengesToLocalStorage = (challenges) =>
@@ -26,68 +19,71 @@ const userChallengeSlice = createSlice({
     name: 'myClgList',
     initialState: {
         myPosts: [], // 테스트계정이 작성한 챌린지 목록
-        joinedChallenges: getInitialJoinedChallenges().filter(
-            (challenge) => challenge.clgJoin
-        ),
+        joinedChallenges: getInitialJoinedChallenges(),
         selectedChallenge: null, // 현재 선택된 챌린지
-        list: getInitialList(), // 초기 데이터,
     },
     reducers: {
         // 작성한 챌린지 가져오는 액션
-        setMyPosts: (state, action) => {
+        setMyPosts: (state) => {
             const loggedInUser = localStorage.getItem('loggedInUser');
             const currentChallenges = getChallenges();
 
             state.myPosts = currentChallenges.filter(
                 (post) => post.authorId === loggedInUser
             );
-
-            saveChallengesToLocalStorage(currentChallenges);
         },
 
         // 참여한 챌린지 가져오는 액션
         getMyJoinedChallenge: (state) => {
+            const loggedInUser = localStorage.getItem('loggedInUser');
             const currentChallenges = getChallenges();
-            state.joinedChallenges = currentChallenges.filter(
-                (challenge) => challenge.clgJoin
-            );
 
-            saveChallengesToLocalStorage(currentChallenges);
+            state.joinedChallenges = currentChallenges.filter(
+                (challenge) => challenge.participants && challenge.participants.some((p) => p.authorId === loggedInUser)
+            );
         },
 
         // 참여한 챌린지 상태 변경 및 저장하는 액션
         toggleClgState: (state, action) => {
             const { id, type } = action.payload;
+			const loggedInUser = localStorage.getItem('loggedInUser');
             const currentChallenges = getChallenges();
 
-            const updatedChallenges = currentChallenges.map((challenge) => {
-                if (challenge.id === id) {
-                    if (type === 'doing') {
-                        return {
-                            ...challenge,
-                            clgDoing: !challenge.clgDoing,
-                            clgDone: challenge.clgDoing ? true : false,
-                        };
-                    } else if (type === 'done') {
-                        return {
-                            ...challenge,
-                            clgDone: !challenge.clgDone,
-                            clgDoing: false,
-                        };
-                    }
-                }
-                return challenge;
-            });
+			// 도우미 함수: 참여자 상태 변경
+            const updatedParticipantStatus = (challenge) => {
+				if(challenge.id !== id || !challenge.participants) return challenge;
 
-            saveChallengesToLocalStorage(updatedChallenges);
+				//참여자 배열 업데이트
+				const updatedParticipants = challenge.participants.map(participant => {
+					if(participant.authorId ===  loggedInUser){
+						// 상태에 따라 참여자 상태 업데이트
+						if(type === 'doing'){
+							return{
+								...participant,
+								status: participant.status === 'doing' ? 'done' : 'doing'
+							}
+						} else if(type === 'done'){
+							return{
+								...participant,
+								status: participant.status === 'done' ? 'doing' : 'done'
+							};
+						}
+					}
+					return participant;
+				});
 
-            state.list = updatedChallenges;
-            state.myPosts = updatedChallenges.filter(
-                (post) => post.authorId === localStorage.getItem('loggedInUser')
-            );
-            state.joinedChallenges = updatedChallenges.filter(
-                (challenge) => challenge.clgJoin
-            );
+				return{
+					...challenge,
+					participant: updatedParticipants
+				}
+
+			}
+
+			// 챌린지 목록 업데이트
+			const updatedChallenges = currentChallenges.map(updatedParticipantStatus);
+			saveChallengesToLocalStorage(updatedChallenges);
+
+			
         },
 
         // 선택된 챌린지 정보를 저장하는 액션
