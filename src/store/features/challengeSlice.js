@@ -161,23 +161,10 @@ const challengeSlice = createSlice({
 
             // 로컬 스토리지 업데이트
 			const currentChallenges = getChallenges();
-            const updatedChallenge = currentChallenges.map((challenge) => {
-                if (challenge.id === id) {
-                    return {
-                        ...challenge,
-                        clgJoin: true,
-                        // clgDoing: true,
-						joinDate: joinDate
-                    };
-                }
-                return challenge;
-            });
-            localStorage.setItem(
-                'clglist',
-                JSON.stringify(updatedChallenge)
-            );
-        },
-    },
+            const updatedChallenges = currentChallenges.map(addParticipantToChallenge);
+            localStorage.setItem( 'clglist',JSON.stringify(updatedChallenges) );
+        }
+    }
 });
 
 export const {
