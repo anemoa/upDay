@@ -81,7 +81,17 @@ const userChallengeSlice = createSlice({
 
 			// 챌린지 목록 업데이트
 			const updatedChallenges = currentChallenges.map(updatedParticipantStatus);
-			saveChallengesToLocalStorage(updatedChallenges);
+            saveChallengesToLocalStorage(updatedChallenges);
+
+			state.list = updatedChallenges;
+            state.myPosts = updatedChallenges.filter(
+                (post) => post.authorId === loggedInUser
+            );
+            state.joinedChallenges = updatedChallenges.filter(
+                (challenge) => 
+                    challenge.participants && 
+                    challenge.participants.some(p => p.authorId === loggedInUser)
+            );
 
 			
         },
