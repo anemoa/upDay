@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
+import axios from 'axios';
 
 // const getInitialList = () => {
 //     // 로컬 스토리지에서 챌린지 가져오기
@@ -44,8 +45,8 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
 	'challenge/fetchChallenges',
 	async (_, { rejectWithValue }) => {
 	  try {
-		const supabaseUrl = 'https://mryvklwuokgolewanijs.supabase.co';
-		const supabaseKey = '여기에_anon_key를_넣으세요';
+		const supabaseUrl = process.env.REACT_APP_SUPBASE_URL;
+		const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 		
 		const response = await axios.get(`${supabaseUrl}/rest/v1/challenges?select=*`, {
 		  headers: {
