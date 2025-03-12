@@ -42,34 +42,35 @@ import axios from 'axios';
 
 // Supabase에서 챌린지 가져오는 비동기 액션 생성
 export const fetchChallengesFromSupabase = createAsyncThunk(
-	'challenge/fetchChallenges',
-	async (_, { rejectWithValue }) => {
-	  try {
-		const supabaseUrl = process.env.REACT_APP_SUPBASE_URL;
-		const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-		
-		const response = await axios.get(`${supabaseUrl}/rest/v1/challenges?select=*`, {
-		  headers: {
-			'apikey': supabaseKey,
-			'Authorization': `Bearer ${supabaseKey}`
-		  }
-		});
-		
-		return response.data;
-	  } catch (error) {
-		return rejectWithValue(error.message);
-	  }
-	}
-  );
-  
+    'challenge/fetchChallenges',
+    async (_, { rejectWithValue }) => {
+        try {
+            const supabaseUrl = process.env.REACT_APP_SUPBASE_URL;
+            const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
+            const response = await axios.get(
+                `${supabaseUrl}/rest/v1/challenges?select=*`,
+                {
+                    headers: {
+                        apikey: supabaseKey,
+                        Authorization: `Bearer ${supabaseKey}`,
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 const challengeSlice = createSlice({
     name: 'challenge',
     initialState: {
         list: [],
-		loading: false,
-		error: null,
+        loading: false,
+        error: null,
         selectedChallenge: null,
     },
     reducers: {
@@ -85,10 +86,7 @@ const challengeSlice = createSlice({
             // 로컬 스토리지에 저장
             const currentChallenges = getChallenges();
             const updatedChallenges = [...currentChallenges, action.payload];
-            localStorage.setItem(
-                'clglist',
-                JSON.stringify(updatedChallenges)
-            );
+            localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
         },
 
         // 변경된 챌린지 정보를 처리하는 액션
@@ -107,16 +105,13 @@ const challengeSlice = createSlice({
             state.selectedChallenge = updatedChallenge;
 
             // 로컬 스토리지 상태 업데이트
-			const currentChallenges = getChallenges();
+            const currentChallenges = getChallenges();
             const updatedChallenges = currentChallenges.map((challenge) =>
                 challenge.id === updatedChallenge.id
                     ? updatedChallenge
                     : challenge
             );
-            localStorage.setItem(
-                'clglist',
-                JSON.stringify(updatedChallenges)
-            );
+            localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
         },
 
         // 챌린지 삭제하는 액션
@@ -133,64 +128,90 @@ const challengeSlice = createSlice({
             }
 
             // 로컬 스토리지 업데이트 하기
-			const currentChallenges = getChallenges();
+            const currentChallenges = getChallenges();
             const updatedChallenges = currentChallenges.filter(
                 (challenge) => challenge.id !== action.payload
             );
-            localStorage.setItem(
-                'clglist',
-                JSON.stringify(updatedChallenges)
-            );
+            localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
         },
 
         // 챌린지 참여 액션
         joinChallenge: (state, action) => {
-            const {id, authorId, nickname, userImg} = action.payload;
-			const joinDate = new Date().toISOString().split('T')[0] // 현재 날짜
+            const { id, authorId, nickname, userImg } = action.payload;
+            const joinDate = new Date().toISOString().split('T')[0]; // 현재 날짜
 
+            const addParticipantToChallenge = (challenge) => {
+                if (challenge.id !== id) return challenge;
 
-			const addParticipantToChallenge = (challenge) => {
-				if(challenge.id !== id) return challenge;
+                // participants 배열이 없으면 생성하기
+                const participants = challenge.participants || [];
 
-				// participants 배열이 없으면 생성하기
-				const participants = challenge.participants || [];
+                // 이미 참여중인지 확인하기
+                const isAlreadyJoined = participants.some(
+                    (p) => p.authorId === authorId
+                );
 
-				// 이미 참여중인지 확인하기
-				const isAlreadyJoined = participants.some(p => p.authorId === authorId);
-
-				if(!isAlreadyJoined){
-					// 새 참여자 추가
-					return {
-						...challenge,
-						participants: [
-							...participants, {
-								authorId,
-								nickname,
-								userImg,
-								joinDate,
-								status: 'doing'
-							}
-						]
-					};
-				}
-				return challenge;
-			}
-
+                if (!isAlreadyJoined) {
+                    // 새 참여자 추가
+                    return {
+                        ...challenge,
+                        participants: [
+                            ...participants,
+                            {
+                                authorId,
+                                nickname,
+                                userImg,
+                                joinDate,
+                                status: 'doing',
+                            },
+                        ],
+                    };
+                }
+                return challenge;
+            };
 
             // redux 스토어의 list 업데이트
             state.list = state.list.map(addParticipantToChallenge);
 
-			// selectedChallenge도 업데이트
-			if (state.selectedChallenge && state.selectedChallenge.id === id) {
-				state.selectedChallenge = addParticipantToChallenge(state.selectedChallenge)
-			}
+            // selectedChallenge도 업데이트
+            if (state.selectedChallenge && state.selectedChallenge.id === id) {
+                state.selectedChallenge = addParticipantToChallenge(
+                    state.selectedChallenge
+                );
+            }
 
             // 로컬 스토리지 업데이트
-			const currentChallenges = getChallenges();
-            const updatedChallenges = currentChallenges.map(addParticipantToChallenge);
-            localStorage.setItem( 'clglist',JSON.stringify(updatedChallenges) );
-        }
-    }
+            const currentChallenges = getChallenges();
+            const updatedChallenges = currentChallenges.map(
+                addParticipantToChallenge
+            );
+            localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
+        },
+        extraReducers: (builder) => {
+            builder
+                // 데이터 로딩 중일 때
+                .addCase(fetchChallengesFromSupabase.pending, (state) => {
+                    state.loading = true; // 로딩 중 표시
+                    state.error = null; // 이전 에러 초기화
+                })
+                // 데이터 로딩 성공했을 때
+                .addCase(
+                    fetchChallengesFromSupabase.fulfilled,
+                    (state, action) => {
+                        state.loading = false; // 로딩 끝
+                        state.list = action.payload; // 받아온 데이터 저장
+                    }
+                )
+                // 데이터 로딩 실패했을 때
+                .addCase(
+                    fetchChallengesFromSupabase.rejected,
+                    (state, action) => {
+                        state.loading = false; // 로딩 끝
+                        state.error = action.payload; // 에러 메시지 저장
+                    }
+                );
+        },
+    },
 });
 
 export const {
