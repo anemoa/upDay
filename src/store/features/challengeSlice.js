@@ -45,8 +45,8 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
-            const supabaseUrl = process.env.REACT_APP_SUPBASE_URL;
-            const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+			const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+			const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
             const response = await axios.get(
                 `${supabaseUrl}/rest/v1/challenges?select=*`,
@@ -60,7 +60,10 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
 
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+			// console.error('API Error:', error); // 에러 상세 정보 확인
+            // return rejectWithValue(error.message);
+			console.error('API Error Details:', error.response || error);
+      		return rejectWithValue(error.message || 'Unknown error');
         }
     }
 );

@@ -11,7 +11,7 @@ import useLoginModal from '../../common/hooks/useLoginModal';
 
 const ChallengeCard = ({ cardData }) => {
     // cardData 구조분해할당
-    const { id, category, duration, title, content, userImg, nickname, authorId, clgJoin } = cardData;
+    const { id, category, duration, title, content, user_img, nickname, author_id, post_date, post_clicked } = cardData;
 
 	// 로그인 모달 커스텀 훅 사용
 	const {openLoginModal, renderLoginModal} = useLoginModal();
@@ -36,7 +36,7 @@ const ChallengeCard = ({ cardData }) => {
     // const canJoin = loggedInUser && loggedInUser !== authorId && currentUser;
     // 로그인한 유저인지 확인
     const isLoggedIn = loggedInUser && currentUser;
-    const isAuthor = loggedInUser === authorId;
+    const isAuthor = loggedInUser === author_id;
 
     // 참여하기 버튼 핸들링
     const handleJoin = (e) => {
@@ -132,7 +132,7 @@ const ChallengeCard = ({ cardData }) => {
                 <div className="flex justify-between items-center">
                     <div className="w-8 max-md:w-6 h-8 max-md:h-6 rounded-full overflow-hidden">
                         <img
-                            src={userImg}
+                            src={user_img}
                             alt={`${nickname} 사진`}
                             className="w-full h-full object-cover"
                         />
@@ -149,7 +149,7 @@ const ChallengeCard = ({ cardData }) => {
                         className="btn btn-primary w-[40%] max-md:text-xs"
                         onClick={handleJoin}
                     >
-                        {isAuthor || clgJoin ? '참여중' : '참여하기'}
+                        {isAuthor ? '참여중' : '참여하기'}
                     </button>
                 )}
 				{renderLoginModal()}
