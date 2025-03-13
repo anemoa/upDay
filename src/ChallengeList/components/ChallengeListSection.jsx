@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux';
 import { getChallenges } from '../../utils/localStorage';
 
 const ChallengeListSection = ({ selectedCategory, searchResults }) => {
-    //
     const [filteredChallenges, setFilteredChallenges] = useState([]);
 
-    // redux store의 기본 상태
-    const challenges = useSelector((state) => state.challenge.list);
+	// redux 상태에서 챌린지 목록과 로딩 상태 가져오기
+	const challenges = useSelector((state) => state.challenge.list);
+	const loading = useSelector((state) => state.challenge.loading);
+	const error = useSelector((state) => state.challenge.error);
 
     useEffect(() => {
         // 날짜 정렬 함수
@@ -19,8 +20,8 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
                 if (!b.postDate) return -1; // 날짜 없는 항목은 뒤로
 
                 // 2. 날짜 객체 생성
-                const dateA = new Date(a.postDate);
-                const dateB = new Date(b.postDate);
+                const dateA = new Date(a.post_date);
+                const dateB = new Date(b.post_date);
 
                 // 3. 날짜 유효성 체크
                 if (isNaN(dateA.getTime())) return 1; // a가 유효하지 않은 날짜면 뒤로
@@ -31,7 +32,6 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
             });
         };
 
-        const storedChallenges = getChallenges();
 
         // 검색 결과가 있으면 검색 결과만 정렬
         if (searchResults) {
@@ -42,13 +42,16 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
         // 아니면 카테고리 필터링 후 정렬
         const filtered =
             selectedCategory === '전체'
-                ? storedChallenges
-                : storedChallenges.filter(
+                ? challenges
+                : challenges.filter(
                       (ch) => ch.category === selectedCategory
                   );
 
         setFilteredChallenges(sortByDate(filtered));
     }, [selectedCategory, challenges, searchResults]);
+
+	if(loading) return <div className="col-span-3 text-center py-10">데이터 가져오는 중</div>
+	if(error) return <div className="col-span-3 text-center py-10 text-red-500">에러 발생: {error}</div>
 
     return (
         <section className='grid grid-cols-3 max-md:grid-cols-2 gap-6 max-md:gap-4'>
