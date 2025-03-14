@@ -13,6 +13,11 @@ const ChallengeCard = ({ cardData }) => {
     // cardData 구조분해할당
     const { id, category, duration, title, content, user_img, nickname, author_id, post_date, post_clicked } = cardData;
 
+	console.log(user_img);
+	console.log(nickname);
+	console.log(duration);
+	
+
 	// 로그인 모달 커스텀 훅 사용
 	const {openLoginModal, renderLoginModal} = useLoginModal();
 

@@ -45,11 +45,11 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
-			const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-			const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+            const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+            const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
             const response = await axios.get(
-                `${supabaseUrl}/rest/v1/challenges?select=*`,
+                `${supabaseUrl}/rest/v1/challenges?select=*,users(nickname,user_img)`,
                 {
                     headers: {
                         apikey: supabaseKey,
@@ -57,13 +57,12 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
                     },
                 }
             );
-
             return response.data;
         } catch (error) {
-			// console.error('API Error:', error); // 에러 상세 정보 확인
+            // console.error('API Error:', error); // 에러 상세 정보 확인
             // return rejectWithValue(error.message);
-			console.error('API Error Details:', error.response || error);
-      		return rejectWithValue(error.message || 'Unknown error');
+            console.error('API Error Details:', error.response || error);
+            return rejectWithValue(error.message || 'Unknown error');
         }
     }
 );
@@ -190,30 +189,25 @@ const challengeSlice = createSlice({
             );
             localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
         },
-        extraReducers: (builder) => {
-            builder
-                // 데이터 로딩 중일 때
-                .addCase(fetchChallengesFromSupabase.pending, (state) => {
-                    state.loading = true; // 로딩 중 표시
-                    state.error = null; // 이전 에러 초기화
-                })
-                // 데이터 로딩 성공했을 때
-                .addCase(
-                    fetchChallengesFromSupabase.fulfilled,
-                    (state, action) => {
-                        state.loading = false; // 로딩 끝
-                        state.list = action.payload; // 받아온 데이터 저장
-                    }
-                )
-                // 데이터 로딩 실패했을 때
-                .addCase(
-                    fetchChallengesFromSupabase.rejected,
-                    (state, action) => {
-                        state.loading = false; // 로딩 끝
-                        state.error = action.payload; // 에러 메시지 저장
-                    }
-                );
-        },
+    },
+    extraReducers: (builder) => {
+        builder
+            // 데이터 로딩 중일 때
+            .addCase(fetchChallengesFromSupabase.pending, (state) => {
+                state.loading = true; // 로딩 중 표시
+                state.error = null; // 이전 에러 초기화
+            })
+            // 데이터 로딩 성공했을 때
+            .addCase(fetchChallengesFromSupabase.fulfilled, (state, action) => {
+                console.log('Reducer fulfilled with:', action.payload);
+                state.loading = false; // 로딩 끝
+                state.list = action.payload; // 받아온 데이터 저장
+            })
+            // 데이터 로딩 실패했을 때
+            .addCase(fetchChallengesFromSupabase.rejected, (state, action) => {
+                state.loading = false; // 로딩 끝
+                state.error = action.payload; // 에러 메시지 저장
+            });
     },
 });
 

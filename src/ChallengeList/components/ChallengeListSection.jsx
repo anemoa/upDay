@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import ChallengeCard from './ChallengeCard';
 import { useSelector } from 'react-redux';
-import { getChallenges } from '../../utils/localStorage';
 
 const ChallengeListSection = ({ selectedCategory, searchResults }) => {
     const [filteredChallenges, setFilteredChallenges] = useState([]);
 
 	// redux 상태에서 챌린지 목록과 로딩 상태 가져오기
-	const challenges = useSelector((state) => state.challenge.list);
+	const challenges = useSelector((state) => {
+		console.log('Redux state:', state);
+		console.log('Challenge list from Redux:', state.challenge.list);
+		return state.challenge.list
+	});
 	const loading = useSelector((state) => state.challenge.loading);
 	const error = useSelector((state) => state.challenge.error);
 
     useEffect(() => {
         // 날짜 정렬 함수
         const sortByDate = (challenges) => {
-            return challenges.sort((a, b) => {
+            return [...challenges].sort((a, b) => {
                 // 1. 날짜 유무 체크
-                if (!a.postDate) return 1; // 날짜 없는 항목은 뒤로
-                if (!b.postDate) return -1; // 날짜 없는 항목은 뒤로
+                if (!a.post_date) return 1; // 날짜 없는 항목은 뒤로
+                if (!b.post_date) return -1; // 날짜 없는 항목은 뒤로
 
                 // 2. 날짜 객체 생성
                 const dateA = new Date(a.post_date);
