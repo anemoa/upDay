@@ -15,6 +15,7 @@ const ChallengeList = () => {
 
 	// 컴폰너트 마운트 시 Supabase에서 챌린지 데이터 가져오기
 	useEffect(() => {
+		console.log('Dispatching fetchChallengesFromSupabase');
 		dispatch(fetchChallengesFromSupabase())
 	}, [dispatch])
 
