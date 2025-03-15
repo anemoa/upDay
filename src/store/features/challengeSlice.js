@@ -3,42 +3,6 @@ import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
 import axios from 'axios';
 
-// const getInitialList = () => {
-//     // 로컬 스토리지에서 챌린지 가져오기
-//     const savedChallenges = localStorage.getItem('clglist');
-
-// 	// 로컬 스토리지에 clglist가 없으면
-// 	if(!savedChallenges){
-// 		// 로컬 스토리지에 clglist 이름으로 기존의 더미데이터를 저장
-// 		localStorage.setItem('clglist', JSON.stringify(userChallengeList));
-// 		return userChallengeList;
-// 	}
-
-// 	// 로컬 스토리지 데이터 파싱
-//     const parsedChallenges = JSON.parse(savedChallenges);
-
-//     // 1. 더미데이터의 상태 업데이트
-//     const updatedList = userChallengeList.map((challenge) => {
-//         const savedChallenge = parsedChallenges.find(
-//             (saved) => saved.id === challenge.id
-//         );
-//         return savedChallenge || challenge;
-//     });
-
-//     // 2. 사용자가 작성한 챌린지 추가
-//     const userWrittenChallenges = parsedChallenges.filter(
-//         (challenge) =>
-//             !userChallengeList.some((data) => data.id === challenge.id)
-//     );
-
-//     // 3. 업데이트 된 더미데이터 + 사용자가 작성한 챌린지
-//     const mergedChallenges =  [...updatedList, ...userWrittenChallenges];
-
-// 	// 병합된 데이터로 로컬 스토리지 업데이트
-// 	localStorage.setItem('clglist', JSON.stringify(mergedChallenges));
-
-// 	return mergedChallenges;
-// };
 
 // Supabase에서 챌린지 가져오는 비동기 액션 생성
 export const fetchChallengesFromSupabase = createAsyncThunk(
@@ -49,7 +13,7 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
             const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
             const response = await axios.get(
-                `${supabaseUrl}/rest/v1/challenges?select=*,users(nickname,user_img)`,
+                `${supabaseUrl}/rest/v1/challenges?select=*,users(*)`,
                 {
                     headers: {
                         apikey: supabaseKey,
@@ -59,8 +23,6 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
             );
             return response.data;
         } catch (error) {
-            // console.error('API Error:', error); // 에러 상세 정보 확인
-            // return rejectWithValue(error.message);
             console.error('API Error Details:', error.response || error);
             return rejectWithValue(error.message || 'Unknown error');
         }
