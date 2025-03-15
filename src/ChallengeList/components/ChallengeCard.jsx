@@ -11,11 +11,10 @@ import useLoginModal from '../../common/hooks/useLoginModal';
 
 const ChallengeCard = ({ cardData }) => {
     // cardData 구조분해할당
-    const { id, category, duration, title, content, user_img, nickname, author_id, post_date, post_clicked } = cardData;
+    const { id, category, duration, title, content, author_id, post_date, post_clicked, users } = cardData;
 
-	console.log(user_img);
-	console.log(nickname);
-	console.log(duration);
+	const nickname = users?.nickname || '작성자';
+	const user_img = users?.user_img || 'https://via.placeholder.com/32';
 	
 
 	// 로그인 모달 커스텀 훅 사용
@@ -32,10 +31,10 @@ const ChallengeCard = ({ cardData }) => {
 
     // 로그인한 유저 정보 가져오기 (users 배열에서)
     const userString = localStorage.getItem('users');
-    const users = userString ? JSON.parse(userString) : [];
+    const localUsers = userString ? JSON.parse(userString) : [];
 
     // 현재 로그인한 유저 정보 찾기
-    const currentUser = users.find((user) => user.email === loggedInUser);
+    const currentUser = localUsers.find((user) => user.email === loggedInUser);
 
     // 내가 작성한 글이 아니고, 로그인한 유저가 있는 경우에만 참여 가능
     // const canJoin = loggedInUser && loggedInUser !== authorId && currentUser;
