@@ -1,13 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { joinChallenge } from '../../store/features/challengeSlice';
-import { useNavigate } from 'react-router-dom';
 import useLoginModal from '../../common/hooks/useLoginModal';
 
 const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, challengeId }) => {
 
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const loggedInUser = localStorage.getItem('loggedInUser');
 	const {openLoginModal, renderLoginModal} = useLoginModal();
 	const selectedChallenge = useSelector(state => state.challenge.selectedChallenge);
