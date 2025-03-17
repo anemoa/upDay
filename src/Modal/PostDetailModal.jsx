@@ -24,6 +24,9 @@ const PostDetailModal = () => {
         (state) => state.challenge.selectedChallenge
     );
 
+	console.log('selectedChallenge', selectedChallenge);
+	
+
     const loggedInUser = localStorage.getItem('loggedInUser');
     
 	// 로그인하지 않은 상태로 글 작성 시도할 경우 로그인 모달 표시하는 함수
@@ -238,10 +241,10 @@ const PostDetailModal = () => {
                         <ModalFooter
                             mode={
                                 isCreateMode ? 'create' : isEditMode ? 'edit' : 'view' }
-                            userImg={ isViewMode ? selectedChallenge?.userImg
+                            userImg={ isViewMode ? selectedChallenge?.users.user_img
                                     : 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
                             }
-                            nickname={ isViewMode ? selectedChallenge?.nickname : '' }
+                            nickname={ isViewMode ? selectedChallenge?.users.nickname : '' }
                             isMyPost={isMyPost}
                             onSubmit={handleSubmit}
                             onClose={handleClose}
