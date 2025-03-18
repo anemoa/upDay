@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
 import axios from 'axios';
+import { supabaseApi } from '../../utils/supabaseApi';
 
 
 // Supabase에서 챌린지 가져오는 비동기 액션 생성
@@ -9,19 +10,7 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
-            const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-            const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-
-            const response = await axios.get(
-                `${supabaseUrl}/rest/v1/challenges?select=*,users(*)`,
-                {
-                    headers: {
-                        apikey: supabaseKey,
-                        Authorization: `Bearer ${supabaseKey}`,
-                    },
-                }
-            );
-            return response.data;
+            return await supabaseApi.get('challenges', '*,users(*)')
         } catch (error) {
             console.error('API Error Details:', error.response || error);
             return rejectWithValue(error.message || 'Unknown error');
