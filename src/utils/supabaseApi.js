@@ -22,9 +22,24 @@ export const supabaseApi = {
 			);
 			return response.data;
 		} catch(error){
-			console.error('API error', error);
+			console.error('API error: ', error);
 			throw error;
 			
+		}
+	},
+
+	// 생성(create)
+	async post(table, data){
+		try{
+			const response = await axios.post(
+				`${supabaseUrl}/rest/v1/${table}`,
+				data,
+				{headers}
+			);
+			return response.data;
+		} catch(error){
+			console.error('API error: ', error);
+			throw error;
 		}
 	}
 }
