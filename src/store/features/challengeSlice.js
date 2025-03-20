@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { userChallengeList } from '../../data/userChallengeData';
 import { getChallenges } from '../../utils/localStorage';
-import axios from 'axios';
 import { supabaseApi } from '../../utils/supabaseApi';
 
 
@@ -16,6 +15,19 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
             return rejectWithValue(error.message || 'Unknown error');
         }
     }
+);
+
+// 챌린지 글 생성 액션
+export const createChallengeToSupabase = createAsyncThunk(
+	'challenge/createChallenge',
+	async (challengeData, {rejectWithValue}) => {
+		try{
+			return await supabaseApi.post('challenges', challengeData);
+		} catch(error){
+			console.error('API Error Details:', error.response || error);
+            return rejectWithValue(error.message || 'Unknown error');
+		}
+	}
 );
 
 const challengeSlice = createSlice({
@@ -158,7 +170,24 @@ const challengeSlice = createSlice({
             .addCase(fetchChallengesFromSupabase.rejected, (state, action) => {
                 state.loading = false; // 로딩 끝
                 state.error = action.payload; // 에러 메시지 저장
-            });
+            })
+
+
+			// 글 작성할 때
+			.addCase(createChallengeToSupabase.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+
+			.addCase(createChallengeToSupabase.fulfilled, (state, action) => {
+				state.loading = false;
+				// 새로 생성된 챌린지를 목록에 추가
+				state.list.push(action.payload);
+			})
+			.addCase(createChallengeToSupabase.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			});
     },
 });
 
