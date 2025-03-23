@@ -104,6 +104,15 @@ const PostDetailModal = () => {
 			// 현재 로그인한 유저 구별하기
 			const userInfo = users.find((user) => user.email === loggedInUser);
 
+			// 유저의 숫자 ID 가져오기
+			const userId = users.find((user) => user.email === loggedInUser);
+
+			if(!userId){
+				console.error('id 찾을 수 없어', userInfo);
+				alert('사용자 정보 없다');
+				return
+			}
+
 			// Supabase에 저장할 데이터 형식에 맞춰 객체 생성
             const newChallengeData = {
                 title: formData.title,
