@@ -40,6 +40,8 @@ export const supabaseApi = {
 			return response.data[0]?.id;
 		}catch (error){
 			console.error('API error: ', error);
+			console.log('test');
+			
 			throw error;
 		}
 	},
