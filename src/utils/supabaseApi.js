@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BiErrorAlt } from "react-icons/bi";
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -10,6 +11,7 @@ const headers = {
 	Authorization: `Bearer ${supabaseKey}`,
 	'Content-Type': 'application/json'
 };
+
 
 
 export const supabaseApi = {
@@ -27,6 +29,21 @@ export const supabaseApi = {
 			
 		}
 	},
+
+	// email로 id 사용자 id 조회 함수
+	async getUserIdByEmail(email){
+		try{
+			const response = await axios.get(
+				`${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
+				{headers}
+			);
+			return response.data[0]?.id;
+		}catch (error){
+			console.error('API error: ', error);
+			throw error;
+		}
+	},
+	
 
 	// 생성(create)
 	async post(table, data){

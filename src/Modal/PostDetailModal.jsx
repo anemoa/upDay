@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import {addChallenge, deleteChallenge, updateChallenge } from '../store/features/challengeSlice';
+import {addChallenge, createChallengeToSupabase, deleteChallenge, updateChallenge } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
 import useLoginModal from '../common/hooks/useLoginModal';
 
@@ -86,53 +86,45 @@ const PostDetailModal = () => {
 
     // 글 작성하는 로직
     const handleSubmit = () => {
+		// 필수 입력 체크
+    	if (
+    	    !formData.title ||
+    	    !formData.content ||
+    	    !formData.duration ||
+    	    !formData.category
+    	) {
+    	    alert('모든 항목을 입력하시오');
+    	    return;
+    	}
+
         if (isCreateMode) {
-            // 1. 로컬 스토리지의 챌린지 가져오기
-            const existingStorageChallenges = JSON.parse(
-                localStorage.getItem('clglist') || '[]'
-            );
-
-            // 2. 더미 데이터 챌린지와 로컬 스토리지에 저장된 챌린지 합치기
-            const allChallenges = [
-                ...userChallengeList,
-                ...existingStorageChallenges,
-            ];
-
-            // 3. 합쳐진 챌린지들 중에서 가장 큰 id 값 찾은 후에 + 1 하기
-            const maxId =
-                Math.max(...allChallenges.map((challenge) => challenge.id), 0) + 1;
-
             // users 정보 다 가져오기
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+			const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-            // 현재 로그인한 유저 구별하기
-            const userInfo = users.find((user) => user.email === loggedInUser);
+			// 현재 로그인한 유저 구별하기
+			const userInfo = users.find((user) => user.email === loggedInUser);
 
-            const newChallenge = {
-                ...formData,
-                id: maxId,
-                authorId: loggedInUser,
-                userImg: userInfo?.profileImage || '',
-                nickname: userInfo?.nickname || '기본 닉네임',
-                postDate: new Date().toISOString().slice(0, 19),
-                postClicked: 0,
-                joinDate: new Date().toISOString().split('T')[0], // 작성자는 자동으로 참여
-                clgJoin: true, // 추가: 처음에는 참여한 상태
-                clgDoing: true, // 추가: 처음에는 진행한 상태
-                clgDone: false, // 추가: 처음에는 완료하지 않은 상태,
+			// 유저의 숫자 ID 가져오기
+			const userId = users.find((user) => user.email === loggedInUser);
+
+			if(!userId){
+				console.error('id 찾을 수 없어', userInfo);
+				alert('사용자 정보 없다');
+				return
+			}
+
+			// Supabase에 저장할 데이터 형식에 맞춰 객체 생성
+            const newChallengeData = {
+                title: formData.title,
+				content: formData.content,
+                category: formData.category,
+                duration: formData.duration,
+                author_id: loggedInUser,
+                post_date: new Date().toISOString(),
+                post_clicked: 0,
             };
-            // 필수 입력 체크
-            if (
-                !formData.title ||
-                !formData.content ||
-                !formData.duration ||
-                !formData.category
-            ) {
-                alert('모든 항목을 입력하시오');
-                return;
-            }
 
-            dispatch(addChallenge(newChallenge));
+            dispatch(createChallengeToSupabase(newChallengeData));
             navigate('/challengelist');
         } else if (isEditMode) {
             // 필수 입력 체크
