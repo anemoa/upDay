@@ -4,9 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import {addChallenge, createChallengeToSupabase, deleteChallenge, updateChallenge } from '../store/features/challengeSlice';
+import {addChallenge, createChallengeToSupabase, deleteChallenge, fetchChallengesFromSupabase, updateChallenge } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
 import useLoginModal from '../common/hooks/useLoginModal';
+import { supabaseApi } from '../utils/supabaseApi';
+import { Store } from 'lucide-react';
 
 const PostDetailModal = () => {
     const dispatch = useDispatch();
@@ -85,7 +87,7 @@ const PostDetailModal = () => {
     };
 
     // 글 작성하는 로직
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 		// 필수 입력 체크
     	if (
     	    !formData.title ||
@@ -98,34 +100,48 @@ const PostDetailModal = () => {
     	}
 
         if (isCreateMode) {
-            // users 정보 다 가져오기
-			const users = JSON.parse(localStorage.getItem('users') || '[]');
+			try{
+				// users 정보 다 가져오기
+				// const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-			// 현재 로그인한 유저 구별하기
-			const userInfo = users.find((user) => user.email === loggedInUser);
+				// 현재 로그인한 유저 구별하기
+				// const userInfo = users.find((user) => user.email === loggedInUser);
 
-			// 유저의 숫자 ID 가져오기
-			const userId = users.find((user) => user.email === loggedInUser);
+				// 유저의 숫자 ID 가져오기
+				const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
 
-			if(!userId){
-				console.error('id 찾을 수 없어', userInfo);
-				alert('사용자 정보 없다');
-				return
+				if(!userId){
+					alert('사용자 정보 없다');
+					return
+				}
+
+				// Supabase에 저장할 데이터 형식에 맞춰 객체 생성
+				const newChallengeData = {
+					title: formData.title,
+					content: formData.content,
+					category: formData.category,
+					duration: formData.duration,
+					author_id: userId,
+					post_date: new Date().toISOString(),
+					post_clicked: 0,
+				};
+				
+				// 챌린지 생성
+				 await dispatch(createChallengeToSupabase(newChallengeData));
+				 console.log('챌린지 생성 완료');
+
+				 // 목록 새로 고침
+				 await dispatch(fetchChallengesFromSupabase());
+				 console.log('목록 새로고침 완료');
+				 
+				 // 페이지 이동
+				 navigate('/challengelist');
+				 
+			} catch (error){
+				console.error('error creating challenge: ' ,error);
+				alert('글 작성 오류!')
 			}
 
-			// Supabase에 저장할 데이터 형식에 맞춰 객체 생성
-            const newChallengeData = {
-                title: formData.title,
-				content: formData.content,
-                category: formData.category,
-                duration: formData.duration,
-                author_id: loggedInUser,
-                post_date: new Date().toISOString(),
-                post_clicked: 0,
-            };
-
-            dispatch(createChallengeToSupabase(newChallengeData));
-            navigate('/challengelist');
         } else if (isEditMode) {
             // 필수 입력 체크
             if (

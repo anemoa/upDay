@@ -59,9 +59,12 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
     return (
         <section className='grid grid-cols-3 max-md:grid-cols-2 gap-6 max-md:gap-4'>
             {filteredChallenges.length > 0 ? (
-                filteredChallenges.map((card) => (
-                    <ChallengeCard key={card.id} cardData={card} />
-                ))
+                filteredChallenges.map((challenge) => {
+					console.log('Challenge id를 위한 확인', challenge.id);
+					return (
+						<ChallengeCard key={challenge.id} challenge={challenge} />
+					)
+				})
             ) : (
                 <p>등록된 챌린지가 없습니다.</p>
             )}
