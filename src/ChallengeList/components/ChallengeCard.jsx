@@ -9,9 +9,9 @@ import { CATEGORY_IMAGES } from '../../data/userChallengeData';
 import useLoginModal from '../../common/hooks/useLoginModal';
 
 
-const ChallengeCard = ({ cardData }) => {
+const ChallengeCard = ({ challenge }) => {
     // cardData 구조분해할당
-    const { id, category, duration, title, content, author_id, post_date, post_clicked, users } = cardData;
+    const { id, category, duration, title, content, author_id, post_date, post_clicked, users } = challenge;
 
 	const nickname = users?.nickname || '작성자';
 	const user_img = users?.user_img || 'https://via.placeholder.com/32';
@@ -59,7 +59,7 @@ const ChallengeCard = ({ cardData }) => {
     // 카드 클릭시 모달을 띄우는 이벤트 핸들러
     const handleCardClick = () => {
         // 선택한 카드의 데이터를 Redux store에 저장
-        dispatch(setSelectedChallenge(cardData));
+        dispatch(setSelectedChallenge(challenge));
 
         // 해당 카드의 상세 모달 페이지로 이동
         navigate(`/challengelist/${id}`);
@@ -115,9 +115,9 @@ const ChallengeCard = ({ cardData }) => {
                 }}
             >
                 <img
-                    src={getCategoryImage(cardData.category)}
+                    src={getCategoryImage(challenge.category)}
                     className="h-full mx-auto"
-                    alt={`${cardData.category} 챌린지`}
+                    alt={`${challenge.category} 챌린지`}
                 />
             </div>
 
