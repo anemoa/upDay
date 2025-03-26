@@ -62,6 +62,7 @@ export const supabaseApi = {
 				`${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
 				{headers}
 			);
+			return response.data;
 		} catch(error){
 			console.error('API Error:', error);
 			throw error;
