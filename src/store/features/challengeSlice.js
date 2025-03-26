@@ -30,6 +30,20 @@ export const createChallengeToSupabase = createAsyncThunk(
 	}
 );
 
+// 챌린지 글 삭제 액션
+export const deleteChallengeFromSupbase = createAsyncThunk(
+	'challenge/deleteChallenge',
+	async (id, {rejectWithValue}) => {
+		try{
+			await supabaseApi.delete('challenges', id);
+			return id; // 삭제된 ID 반환
+		}catch (error){
+			console.error('API Error Details:', error.response || error);
+            return rejectWithValue(error.message || 'Unknown error');
+		}
+	}
+)
+
 const challengeSlice = createSlice({
     name: 'challenge',
     initialState: {
@@ -187,9 +201,30 @@ const challengeSlice = createSlice({
 			.addCase(createChallengeToSupabase.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
+			})
+
+			// 글 삭제하는 액션
+			.addCase(deleteChallengeFromSupbase.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(deleteChallengeFromSupbase.fulfilled, (state, action) => {
+				state.loading = false;
+				// 삭제된 ID로 목록에서 제거
+				state.list = state.list.filter(challenge => challenge.id !== action.payload);
+
+				// selectedChallenge도 해당 ID면 null로 설정
+				if(state.selectedChallenge?.id === action.payload){
+					state.selectedChallenge = null;
+				}
+			})
+			.addCase(deleteChallengeFromSupbase.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
 			});
     },
 });
+
 
 export const {
     setSelectedChallenge,
