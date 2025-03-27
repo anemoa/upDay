@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import {addChallenge, createChallengeToSupabase, deleteChallenge, fetchChallengesFromSupabase, updateChallenge } from '../store/features/challengeSlice';
+import {addChallenge, createChallengeToSupabase, deleteChallenge, deleteChallengeFromSupbase, fetchChallengesFromSupabase, updateChallenge } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
 import useLoginModal from '../common/hooks/useLoginModal';
 import { supabaseApi } from '../utils/supabaseApi';
@@ -74,7 +74,7 @@ const PostDetailModal = () => {
 
     // 로그인 한 유저인지 확인하는 로직
     const isMyPost =
-        isCreateMode || loggedInUser === selectedChallenge?.authorId;
+        isCreateMode || (selectedChallenge && selectedChallenge.users && selectedChallenge.users.email === loggedInUser);
 
     // 창 닫기
     const handleClose = () => {
@@ -166,9 +166,22 @@ const PostDetailModal = () => {
     };
 
     // 글 삭제하는 로직
-    const handleDelete = (id) => {
-        dispatch(deleteChallenge(id));
-        navigate('/challengelist');
+    const handleDelete = async (id) => {
+		try{
+			await dispatch(deleteChallengeFromSupbase(id));
+			console.log('챌린지 삭제 완료');
+			
+			// 목록 새로 고침
+			await dispatch(fetchChallengesFromSupabase());
+			console.log('삭제후 목록 새로고침 완료');
+
+			// 페이지 이동
+			navigate('/challengelist');
+		} catch(error){
+			console.error('error creating challenge: ' ,error);
+			alert('글 삭제 오류!')
+		}
+
     };
 
     return (
