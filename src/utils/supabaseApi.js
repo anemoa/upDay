@@ -10,7 +10,7 @@ const headers = {
 };
 
 export const supabaseApi = {
-    // 조회(read)
+    // 조회
     async get(table, query = '*') {
         try {
             const response = await axios.get(
@@ -40,7 +40,7 @@ export const supabaseApi = {
         }
     },
 
-    // 생성(create)
+    // 생성
     async post(table, data) {
         try {
             const response = await axios.post(
@@ -55,11 +55,26 @@ export const supabaseApi = {
         }
     },
 
-    // 삭제 (Delete)
+    // 삭제
 	async delete(table, id){
 		try{
 			const response = await axios.delete(
 				`${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
+				{headers}
+			);
+			return response.data;
+		} catch(error){
+			console.error('API Error:', error);
+			throw error;
+		}
+	},
+
+	//수정
+	async patch(table, id, data){
+		try{
+			const response = await axios.patch(
+				`${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
+				data,
 				{headers}
 			);
 			return response.data;

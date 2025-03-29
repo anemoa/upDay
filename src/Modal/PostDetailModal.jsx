@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import {addChallenge, createChallengeToSupabase, deleteChallenge, deleteChallengeFromSupbase, fetchChallengesFromSupabase, updateChallenge } from '../store/features/challengeSlice';
+import { createChallengeToSupabase, deleteChallengeFromSupbase, fetchChallengesFromSupabase, updateChallenge } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
 import useLoginModal from '../common/hooks/useLoginModal';
 import { supabaseApi } from '../utils/supabaseApi';
-import { Store } from 'lucide-react';
+
 
 const PostDetailModal = () => {
     const dispatch = useDispatch();
