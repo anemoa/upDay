@@ -237,7 +237,31 @@ const challengeSlice = createSlice({
 			.addCase(deleteChallengeFromSupbase.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
-			});
+			})
+
+			// 글 수정하는 액션
+			.addCase(updateChallengeInSupabase.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(updateChallengeInSupabase.fulfilled, (state, action) => {
+				state.loading = false;
+
+				// 수정된 챌린지를 찾아 업데이트
+				const index = state.list.findIndex(challenge => challenge.id === action.payload.id);
+				if(index !== -1 ){
+					state.list[index] = {...state.list[index], ...action.payload};
+				}
+
+				// 현재 선택된 챌린지가 수정된 것이라면 그것도 업데이트
+				if(state.selectedChallenge && state.selectedChallenge.id === action.payload.id){
+					state.selectedChallenge = {...state.selectedChallenge, ...action.payload};
+				}
+			})
+			.addCase(updateChallengeInSupabase.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
     },
 });
 
