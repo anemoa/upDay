@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalHeader from './components/ModalHeader';
 import ModalContent from './components/ModalContent';
 import ModalFooter from './components/ModalFooter';
-import { createChallengeToSupabase, deleteChallengeFromSupbase, fetchChallengesFromSupabase, updateChallenge } from '../store/features/challengeSlice';
+import { createChallengeToSupabase, deleteChallengeFromSupbase, fetchChallengesFromSupabase, updateChallenge, updateChallengeInSupabase } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
 import useLoginModal from '../common/hooks/useLoginModal';
 import { supabaseApi } from '../utils/supabaseApi';
@@ -101,11 +101,6 @@ const PostDetailModal = () => {
 
         if (isCreateMode) {
 			try{
-				// users 정보 다 가져오기
-				// const users = JSON.parse(localStorage.getItem('users') || '[]');
-
-				// 현재 로그인한 유저 구별하기
-				// const userInfo = users.find((user) => user.email === loggedInUser);
 
 				// 유저의 숫자 ID 가져오기
 				const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
@@ -143,6 +138,27 @@ const PostDetailModal = () => {
 			}
 
         } else if (isEditMode) {
+			try{
+				const updateData = {
+					title: formData.title,
+					content: formData.content,
+					category: formData.category,
+					duration: formData.duration,
+					updated_at: new Date().toISOString()
+				};
+
+				// 챌린지 ID 가져오기
+				const challengedId = selectedChallenge.id;
+
+				// 수정 액션 디스패치
+				await dispatch(updateChallengeInSupabase({
+					id: challengedId,
+					challengeData: updateData
+				}))
+			}catch (error){
+				console.error('글 수정 중 오류:', error);
+				alert('글 수정 중 오류가 발생했습니다.');
+			}
             // 필수 입력 체크
             if (
                 !formData.title ||
