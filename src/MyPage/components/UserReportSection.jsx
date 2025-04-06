@@ -4,7 +4,7 @@ import { HiFire, HiDocumentCheck, HiMiniTrophy } from 'react-icons/hi2';
 import { FaStar } from 'react-icons/fa6';
 import { getMyJoinedChallenge } from '../../store/features/userChallengeSlice';
 
-export default function UserReport() {
+const UserReportSection = () => {
     const dispatch = useDispatch();
     const TEST_ACCOUNT_EMAIL = 'test01@naver.com'; // 테스트 계정 이메일 고정
     const [loggedInUser, setLoggedInUser] = useState(null);
@@ -134,3 +134,5 @@ export default function UserReport() {
         </div>
     );
 }
+
+export default UserReportSection;

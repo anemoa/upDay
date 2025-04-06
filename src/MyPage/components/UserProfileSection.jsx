@@ -6,7 +6,7 @@ import img2 from '../img/2.svg';
 import img3 from '../img/3.svg';
 import img4 from '../img/4.svg';
 
-const UserProfile = () => {
+const UserProfileSection = () => {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [daysSinceSignup, setDaysSinceSignup] = useState(0);
     const defaultImages = [img1, img2, img3, img4];
@@ -106,4 +106,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default UserProfileSection;
