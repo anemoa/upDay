@@ -4,7 +4,7 @@ import { getMyJoinedChallenge } from '../../store/features/userChallengeSlice';
 import UserChallengeSearch from './UserChallengeSearch';
 import UserChallengeList from './UserChallengeList';
 
-export default function UserChallengeSection() {
+const UserChallengeSection = () => {
     const dispatch = useDispatch();
     const joinedChallenges =
         useSelector((state) => state.myClgList.joinedChallenges) || [];
@@ -124,3 +124,5 @@ export default function UserChallengeSection() {
         </div>
     );
 }
+
+export default UserChallengeSection;
