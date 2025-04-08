@@ -8,12 +8,12 @@ export default function UserChallengeSearch({
     setCategoryFilter,
     searchTerm,
     setSearchTerm,
-    isMyPost,
-    setIsMyPost,
-    isDoingClg,
-    setIsDoingClg,
-    isDoneClg,
-    setIsDoneClg,
+    filterByMyPost,
+    setFilterByMyPost,
+    filterByDoingStatus,
+    setFilterByDoingStatus,
+    filterByDoneStatus,
+    setFilterByDoneStatus
 }) {
     const [inputValue, setInputValue] = useState(''); // 사용자가 입력하는 값
 
@@ -29,9 +29,9 @@ export default function UserChallengeSearch({
         } else {
             setCategoryFilter('전체'); // 검색어가 없을 경우 전체 목록 다시 보여주기
             setSearchTerm('');
-            setIsMyPost(false); // 필터 초기화
-            setIsDoingClg(false); // 필터 초기화
-            setIsDoneClg(false); // 필터 초기화
+            setFilterByMyPost(false); // 필터 초기화
+            setFilterByDoingStatus(false); // 필터 초기화
+            setFilterByDoneStatus(false); // 필터 초기화
         }
     };
 
@@ -46,21 +46,21 @@ export default function UserChallengeSearch({
         setInputValue('');
     };
 
-    // 내가 만든, 진행 중, 완료 챌린지 필터링
-    const handleIsMyPost = () => {
-        setIsMyPost((prev) => !prev); // true-false 토글
-        setIsDoingClg();
-        setIsDoneClg();
+    // 내가 작성한 챌린지, 진행 중인 챌린지, 완료한 챌린지 필터링
+    const handleFilterByMyPost = () => {
+        setFilterByMyPost((prev) => !prev); // true-false 토글
+        setFilterByDoingStatus(false);
+        setFilterByDoneStatus(false);
     };
-    const handleIsDoingClg = () => {
-        setIsDoingClg((prev) => !prev);
-        setIsMyPost();
-        setIsDoneClg();
+    const handleFilterByDoingStatus = () => {
+        setFilterByDoingStatus((prev) => !prev);
+        setFilterByMyPost(false);
+        setFilterByDoneStatus(false);
     };
-    const handleIsDoneClg = () => {
-        setIsDoneClg((prev) => !prev);
-        setIsMyPost();
-        setIsDoingClg();
+    const handleFilterByDoneStatus = () => {
+        setFilterByDoingStatus((prev) => !prev);
+        setFilterByMyPost(false);
+        setFilterByDoneStatus(false);
     };
 
     return (
@@ -108,34 +108,34 @@ export default function UserChallengeSearch({
             </div>
             <div className='flex gap-2 justify-end py-2 md:py-4 border-b border-neutral-300'>
                 <div
-                    className={`h-7 flex gap-0.5 px-1 pl-0.5 pr-2 rounded-[10px] items-center text-sm ${isMyPost ? 'bg-blue-200' : ''}`}
-                    onClick={handleIsMyPost}
+                    className={`h-7 flex gap-0.5 px-1 pl-0.5 pr-2 rounded-[10px] items-center text-sm ${filterByMyPost ? 'bg-blue-200' : ''}`}
+                    onClick={handleFilterByMyPost}
                 >
                     <BsDot className='text-base text-blue-500' />
                     <button
-                        className={`text-[10px] md:text-xs ${isMyPost ? 'font-semibold' : ''}`}
+                        className={`text-[10px] md:text-xs ${filterByMyPost ? 'font-semibold' : ''}`}
                     >
                         내가 만든
                     </button>
                 </div>
                 <div
-                    className={`h-7 flex gap-1 p-1 pr-1.5 rounded-[10px] items-center text-sm ${isDoingClg ? 'bg-orange-100' : ''}`}
-                    onClick={handleIsDoingClg}
+                    className={`h-7 flex gap-1 p-1 pr-1.5 rounded-[10px] items-center text-sm ${filterByDoingStatus ? 'bg-orange-100' : ''}`}
+                    onClick={handleFilterByDoingStatus}
                 >
                     <HiFire className='text-sm text-orange-400' />
                     <button
-                        className={`text-[10px] md:text-xs ${isDoingClg ? 'text-neutral-900 font-semibold' : ''}`}
+                        className={`text-[10px] md:text-xs ${filterByDoingStatus ? 'text-neutral-900 font-semibold' : ''}`}
                     >
                         진행 중
                     </button>
                 </div>
                 <div
-                    className={`h-7 flex gap-1 p-1 pr-1.5 rounded-[10px] items-center text-sm ${isDoneClg ? 'bg-green-100' : ''}`}
-                    onClick={handleIsDoneClg}
+                    className={`h-7 flex gap-1 p-1 pr-1.5 rounded-[10px] items-center text-sm ${filterByDoneStatus ? 'bg-green-100' : ''}`}
+                    onClick={handleFilterByDoneStatus}
                 >
                     <HiDocumentCheck className='text-sm text-green-400' />
                     <button
-                        className={`text-[10px] md:text-xs ${isDoneClg ? 'font-semibold' : ''}`}
+                        className={`text-[10px] md:text-xs ${filterByDoneStatus ? 'font-semibold' : ''}`}
                     >
                         완료
                     </button>
