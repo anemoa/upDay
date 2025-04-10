@@ -5,6 +5,8 @@ import {
     toggleClgState,
     setSelectedChallenge,
     getMyJoinedChallenge,
+	fetchMyPostFromSupabase,
+	fetchJoinedChallengesFromSupabase,
 } from '../../store/features/userChallengeSlice';
 import { BsDot } from 'react-icons/bs';
 import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
@@ -12,16 +14,20 @@ import UserChallengeModal from './UserChallengeModal';
 
 export default function UserChallengeList({ filteredChallenges }) {
     const dispatch = useDispatch();
-    const myPosts = useSelector((state) => state.myClgList.myPosts);
+    const myPosts = useSelector((state) => state.userChallenge.myPosts);
     const joinedChallenges =
-        useSelector((state) => state.myClgList.joinedChallenges) || [];
+        useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     const [isModalOpen, setModalOpen] = useState(false);
+	const [selectedChallenge, setSelectedChallenge] = useState(null);
 
     useEffect(() => {
-        dispatch(setMyPosts());
-        dispatch(getMyJoinedChallenge()); // 삭제 후 목록 새로고침
-    }, [dispatch]); // `joinedChallenges`가 변경될 때마다 실행
+		const userId = localStorage.getItem('loggedInUser');
+		if(userId){
+			dispatch(fetchMyPostFromSupabase(userId));
+			dispatch(fetchJoinedChallengesFromSupabase(userId));
+		}
+    }, [dispatch]); 
 
     // 노출할 목록 선택
     const challengesToDisplay =
@@ -35,11 +41,13 @@ export default function UserChallengeList({ filteredChallenges }) {
     );
 
     // 역순 번호 매핑
-    const clgNum = (index) => sortedChallenges.length - index;
+    const challengeNumber = (index) => sortedChallenges.length - index;
 
     // 챌린지 상태 변경 핸들러
     const handleToggle = (id, type) => {
-        dispatch(toggleClgState({ id, type }));
+        //dispatch(toggleClgState({ id, type }));
+		console.log(`Challenge ${id} toggle ${type} - 현재는 읽기만`);
+		
     };
 
     // 챌린지 카테고리별 뱃지 클래스
@@ -52,7 +60,7 @@ export default function UserChallengeList({ filteredChallenges }) {
     const getBadgeClass = (category) => badgeClasses[category] || '';
 
     // 챌린지 상태 클래스
-    const getClgTitleClass = (doing, done) =>
+    const getChallengeTitleClass = (doing, done) =>
         !doing && done
             ? 'line-through'
             : !doing && !done
@@ -89,7 +97,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                             className='flex flex-1 gap-x-1 md:gap-x-1.5 h-15 py-3 md:py-4 border-b border-neutral-300 items-center cursor-pointer'
                         >
                             <div className='flex flex-row justify-center w-[8%] text-[10px] md:text-xs text-neutral-500'>
-                                {clgNum(index)}
+                                {challengeNumber(index)}
                             </div>
                             <BsDot
                                 className={`${isMyChallenge(challenge.authorId)} text-2xl text-blue-500 ml-[-3%]`}
@@ -102,7 +110,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                             <div className='flex flex-1 gap-1 h-6 items-center overflow-hidden'>
                                 {/* Title을 클릭해야만 모달 열림 */}
                                 <span
-                                    className={`${getClgTitleClass(challenge.clgDoing, challenge.clgDone)} block w-full overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer`}
+                                    className={`${getChallengeTitleClass(challenge.clgDoing, challenge.clgDone)} block w-full overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer`}
                                     onClick={() => openModal(challenge)}
                                 >
                                     {challenge.title}
