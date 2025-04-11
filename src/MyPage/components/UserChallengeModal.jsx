@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-    setMyPosts,
-    deleteChallenge,
-    updateChallenge,
+    fetchMyPostFromSupabase,
+	setSelectedChallenge
 } from '../../store/features/userChallengeSlice';
 import ModalHeader from '../../Modal/components/ModalHeader';
 import ModalContent from '../../Modal/components/ModalContent';
@@ -16,9 +15,9 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const selectedChallenge = useSelector(
-        (state) => state.myClgList.selectedChallenge
+        (state) => state.userChallenge.selectedChallenge
     );
-    const myChallenges = useSelector((state) => state.myClgList.challenges);
+    const myPosts = useSelector((state) => state.userChallenge.myPosts);
     const loggedInUser = localStorage.getItem('loggedInUser');
 
     // 현재 모드 확인
@@ -34,9 +33,10 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     });
 
     useEffect(() => {
-        dispatch(setMyPosts()); // 새로고침해도 유지되도록 불러오기
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [myChallenges]);
+		if(loggedInUser){
+			dispatch(fetchMyPostFromSupabase(loggedInUser));
+		}
+    }, [dispatch, myPosts]);
 
     useEffect(() => {
         if (isEditMode && selectedChallenge) {
@@ -100,8 +100,13 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
             ...formData,
         };
 
-        dispatch(updateChallenge(updatedChallenge));
-        dispatch(setMyPosts());
+		// 임시로 콘솔 로그만
+		console.log('challenge update not implemented yet', updatedChallenge);
+		
+		if(loggedInUser){
+			dispatch(fetchMyPostFromSupabase(loggedInUser));
+		}
+
         navigate('/mypage');
         onClose();
     };
@@ -109,7 +114,8 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     // 삭제 버튼 클릭 시 챌린지 삭제
     const handleDelete = () => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
-            dispatch(deleteChallenge(id)); // 동기 액션 사용
+            console.log('챌린지 삭제 기능 아직임', id);
+			
             onClose(); // 모달 닫기
         }
     };
