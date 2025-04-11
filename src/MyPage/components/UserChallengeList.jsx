@@ -19,15 +19,18 @@ export default function UserChallengeList({ filteredChallenges }) {
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     const [isModalOpen, setModalOpen] = useState(false);
-	const [selectedChallenge, setSelectedChallenge] = useState(null);
+
+	const selectedChallenge = useSelector(state => state.userChallenge.selectedChallenge);
+
+	const userId = localStorage.getItem('loggedInUser');
 
     useEffect(() => {
-		const userId = localStorage.getItem('loggedInUser');
+
 		if(userId){
 			dispatch(fetchMyPostFromSupabase(userId));
 			dispatch(fetchJoinedChallengesFromSupabase(userId));
 		}
-    }, [dispatch]); 
+    }, [dispatch, userId]); 
 
     // 노출할 목록 선택
     const challengesToDisplay =
@@ -60,14 +63,29 @@ export default function UserChallengeList({ filteredChallenges }) {
     const getBadgeClass = (category) => badgeClasses[category] || '';
 
     // 챌린지 상태 클래스
-    const getChallengeTitleClass = (doing, done) =>
-        !doing && done
-            ? 'line-through'
-            : !doing && !done
-              ? 'line-through text-neutral-500'
-              : '';
-    const getClgDoingClass = (doing) => (doing ? 'doing-on' : 'doing-off');
-    const getClgDoneClass = (done) => (done ? 'done-on' : 'done-off');
+    const getChallengeTitleClass = (challenge) => {
+		const userParticipation = challenge.participants?.find(p => p.authorId === userId);
+
+		if(!userParticipation) return '';
+
+		//참여자 상태에 따른 클래스 변환
+		if(userParticipation.status === 'done'){
+			return 'line-through';
+		}else if(userParticipation.status !== 'doing'){
+			return 'line-through text-neutral-500';
+		}
+		return '';
+	} 
+
+	const getChallengeDoingClass = (challenge) => {
+		const userPaticipation = challenge.participants?.find(p => p.authorId === userId);
+		return userPaticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
+	}
+
+	const getChallengeDoneClass = (challenge) => {
+		const userPaticipation = challenge.participants?.find(p => p.authorId === userId);
+		return userPaticipation?.status === 'done' ? 'done-on' : 'done-off';
+	}
 
     // 내 챌린지 여부 아이콘 표시
     const isMyChallenge = (authorId) => {
@@ -110,7 +128,7 @@ export default function UserChallengeList({ filteredChallenges }) {
                             <div className='flex flex-1 gap-1 h-6 items-center overflow-hidden'>
                                 {/* Title을 클릭해야만 모달 열림 */}
                                 <span
-                                    className={`${getChallengeTitleClass(challenge.clgDoing, challenge.clgDone)} block w-full overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer`}
+                                    className={`${getChallengeTitleClass(challenge)} block w-full overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer`}
                                     onClick={() => openModal(challenge)}
                                 >
                                     {challenge.title}
@@ -118,8 +136,8 @@ export default function UserChallengeList({ filteredChallenges }) {
                             </div>
                             <div className='w-14 flex justify-between items-center'>
                                 <button
-                                    className={getClgDoingClass(
-                                        challenge.clgDoing
+                                    className={getChallengeDoingClass(
+                                        challenge
                                     )}
                                     onClick={(e) =>
                                         handleToggle(challenge.id, 'doing', e)
@@ -128,8 +146,8 @@ export default function UserChallengeList({ filteredChallenges }) {
                                     <HiFire className='text-xl' />
                                 </button>
                                 <button
-                                    className={getClgDoneClass(
-                                        challenge.clgDone
+                                    className={getChallengeDoneClass(
+                                        challenge
                                     )}
                                     onClick={(e) =>
                                         handleToggle(challenge.id, 'done', e)
