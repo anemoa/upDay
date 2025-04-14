@@ -15,6 +15,8 @@ import UserChallengeModal from './UserChallengeModal';
 export default function UserChallengeList({ filteredChallenges }) {
     const dispatch = useDispatch();
     const myPosts = useSelector((state) => state.userChallenge.myPosts);
+	console.log('내 포스트', myPosts);
+	
     const joinedChallenges =
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
@@ -25,7 +27,8 @@ export default function UserChallengeList({ filteredChallenges }) {
 	const userId = localStorage.getItem('loggedInUser');
 
     useEffect(() => {
-
+		console.log('현재 사용자 id', userId);
+		
 		if(userId){
 			dispatch(fetchMyPostFromSupabase(userId));
 			dispatch(fetchJoinedChallengesFromSupabase(userId));
