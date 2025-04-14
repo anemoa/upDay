@@ -10,7 +10,6 @@ const UserChallengeSection = () => {
     const joinedChallenges = useSelector((state) => state.userChallenge.joinedChallenges) || [];
 	const loading = useSelector((state) => state.userChallenge.loading.joinedChallenges);
 
-    const [loggedInUser, setLoggedInUser] = useState(null);
     const [categoryFilter, setCategoryFilter] = useState('전체');
     const [searchTerm, setSearchTerm] = useState('');
     const [filterByMyPost, setFilterByMyPost] = useState(false);
@@ -18,8 +17,17 @@ const UserChallengeSection = () => {
     const [filterByDoneStatus, setFilterByDoneStatus] = useState(false);
     const [filteredChallenges, setFilteredChallenges] = useState([]);
 
-	// 로그인하지 않은 유저의 경우 모달창 표시
-	const [loginModalOpen, setLoginModalOpen] = useState(!loggedInUser);
+	// 초기화 시 로컬스토리지에서 값 바로 가져오기
+	const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem('loggedInUser'));
+
+	// 로그인하지 않은 유저의 경우 모달창 표시 초기 상태를 false로 하고 나중에 확인
+	const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+	useEffect(() => {
+		if(!loggedInUser){
+			setLoginModalOpen(true);
+		}
+	}, [loggedInUser]);
 
 	const handleCloseLoginModal = () => {
 		setLoginModalOpen(false);
