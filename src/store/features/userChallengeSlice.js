@@ -2,15 +2,29 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { supabaseApi } from '../../utils/supabaseApi';
 
 
+async function getNumericUserIdFromEmail(email) {
+	// supabaseApi에 있는 함수 활용
+	const userId = await supabaseApi.getUserIdByEmail(email);
+	return userId;
+}
+
 // 내가 작성한 챌린지 데이터 가져오기
 export const fetchMyPostFromSupabase = createAsyncThunk(
 	'userChallenge/fetchMyPostFromSupabase',
-	async (id, {rejectWithValue}) => {
+	async (email, {rejectWithValue}) => {
 		try{
+			// 1. 이메일을 숫자 id로 변환하기
+			const numbericUserId = await supabaseApi.getUserIdByEmail(email);
+			console.log('email: ', email, '숫자 아이디: ', numbericUserId);
+			
+			// 2. 모든 챌린지 글 가져오기
 			const challenges = await supabaseApi.get('challenges', '*');
 
 			// 내가 작성한 챌린지만 필터링
-			const myPosts = challenges.filter(post => post.authorId === id );
+			const myPosts = challenges.filter(post => post.authorId === numbericUserId);
+
+			console.log('필터링 된 내 포스트들', myPosts);
+			
 			return myPosts;
 		} catch(error){
 			return rejectWithValue(error.message);
@@ -22,14 +36,17 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 // 참여한 챌린지 데이터 가져오기
 export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 	'userChallenge/fetchJoinedChallengesFromSupabase',
-	async (id, {rejectWithValue}) => {
+	async (email, {rejectWithValue}) => {
 		try{
-			// 전체 챌린지 가져오기
+			// 1. 이메일을 숫자 id로 변환하기
+			const numbericUserId = await supabaseApi.getUserIdByEmail(email);
+
+			// 2. 전체 챌린지 가져오기
 			const challenges = await supabaseApi.get('challenges', '*, participants(*)');
 
-			// 참여 중인 챌린지 필터링
+			// 3. 참여 중인 챌린지 필터링
 			const joinedChallenges = challenges.filter(
-				challenge => challenge.participants && challenge.participants.some(p => p.authorId === id)
+				challenge => challenge.participants && challenge.participants.some(p => p.authorId === numbericUserId)
 			);
 			return joinedChallenges;
 		} catch(error){
