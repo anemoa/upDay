@@ -14,16 +14,16 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 	async (email, {rejectWithValue}) => {
 		try{
 			// 1. 이메일을 숫자 id로 변환하기
-			const numbericUserId = await supabaseApi.getUserIdByEmail(email);
-			console.log('email: ', email, '숫자 아이디: ', numbericUserId);
+			const numericUserId = await supabaseApi.getUserIdByEmail(email);
+			//console.log('email: ', email, '숫자 아이디: ', numericUserId);
 			
 			// 2. 모든 챌린지 글 가져오기
 			const challenges = await supabaseApi.get('challenges', '*');
 
 			// 내가 작성한 챌린지만 필터링
-			const myPosts = challenges.filter(post => post.authorId === numbericUserId);
+			const myPosts = challenges.filter(post => post.authorId === numericUserId);
 
-			console.log('필터링 된 내 포스트들', myPosts);
+			//console.log('필터링 된 내 포스트들', myPosts);
 			
 			return myPosts;
 		} catch(error){
@@ -39,14 +39,14 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 	async (email, {rejectWithValue}) => {
 		try{
 			// 1. 이메일을 숫자 id로 변환하기
-			const numbericUserId = await supabaseApi.getUserIdByEmail(email);
+			const numericUserId = await supabaseApi.getUserIdByEmail(email);
 
 			// 2. 전체 챌린지 가져오기
 			const challenges = await supabaseApi.get('challenges', '*, participants(*)');
 
 			// 3. 참여 중인 챌린지 필터링
 			const joinedChallenges = challenges.filter(
-				challenge => challenge.participants && challenge.participants.some(p => p.authorId === numbericUserId)
+				challenge => challenge.participants && challenge.participants.some(p => p.authorId === numericUserId)
 			);
 			return joinedChallenges;
 		} catch(error){

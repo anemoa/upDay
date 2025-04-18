@@ -11,14 +11,13 @@ import {
 import { BsDot } from 'react-icons/bs';
 import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
 import UserChallengeModal from './UserChallengeModal';
+import { supabaseApi } from '../../utils/supabaseApi';
 
 export default function UserChallengeList({ filteredChallenges }) {
     const dispatch = useDispatch();
     const myPosts = useSelector((state) => state.userChallenge.myPosts);
-	console.log('내 포스트', myPosts);
 	
-    const joinedChallenges =
-        useSelector((state) => state.userChallenge.joinedChallenges) || [];
+    const joinedChallenges = useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -26,14 +25,22 @@ export default function UserChallengeList({ filteredChallenges }) {
 
 	const userId = localStorage.getItem('loggedInUser');
 
+	const [numericUserId, setNumericUserId] = useState(null);
+
     useEffect(() => {
-		console.log('현재 사용자 id', userId);
-		
-		if(userId){
-			dispatch(fetchMyPostFromSupabase(userId));
-			dispatch(fetchJoinedChallengesFromSupabase(userId));
-		}
-    }, [dispatch, userId]); 
+		const fetchNumericUserId = async () => {
+			if(userId){
+				try{
+					const id = await supabaseApi.getUserIdByEmail(userId);
+					setNumericUserId(id)
+				}catch (error){
+					console.error('Error fetching numeric user ID:', error);
+				}
+			}
+		};
+
+		fetchNumericUserId();
+    }, [userId]); 
 
     // 노출할 목록 선택
     const challengesToDisplay =
@@ -91,12 +98,16 @@ export default function UserChallengeList({ filteredChallenges }) {
 	}
 
     // 내 챌린지 여부 아이콘 표시
-    const isMyChallenge = (authorId) => {
-        if (!Array.isArray(myPosts)) return 'opacity-0';
-        return myPosts.some((post) => post.authorId === authorId)
-            ? 'opacity-100'
-            : 'opacity-0';
-    };
+    // const isMyChallenge = async (authorId) => {
+    //     if (!Array.isArray(myPosts)) return 'opacity-0';
+	// 	return authorId === numericUserId ? 'opacity-100' : 'opacity-0';
+    // };
+	const isMyChallenge = (authorId) => {
+		if (!numericUserId || !Array.isArray(myPosts)) return 'opacity-0';
+		console.log('비교:', authorId, numericUserId, authorId === numericUserId);
+		return authorId === numericUserId ? 'opacity-100' : 'opacity-0';
+	};
+	
 
     // 모달 열기
     const openModal = (challenge) => {
