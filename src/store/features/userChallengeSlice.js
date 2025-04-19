@@ -23,7 +23,11 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 			// 내가 작성한 챌린지만 필터링
 			const myPosts = challenges.filter(post => post.authorId === numericUserId);
 
-			//console.log('필터링 된 내 포스트들', myPosts);
+			console.log('필터링 된 내 포스트들', myPosts);
+
+			console.log('변환된 숫자 ID:', numericUserId, 'type:', typeof numericUserId);
+			console.log('전체 챌린지 개수:', challenges.length);
+
 			
 			return myPosts;
 		} catch(error){
@@ -38,18 +42,36 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 	'userChallenge/fetchJoinedChallengesFromSupabase',
 	async (email, {rejectWithValue}) => {
 		try{
-			// 1. 이메일을 숫자 id로 변환하기
-			const numericUserId = await supabaseApi.getUserIdByEmail(email);
+			// // 1. 이메일을 숫자 id로 변환하기
+			// const numericUserId = await supabaseApi.getUserIdByEmail(email);
 
-			// 2. 전체 챌린지 가져오기
-			const challenges = await supabaseApi.get('challenges', '*, participants(*)');
+			// // 2. 전체 챌린지 가져오기
+			// const challenges = await supabaseApi.get('challenges', '*, participants(*)');
 
-			// 3. 참여 중인 챌린지 필터링
-			const joinedChallenges = challenges.filter(
-				challenge => challenge.participants && challenge.participants.some(p => p.authorId === numericUserId)
-			);
+			// // 3. 참여 중인 챌린지 필터링
+			// const joinedChallenges = challenges.filter(
+			// 	challenge => challenge.participants && challenge.participants.some(p => p.authorId === numericUserId)
+			// );
+			console.log('1. 액션 시작:', email);
+            
+            // 이메일을 숫자 id로 변환
+            const numericUserId = await supabaseApi.getUserIdByEmail(email);
+            console.log('2. 변환된 ID:', numericUserId);
+
+            // 챌린지 데이터 가져오기
+            const challenges = await supabaseApi.get('challenges', '*, participants(*)');
+            console.log('3. 챌린지 개수:', challenges.length);
+            
+            // 참여 챌린지 필터링
+            const joinedChallenges = challenges.filter(challenge => 
+                challenge.participants && 
+                challenge.participants.some(p => p.authorId === numericUserId)
+            );
+            console.log('4. 참여 챌린지 개수:', joinedChallenges.length);
+
 			return joinedChallenges;
 		} catch(error){
+			console.error('오류 발생:', error);
 			return rejectWithValue(error.message);
 		}
 	}
