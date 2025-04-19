@@ -27,31 +27,59 @@ export default function UserChallengeList({ filteredChallenges }) {
 
 	const [numericUserId, setNumericUserId] = useState(null);
 
-    useEffect(() => {
-		const fetchNumericUserId = async () => {
-			if(userId){
-				try{
-					const id = await supabaseApi.getUserIdByEmail(userId);
-					setNumericUserId(id)
-				}catch (error){
-					console.error('Error fetching numeric user ID:', error);
-				}
-			}
-		};
+    // useEffect(() => {
+	// 	const fetchNumericUserId = async () => {
+	// 		if(userId){
+	// 			try{
+	// 				const id = await supabaseApi.getUserIdByEmail(userId);
+	// 				setNumericUserId(id);
 
-		fetchNumericUserId();
-    }, [userId]); 
+	// 				// 숫자 id를 얻은 후 바로 데이터 요청
+	// 				dispatch(fetchJoinedChallengesFromSupabase(userId));
+	// 				dispatch(fetchMyPostFromSupabase(userId));
+
+	// 			}catch (error){
+	// 				console.error('Error fetching numeric user ID:', error);
+	// 			}
+	// 		}
+	// 	};
+
+	// 	fetchNumericUserId();
+    // }, []);
+
+
+
 
     // 노출할 목록 선택
     const challengesToDisplay =
         (filteredChallenges?.length > 0
             ? filteredChallenges
-            : joinedChallenges) || [];
+            : joinedChallenges?.length >0 ? joinedChallenges : myPosts) || [];
 
     // 참여날짜 오래된 순으로 정렬
     const sortedChallenges = [...challengesToDisplay].sort(
         (a, b) => new Date(b.joinDate) - new Date(a.joinDate)
     );
+
+	// useEffect(() => {
+	// 	console.log('정렬된 챌린지들:', sortedChallenges);
+	// 	sortedChallenges.forEach(challenge => {
+	// 	  console.log('챌린지 authorId:', challenge.authorId, '타입:', typeof challenge.authorId);
+	// 	});
+	//   }, []);
+
+	// useEffect(() => {
+	// 	if(joinedChallenges && joinedChallenges.length > 0) {
+	// 		console.log('joinedChallenges 데이터:', joinedChallenges);
+			
+	// 		// 참가자 데이터 구조 확인
+	// 		const firstChallenge = joinedChallenges[0];
+	// 		console.log('첫 번째 챌린지 구조:', firstChallenge);
+	// 		console.log('participants 구조:', firstChallenge.participants);
+	// 	} else {
+	// 		console.log('joinedChallenges가 비어 있습니다:', joinedChallenges);
+	// 	}
+	// }, [joinedChallenges]);
 
     // 역순 번호 매핑
     const challengeNumber = (index) => sortedChallenges.length - index;
@@ -98,10 +126,6 @@ export default function UserChallengeList({ filteredChallenges }) {
 	}
 
     // 내 챌린지 여부 아이콘 표시
-    // const isMyChallenge = async (authorId) => {
-    //     if (!Array.isArray(myPosts)) return 'opacity-0';
-	// 	return authorId === numericUserId ? 'opacity-100' : 'opacity-0';
-    // };
 	const isMyChallenge = (authorId) => {
 		if (!numericUserId || !Array.isArray(myPosts)) return 'opacity-0';
 		console.log('비교:', authorId, numericUserId, authorId === numericUserId);
@@ -115,8 +139,17 @@ export default function UserChallengeList({ filteredChallenges }) {
         setModalOpen(true);
     };
 
+	const isLoading = useSelector((state) => state.userChallenge.loading.joinedChallenges);
+
     return (
         <>
+			{isLoading ? (
+            <div className="text-center py-4">데이터를 불러오는 중...</div>
+        ) : (
+            <ul className='w-full h-[486px] md:h-[566px] text-xs md:text-sm overflow-scroll scrollbar-none list-none'>
+                {/* 기존 코드 유지 */}
+            </ul>
+        )}
             <ul className='w-full h-[486px] md:h-[566px] text-xs md:text-sm overflow-scroll scrollbar-none list-none'>
                 {filteredChallenges && filteredChallenges.length === 0 ? (
                     <li className='text-center text-gray-500 py-4'>
