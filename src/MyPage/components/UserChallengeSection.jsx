@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserChallengeSearch from './UserChallengeSearch';
 import UserChallengeList from './UserChallengeList';
 import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice';
 import ModalForLogin from '../../common/ModalForLogin';
+import { fetchJoinedChallengesFromSupabase, fetchMyPostFromSupabase } from '../../store/features/userChallengeSlice';
 
 const UserChallengeSection = () => {
     const dispatch = useDispatch();
     const joinedChallenges = useSelector((state) => state.userChallenge.joinedChallenges) || [];
+	const myPosts = useSelector((state) => state.userChallenge.myPosts);
 	const loading = useSelector((state) => state.userChallenge.loading.joinedChallenges);
 
     const [categoryFilter, setCategoryFilter] = useState('전체');
@@ -16,11 +18,13 @@ const UserChallengeSection = () => {
     const [filterByDoingStatus, setFilterByDoingStatus] = useState(false);
     const [filterByDoneStatus, setFilterByDoneStatus] = useState(false);
     const [filteredChallenges, setFilteredChallenges] = useState([]);
+	const [dataFetched, setDataFetched] = useState(false);
+
 
 	// 초기화 시 로컬스토리지에서 값 바로 가져오기
 	const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem('loggedInUser'));
 
-	// 로그인하지 않은 유저의 경우 모달창 표시 초기 상태를 false로 하고 나중에 확인
+	// 로그인하지 않은 유저의 경우 모달창 표시 (초기 상태를 false로 하고 나중에 확인)
 	const [loginModalOpen, setLoginModalOpen] = useState(false);
 
 	useEffect(() => {
@@ -33,21 +37,27 @@ const UserChallengeSection = () => {
 		setLoginModalOpen(false);
 	}
 
-	// supabase에서 참여한 챌린지 글 가져오기
-    useEffect(() => {
-		const userId = localStorage.getItem('loggedInUser');
-		if(userId){
-			setLoggedInUser(userId);
-			dispatch(fetchChallengesFromSupabase(userId));
-		}
-    }, [dispatch]);
 
-	// 데이터가 로드되면 필터링된 챌린지 초기화
-    useEffect(() => {
-        if (joinedChallenges.length > 0) {
-            setFilteredChallenges([...joinedChallenges]);
-        }
-    }, [joinedChallenges]);
+	// 데이터 한 번만 가져오기
+	useEffect(() => {
+		if(loggedInUser && !dataFetched){
+			dispatch(fetchJoinedChallengesFromSupabase(loggedInUser));
+			dispatch(fetchMyPostFromSupabase(loggedInUser));
+			setDataFetched(true);
+		}
+	}, [loggedInUser, dataFetched, dispatch]);
+
+
+	// 필터링 로직을 메모이제이션 해서 최적화 하기
+
+	const applyFilters = useCallback(() => {
+		if(!joinedChallenges.length) return [];
+
+		let filtered = [...joinedChallenges];
+
+
+	})
+
 
 
     // 검색에 따른 목록 노출

@@ -15,7 +15,6 @@ import { supabaseApi } from '../../utils/supabaseApi';
 
 export default function UserChallengeList({ filteredChallenges }) {
     const dispatch = useDispatch();
-    const myPosts = useSelector((state) => state.userChallenge.myPosts);
 	
     const joinedChallenges = useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
