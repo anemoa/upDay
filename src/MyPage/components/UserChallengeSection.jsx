@@ -55,53 +55,43 @@ const UserChallengeSection = () => {
 
 		let filtered = [...joinedChallenges];
 
-
-	})
-
-
-
-    // 검색에 따른 목록 노출
-    useEffect(() => {
-        let filtered = [...joinedChallenges];
-
-		// 카테고리 필터링
-
-        if (categoryFilter !== '전체') {
-            filtered = filtered.filter(
-                (challenge) => challenge.category === categoryFilter
-            );
-        }
+		// 카테고리 필터	
+		if (categoryFilter !== '전체') {
+			filtered = filtered.filter(
+				(challenge) => challenge.category === categoryFilter
+			);
+		}
 
 		// 검색어 필터링
-        if (searchTerm.trim() !== '') {
-            const lowerSearchTerm = searchTerm.toLowerCase();
-            filtered = filtered.filter(
-                (challenge) =>
-                    challenge.title.toLowerCase().includes(lowerSearchTerm) ||
-                    challenge.content.toLowerCase().includes(lowerSearchTerm)
-            );
-        }
+		if (searchTerm.trim() !== '') {
+			const lowerSearchTerm = searchTerm.toLowerCase();
+			filtered = filtered.filter(
+				(challenge) =>
+					challenge.title.toLowerCase().includes(lowerSearchTerm) ||
+					challenge.content.toLowerCase().includes(lowerSearchTerm)
+			);
+		}
 
 		// 내가 작성한 챌린지 글 필터링
-        if (filterByMyPost) {
-            filtered = filtered.filter(
-                (challenge) => challenge.authorId === loggedInUser
-            );
-        }
+		if (filterByMyPost) {
+			filtered = filtered.filter(
+				(challenge) => challenge.authorId === loggedInUser
+			);
+		}
 
 		// 진행 중인 상태 필터링
-        if (filterByDoingStatus) {
-            filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => p.authorId === loggedInUser && p.status === 'doing'));
-        }
-
+		if (filterByDoingStatus) {
+			filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => p.authorId === loggedInUser && p.status === 'doing'));
+		}
+		
 		// 완료 상태 필터링
-        if (filterByDoneStatus) {
-            filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => p.authorId === loggedInUser && p.status === 'done'));
-        }
+		if (filterByDoneStatus) {
+			filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => p.authorId === loggedInUser && p.status === 'done'));
+		}
 
-        // 결과가 없으면 빈 배열을 설정하여 "검색 결과 없음"을 표시
-        setFilteredChallenges(filtered.length > 0 ? filtered : []);
-    }, [
+		return filtered;
+
+	}, [
         categoryFilter,
         searchTerm,
         joinedChallenges,
@@ -110,6 +100,14 @@ const UserChallengeSection = () => {
         filterByDoneStatus,
 		loggedInUser
     ]);
+
+
+
+    // 필터링 적용
+    useEffect(() => {
+		const filtered = applyFilters();
+		setFilteredChallenges(filtered);
+    }, [applyFilters]);
 
 
 
@@ -127,7 +125,7 @@ const UserChallengeSection = () => {
                 filterByDoneStatus={filterByDoneStatus}
                 setFilterByDoneStatus={setFilterByDoneStatus}
             />
-            <UserChallengeList filteredChallenges={filteredChallenges} />
+            <UserChallengeList filteredChallenges={filteredChallenges} myPosts={myPosts} />
 			
 			{/* 로그인 모달 */}
 			<ModalForLogin isOpen={loginModalOpen} onClose={handleCloseLoginModal} />
