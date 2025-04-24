@@ -39,17 +39,34 @@ const UserChallengeSection = () => {
 
 
 	// 데이터 한 번만 가져오기
+	// useEffect(() => {
+	// 	if(loggedInUser && !dataFetched){
+	// 		dispatch(fetchJoinedChallengesFromSupabase(loggedInUser));
+	// 		dispatch(fetchMyPostFromSupabase(loggedInUser));
+	// 		setDataFetched(true);
+	// 	}
+	// }, [loggedInUser, dataFetched, dispatch]);
 	useEffect(() => {
-		if(loggedInUser && !dataFetched){
+		// localStorage에 이미 데이터가 로드되었다는 표시가 있는지 확인
+		const hasLoadedData = localStorage.getItem('hasLoadedChallengeData');
+		
+		if(loggedInUser && !dataFetched && !hasLoadedData){
+			console.log('데이터 로드 시작');
 			dispatch(fetchJoinedChallengesFromSupabase(loggedInUser));
 			dispatch(fetchMyPostFromSupabase(loggedInUser));
+			setDataFetched(true);
+			
+			// 데이터를 로드했다는 표시를 localStorage에 저장
+			localStorage.setItem('hasLoadedChallengeData', 'true');
+			console.log('데이터 로드 완료 표시 저장');
+		} else {
+			console.log('이미 데이터가 로드되었습니다.');
 			setDataFetched(true);
 		}
 	}, [loggedInUser, dataFetched, dispatch]);
 
 
 	// 필터링 로직을 메모이제이션 해서 최적화 하기
-
 	const applyFilters = useCallback(() => {
 		if(!joinedChallenges.length) return [];
 
