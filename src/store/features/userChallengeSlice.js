@@ -85,11 +85,11 @@ const initialState = {
 	selectedChallenge: null,
 	loading: {
 		myPosts: false,
-		joinChallenges: false
+		joinedChallenges: false
 	},
 	error: {
 		myPosts: null,
-		joinChallenges: null
+		joinedChallenges: null
 	}
 };
 
