@@ -13,22 +13,29 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 	'userChallenge/fetchMyPostFromSupabase',
 	async (email, {rejectWithValue}) => {
 		try{
+			console.log('내 글 가져오는지 확인 시작');
+			
 			// 1. 이메일을 숫자 id로 변환하기
 			const numericUserId = await supabaseApi.getUserIdByEmail(email);
-			//console.log('email: ', email, '숫자 아이디: ', numericUserId);
+			console.log('email: ', email, '숫자 아이디: ', numericUserId);
 			
 			// 2. 모든 챌린지 글 가져오기
 			const challenges = await supabaseApi.get('challenges', '*');
-
-			// 내가 작성한 챌린지만 필터링
-			const myPosts = challenges.filter(post => post.authorId === numericUserId);
-
-			console.log('필터링 된 내 포스트들', myPosts);
-
-			console.log('변환된 숫자 ID:', numericUserId, 'type:', typeof numericUserId);
-			console.log('전체 챌린지 개수:', challenges.length);
-
+			console.log('전체 챌린지 수: ', challenges.length);
 			
+
+			// // 내가 작성한 챌린지만 필터링
+			// const myPosts = challenges.filter(post => String(post.authorId) === String(numericUserId));
+
+			// console.log('필터링 된 내 포스트들의 수: ', myPosts.length);
+			const myPosts = challenges.filter(post => {
+				console.log('Post authorId:', post.author_id, 'type:', typeof post.author_id);
+				console.log('My userId:', numericUserId, 'type:', typeof numericUserId);
+				console.log('Comparison result:', String(post.authorId) === String(numericUserId));
+				return String(post.author_id) === String(numericUserId);
+			});
+			console.log('필터링된 내 포스트:', myPosts);
+
 			return myPosts;
 		} catch(error){
 			return rejectWithValue(error.message);
@@ -42,17 +49,7 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 	'userChallenge/fetchJoinedChallengesFromSupabase',
 	async (email, {rejectWithValue}) => {
 		try{
-			// // 1. 이메일을 숫자 id로 변환하기
-			// const numericUserId = await supabaseApi.getUserIdByEmail(email);
-
-			// // 2. 전체 챌린지 가져오기
-			// const challenges = await supabaseApi.get('challenges', '*, participants(*)');
-
-			// // 3. 참여 중인 챌린지 필터링
-			// const joinedChallenges = challenges.filter(
-			// 	challenge => challenge.participants && challenge.participants.some(p => p.authorId === numericUserId)
-			// );
-			console.log('1. 액션 시작:', email);
+			console.log('참여한 챌린지 가져오기 시작');
             
             // 이메일을 숫자 id로 변환
             const numericUserId = await supabaseApi.getUserIdByEmail(email);
@@ -65,9 +62,9 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
             // 참여 챌린지 필터링
             const joinedChallenges = challenges.filter(challenge => 
                 challenge.participants && 
-                challenge.participants.some(p => p.authorId === numericUserId)
+                challenge.participants.some(p => String(p.author_id) === String(numericUserId))
             );
-            console.log('4. 참여 챌린지 개수:', joinedChallenges.length);
+            console.log('참여 챌린지 개수:', joinedChallenges.length);
 
 			return joinedChallenges;
 		} catch(error){
@@ -87,11 +84,10 @@ const initialState = {
 		myPosts: false,
 		joinedChallenges: false
 	},
-	error: {
-		myPosts: null,
-		joinedChallenges: null
-	}
+	error: null,
 };
+
+
 
 
 // 슬라이스 생성
@@ -99,30 +95,30 @@ const userChallengeSlice = createSlice({
 	name: 'userChallenge',
 	initialState,
 	reducers: {
-		setSelectedChallenge: (state, action) => {
-			state.selectedChallenge = action.payload;
-		}
+		// setSelectedChallenge: (state, action) => {
+		// 	state.selectedChallenge = action.payload;
+		// }
 	},
 	extraReducers: (builder) => {
 		builder
 			// 내가 작성한 챌린지 가져오기
 			.addCase(fetchMyPostFromSupabase.pending, (state)=> {
 				state.loading.myPosts = true;
-				state.error.myPosts = null;
+				//state.error.myPosts = null;
 			})
 			.addCase(fetchMyPostFromSupabase.fulfilled, (state, action) => {
 				state.myPosts = action.payload;
-				state.error.myPosts = null;
+				state.loading.myPosts = false;
 			})
 			.addCase(fetchMyPostFromSupabase.rejected, (state, action) => {
 				state.loading.myPosts = false;
-				state.error.myPosts = action.payload;
+				state.error = action.payload;
 			})
 
 			// 참여한 챌린지 가져오기
 			.addCase(fetchJoinedChallengesFromSupabase.pending, (state) => {
 				state.loading.joinedChallenges = true;
-				state.error.joinChallenges = null;
+				//state.error.joinChallenges = null;
 			})
 			.addCase(fetchJoinedChallengesFromSupabase.fulfilled, (state, action) => {
 				state.joinedChallenges = action.payload;
@@ -130,14 +126,13 @@ const userChallengeSlice = createSlice({
 			})
 			.addCase(fetchJoinedChallengesFromSupabase.rejected, (state, action) => {
 				state.loading.joinedChallenges = false;
-				state.error.joinChallenges = action.payload;
+				state.error = action.payload;
 			})
 	}
 });
 
 
 
-
-export const { setSelectedChallenge } = userChallengeSlice.actions;
+//export const { setSelectedChallenge } = userChallengeSlice.actions;
 
 export default userChallengeSlice.reducer;
