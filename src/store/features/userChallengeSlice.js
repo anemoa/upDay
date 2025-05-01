@@ -2,16 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { supabaseApi } from '../../utils/supabaseApi';
 
 
-async function getNumericUserIdFromEmail(email) {
-	// supabaseApi에 있는 함수 활용
-	const userId = await supabaseApi.getUserIdByEmail(email);
-	return userId;
-}
-
 // 내가 작성한 챌린지 데이터 가져오기
 export const fetchMyPostFromSupabase = createAsyncThunk(
 	'userChallenge/fetchMyPostFromSupabase',
-	async (email, {rejectWithValue}) => {
+	async (email, {getState, rejectWithValue}) => {
+
+		// 데이터가 이미 있는 경우에만 스킵 (로딩 상태는 확인하지 않음)
+        const {myPosts} = getState().userChallenge;
+        if (myPosts && myPosts.length > 0) {
+            console.log('이미 데이터가 있음: ', myPosts.length);
+            return myPosts;
+        }
+
+
 		try{
 			console.log('내 글 가져오는지 확인 시작');
 			
@@ -25,16 +28,9 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 			
 
 			// // 내가 작성한 챌린지만 필터링
-			// const myPosts = challenges.filter(post => String(post.authorId) === String(numericUserId));
-
-			// console.log('필터링 된 내 포스트들의 수: ', myPosts.length);
-			const myPosts = challenges.filter(post => {
-				console.log('Post authorId:', post.author_id, 'type:', typeof post.author_id);
-				console.log('My userId:', numericUserId, 'type:', typeof numericUserId);
-				console.log('Comparison result:', String(post.authorId) === String(numericUserId));
-				return String(post.author_id) === String(numericUserId);
-			});
-			console.log('필터링된 내 포스트:', myPosts);
+			const myPosts = challenges.filter(post =>  String(post.author_id) === String(numericUserId));
+			console.log('필터링된 내 포스트 수:', myPosts.length);
+            console.log('내 포스트 목록:', myPosts);
 
 			return myPosts;
 		} catch(error){
@@ -47,7 +43,15 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 // 참여한 챌린지 데이터 가져오기
 export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 	'userChallenge/fetchJoinedChallengesFromSupabase',
-	async (email, {rejectWithValue}) => {
+	async (email, {getState, rejectWithValue}) => {
+		
+        // 데이터가 이미 있는 경우에만 스킵
+        const {joinedChallenges} = getState().userChallenge;
+        if (joinedChallenges && joinedChallenges.length > 0) {
+            console.log('이미 참여 챌린지 데이터가 있음:', joinedChallenges.length);
+            return joinedChallenges;
+        }
+
 		try{
 			console.log('참여한 챌린지 가져오기 시작');
             
@@ -95,9 +99,9 @@ const userChallengeSlice = createSlice({
 	name: 'userChallenge',
 	initialState,
 	reducers: {
-		// setSelectedChallenge: (state, action) => {
-		// 	state.selectedChallenge = action.payload;
-		// }
+		setSelectedChallenge: (state, action) => {
+			state.selectedChallenge = action.payload;
+		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -133,6 +137,6 @@ const userChallengeSlice = createSlice({
 
 
 
-//export const { setSelectedChallenge } = userChallengeSlice.actions;
+export const { setSelectedChallenge } = userChallengeSlice.actions;
 
 export default userChallengeSlice.reducer;

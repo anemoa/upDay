@@ -15,7 +15,7 @@ const UserChallengeSection = () => {
 	// 필터링 관련 상태
     const [categoryFilter, setCategoryFilter] = useState('전체');
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterByMyPost, setFilterByMyPost] = useState(false);
+    const [filterByMyPost, setFilterByMyPost] = useState(true);
     const [filterByDoingStatus, setFilterByDoingStatus] = useState(false);
     const [filterByDoneStatus, setFilterByDoneStatus] = useState(false);
     const [filteredChallenges, setFilteredChallenges] = useState([]);
@@ -44,22 +44,31 @@ const UserChallengeSection = () => {
 		
 		if(userId){
 			console.log('데이터 로드 시작');
-			dispatch(fetchJoinedChallengesFromSupabase(loggedInUser));
-			dispatch(fetchMyPostFromSupabase(loggedInUser));
-			setDataFetched(true);
-			
-			// 데이터를 로드했다는 표시를 localStorage에 저장
-			localStorage.setItem('hasLoadedChallengeData', 'true');
-			console.log('데이터 로드 완료 표시 저장');
+			dispatch(fetchJoinedChallengesFromSupabase(userId));
+			dispatch(fetchMyPostFromSupabase(userId));
+
 		}
-	}, [loggedInUser, dataFetched, dispatch]);
+	}, [dispatch, userId]);
+
+	useEffect(() => {
+		console.log('현재 Redux 상태 - myPosts:', myPosts);
+		console.log('현재 Redux 상태 - joinedChallenges:', joinedChallenges);
+	}, [myPosts, joinedChallenges]);
 
 
 	// 필터링 로직을 메모이제이션 해서 최적화 하기
 	const applyFilters = useCallback(() => {
-		if(!joinedChallenges.length) return [];
+		let dataSource = filterByMyPost ? myPosts : joinedChallenges;
 
-		let filtered = [...joinedChallenges];
+		// 데이터 없으면 빈 배열로 반환하기
+		if(!dataSource.length) {
+			console.log('데이터 소스 비었음');
+				
+			return [];
+		}
+		console.log('필터링 시작 - 데이터 소스:', dataSource.length, '개');
+
+		let filtered = [...dataSource];
 
 		// 카테고리 필터	
 		if (categoryFilter !== '전체') {
@@ -79,20 +88,20 @@ const UserChallengeSection = () => {
 		}
 
 		// 내가 작성한 챌린지 글 필터링
-		if (filterByMyPost) {
-			filtered = filtered.filter(
-				(challenge) => challenge.authorId === loggedInUser
-			);
-		}
+		// if (filterByMyPost) {
+		// 	filtered = filtered.filter(
+		// 		(challenge) => String(challenge.author_id) === String(userId)
+		// 	);
+		// }
 
 		// 진행 중인 상태 필터링
 		if (filterByDoingStatus) {
-			filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => p.authorId === loggedInUser && p.status === 'doing'));
+			filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => String(p.author_id) === String(userId) && p.status === 'doing'));
 		}
 		
 		// 완료 상태 필터링
 		if (filterByDoneStatus) {
-			filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => p.authorId === loggedInUser && p.status === 'done'));
+			filtered = filtered.filter((challenge) => challenge.participants && challenge.participants.some(p => String(p.author_id) === String(userId) && p.status === 'done'));
 		}
 
 		return filtered;
@@ -101,10 +110,11 @@ const UserChallengeSection = () => {
         categoryFilter,
         searchTerm,
         joinedChallenges,
+		myPosts,
         filterByMyPost,
         filterByDoingStatus,
         filterByDoneStatus,
-		loggedInUser
+		userId
     ]);
 
 
