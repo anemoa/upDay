@@ -78,6 +78,18 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 	}
 );
 
+// 챌린지 상태 업데이트
+export const updateChallengeStatus = createAsyncThunk(
+	'userChallenge/updateChallengeStatus',
+	async({challengeId, userId, status}, {rejectWithValue}) => {
+		try{
+			// 1. 현재 참여 정보 가져오기
+			const participant = await supabaseApi;
+		} catch(error){
+			return rejectWithValue(error);
+		}
+	}
+)
 
 //초기 상태
 const initialState = {
