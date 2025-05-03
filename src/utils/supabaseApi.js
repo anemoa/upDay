@@ -84,3 +84,56 @@ export const supabaseApi = {
 		}
 	}
 };
+
+
+// 참여자 정보 가져오기
+const getParticipant = async (challengeId, userId) => {
+	try {
+	  const response = await axios.get(`/api/participants`, {
+		params: {
+		  challenge_id: challengeId,
+		  author_id: userId
+		}
+	  });
+	  return response.data.length > 0 ? response.data[0] : null;
+	} catch (error) {
+	  console.error('참여자 정보 조회 실패:', error);
+	  throw error;
+	}
+  };
+  
+  // 참여자 상태 업데이트
+  const updateParticipantStatus = async (participantId, status) => {
+	try {
+	  const response = await axios.put(`/api/participants/${participantId}`, {
+		status: status
+	  });
+	  return response.data;
+	} catch (error) {
+	  console.error('참여자 상태 업데이트 실패:', error);
+	  throw error;
+	}
+  };
+  
+  // 새 참여자 생성
+  const createParticipant = async (challengeId, userId, status) => {
+	try {
+	  const response = await axios.post(`/api/participants`, {
+		challenge_id: challengeId,
+		author_id: userId,
+		status: status
+	  });
+	  return response.data;
+	} catch (error) {
+	  console.error('참여자 생성 실패:', error);
+	  throw error;
+	}
+  };
+  
+  // 함수 내보내기 (기존 export에 추가)
+  export {
+	// 기존 export 함수들...
+	getParticipant,
+	updateParticipantStatus,
+	createParticipant
+  };
