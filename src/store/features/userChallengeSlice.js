@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { supabaseApi } from '../../utils/supabaseApi';
+import { createParticipant, getParticipant, supabaseApi, updateParticipantStatus } from '../../utils/supabaseApi';
 
 
 // 내가 작성한 챌린지 데이터 가져오기
@@ -79,17 +79,41 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 );
 
 // 챌린지 상태 업데이트
+// export const updateChallengeStatus = createAsyncThunk(
+// 	'userChallenge/updateChallengeStatus',
+// 	async({challengeId, userId, status}, {rejectWithValue}) => {
+// 		try{
+// 			// 1. 현재 참여 정보 가져오기
+// 			const participant = await supabaseApi;
+// 		} catch(error){
+// 			return rejectWithValue(error);
+// 		}
+// 	}
+// )
+
+// 챌린지 상태 업데이트
 export const updateChallengeStatus = createAsyncThunk(
 	'userChallenge/updateChallengeStatus',
 	async({challengeId, userId, status}, {rejectWithValue}) => {
 		try{
 			// 1. 현재 참여 정보 가져오기
-			const participant = await supabaseApi;
+			const participant = await getParticipant(challengeId, userId);
+			
+			let result;
+			// 2. 참여 정보가 있으면 업데이트, 없으면 새로 생성
+			if (participant) {
+				result = await updateParticipantStatus(participant.id, status);
+			} else {
+				result = await createParticipant(challengeId, userId, status);
+			}
+			
+			// 3. 업데이트된 챌린지 정보 반환
+			return { challengeId, userId, status, result };
 		} catch(error){
-			return rejectWithValue(error);
+			return rejectWithValue(error.message);
 		}
 	}
-)
+);
 
 //초기 상태
 const initialState = {

@@ -100,7 +100,7 @@ const getParticipant = async (challengeId, userId) => {
 	  console.error('참여자 정보 조회 실패:', error);
 	  throw error;
 	}
-  };
+};
   
   // 참여자 상태 업데이트
   const updateParticipantStatus = async (participantId, status) => {
