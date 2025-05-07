@@ -26,9 +26,21 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     const challengeNumber = (index) => sortedChallenges.length - index;
 
     // 챌린지 상태 변경 핸들러
-    const handleToggle = (id, type) => {
-        //dispatch(toggleClgState({ id, type }));
-        console.log(`Challenge ${id} toggle ${type} - 현재는 읽기만`);
+    const handleToggle = (challengeId, type) => {
+		// 로그인확인
+		if(!userId){
+			alert('로그인이 필요합니다');
+			return;
+		}
+
+		// 현재 챌린지 찾기
+		const challenge = filteredChallenges.find(ch => ch.id === challengeId);
+		if(!challenge) return;
+
+		// 현재 사용자의 참여 정보 찾기
+		const userParticipation = challenge.participants?.find( p => String(p.author_id) === String(userId));
+
+		
     };
 
     // 챌린지 카테고리별 뱃지 클래스
