@@ -88,18 +88,6 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
     }
 );
 
-// 챌린지 상태 업데이트
-// export const updateChallengeStatus = createAsyncThunk(
-// 	'userChallenge/updateChallengeStatus',
-// 	async({challengeId, userId, status}, {rejectWithValue}) => {
-// 		try{
-// 			// 1. 현재 참여 정보 가져오기
-// 			const participant = await supabaseApi;
-// 		} catch(error){
-// 			return rejectWithValue(error);
-// 		}
-// 	}
-// )
 
 // 챌린지 상태 업데이트
 export const updateChallengeStatus = createAsyncThunk(
@@ -182,8 +170,8 @@ const userChallengeSlice = createSlice({
                 }
             )
 
-            // updateChallengeStatus 액션 처리
-            		.addCase(updateChallengeStatus.pending, (state) => {
+        // updateChallengeStatus 액션 처리
+        .addCase(updateChallengeStatus.pending, (state) => {
 			state.loading.status = true;
 		})
 		.addCase(updateChallengeStatus.fulfilled, (state, action) => {

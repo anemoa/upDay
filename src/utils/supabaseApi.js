@@ -130,9 +130,8 @@ const getParticipant = async (challengeId, userId) => {
 	}
   };
   
-  // 함수 내보내기 (기존 export에 추가)
+
   export {
-	// 기존 export 함수들...
 	getParticipant,
 	updateParticipantStatus,
 	createParticipant
