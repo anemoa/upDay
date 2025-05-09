@@ -38,7 +38,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 		// 현재 사용자의 참여 정보 찾기
 		const userParticipation = challenge.participants?.find( p => String(p.author_id) === String(userId));
 
-		// 상태 결정하기
+		// 상태 결정하기!
 		let newStatus;
 		if (type === 'doing') {
 			// 이미 'doing' 상태면 해제, 아니면 'doing'으로 설정
