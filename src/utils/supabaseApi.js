@@ -56,83 +56,73 @@ export const supabaseApi = {
     },
 
     // 삭제
-	async delete(table, id){
-		try{
-			const response = await axios.delete(
-				`${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
-				{headers}
-			);
-			return response.data;
-		} catch(error){
-			console.error('API Error:', error);
-			throw error;
-		}
-	},
+    async delete(table, id) {
+        try {
+            const response = await axios.delete(
+                `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
+                { headers }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    },
 
-	//수정
-	async patch(table, id, data){
-		try{
-			const response = await axios.patch(
-				`${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
-				data,
-				{headers}
-			);
-			return response.data;
-		} catch(error){
-			console.error('API Error:', error);
-			throw error;
-		}
-	}
+    //수정
+    async patch(table, id, data) {
+        try {
+            const response = await axios.patch(
+                `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
+                data,
+                { headers }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    },
 };
-
 
 // 참여자 정보 가져오기
 const getParticipant = async (challengeId, userId) => {
-	try {
-	  const response = await axios.get(`/api/participants`, {
-		params: {
-		  challenge_id: challengeId,
-		  author_id: userId
-		}
-	  });
-	  return response.data.length > 0 ? response.data[0] : null;
-	} catch (error) {
-	  console.error('참여자 정보 조회 실패:', error);
-	  throw error;
-	}
+    try {
+        const response = await supabaseApi.get(
+            'participants',
+            `*&challenge_id=eq.${challengeId}&author_id=eq.${userId}`
+        );
+        return response.length > 0 ? response[0] : null;
+    } catch (error) {
+        console.error('참여자 정보 조회 실패:', error);
+        throw error;
+    }
 };
-  
-  // 참여자 상태 업데이트
-  const updateParticipantStatus = async (participantId, status) => {
-	try {
-	  const response = await axios.put(`/api/participants/${participantId}`, {
-		status: status
-	  });
-	  return response.data;
-	} catch (error) {
-	  console.error('참여자 상태 업데이트 실패:', error);
-	  throw error;
-	}
-  };
-  
-  // 새 참여자 생성
-  const createParticipant = async (challengeId, userId, status) => {
-	try {
-	  const response = await axios.post(`/api/participants`, {
-		challenge_id: challengeId,
-		author_id: userId,
-		status: status
-	  });
-	  return response.data;
-	} catch (error) {
-	  console.error('참여자 생성 실패:', error);
-	  throw error;
-	}
-  };
-  
 
-  export {
-	getParticipant,
-	updateParticipantStatus,
-	createParticipant
-  };
+// 참여자 상태 업데이트
+const updateParticipantStatus = async (participantId, status) => {
+    try {
+        return await supabaseApi.patch('participants', participantId, {
+            status,
+        });
+    } catch (error) {
+        console.error('참여자 상태 업데이트 실패:', error);
+        throw error;
+    }
+};
+
+// 새 참여자 생성
+const createParticipant = async (challengeId, userId, status) => {
+    try {
+        return await supabaseApi.post('participants', {
+            challenge_id: challengeId,
+            author_id: userId,
+            status: status,
+        });
+    } catch (error) {
+        console.error('참여자 생성 실패:', error);
+        throw error;
+    }
+};
+
+export { getParticipant, updateParticipantStatus, createParticipant };
