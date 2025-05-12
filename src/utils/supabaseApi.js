@@ -88,11 +88,16 @@ export const supabaseApi = {
 // 참여자 정보 가져오기
 const getParticipant = async (challengeId, userId) => {
     try {
-        const response = await supabaseApi.get(
-            'participants',
-            `*&challenge_id=eq.${challengeId}&author_id=eq.${userId}`
+        const participants = await supabaseApi.get('participants', '*');
+
+        // 메모리에서 필터링
+        return (
+            participants.find(
+                (p) =>
+                    String(p.challenge_id) === String(challengeId) &&
+                    String(p.author_id) === String(userId)
+            ) || null
         );
-        return response.length > 0 ? response[0] : null;
     } catch (error) {
         console.error('참여자 정보 조회 실패:', error);
         throw error;
