@@ -118,16 +118,29 @@ const updateParticipantStatus = async (participantId, status) => {
 
 // 새 참여자 생성
 const createParticipant = async (challengeId, userId, status) => {
-    try {
-        return await supabaseApi.post('participants', {
-            challenge_id: challengeId,
-            author_id: userId,
-            status: status,
-        });
-    } catch (error) {
-        console.error('참여자 생성 실패:', error);
-        throw error;
+  try {
+    console.log('요청 URL:', `${supabaseUrl}/rest/v1/participants`);
+    console.log('요청 헤더:', headers);
+    console.log('요청 데이터:', { challenge_id: challengeId, author_id: userId, status });
+    
+    const response = await axios.post(
+      `${supabaseUrl}/rest/v1/participants`,
+      {
+        challenge_id: challengeId,
+        author_id: userId,
+        status: status
+      },
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('참여자 생성 실패:', error);
+    if (error.response) {
+      console.error('응답 데이터:', error.response.data);
+      console.error('응답 상태:', error.response.status);
     }
+    throw error;
+  }
 };
 
 export { getParticipant, updateParticipantStatus, createParticipant };
