@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedChallenge, updateChallengeStatus } from '../../store/features/userChallengeSlice';
+import {
+    setSelectedChallenge,
+    updateChallengeStatus,
+} from '../../store/features/userChallengeSlice';
 import { BsDot } from 'react-icons/bs';
 import { HiFire, HiDocumentCheck } from 'react-icons/hi2';
 import UserChallengeModal from './UserChallengeModal';
@@ -8,7 +11,9 @@ import UserChallengeModal from './UserChallengeModal';
 export default function UserChallengeList({ filteredChallenges, myPosts }) {
     const dispatch = useDispatch();
     const [isModalOpen, setModalOpen] = useState(false);
-    const numericUserId = useSelector( state => state.userChallenge.numericUserId );
+    const numericUserId = useSelector(
+        (state) => state.userChallenge.numericUserId
+    );
     const userId = localStorage.getItem('loggedInUser');
 
     const getBadgeClass = (category) => badgeClasses[category] || '';
@@ -24,37 +29,60 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     const challengeNumber = (index) => sortedChallenges.length - index;
 
     // 챌린지 상태 변경 핸들러
+    // 챌린지 상태 변경 핸들러
     const handleToggle = (challengeId, type) => {
-		// 로그인확인
-		if(!userId){
-			alert('로그인이 필요합니다');
-			return;
-		}
+        // 로그인 확인
+        if (!userId) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
 
-		// 현재 챌린지 찾기
-		const challenge = filteredChallenges.find(ch => ch.id === challengeId);
-		if(!challenge) return;
+        // numericUserId 확인
+        console.log('numericUserId:', numericUserId);
+        if (!numericUserId) {
+            console.error('사용자 ID가 없습니다!');
+            // 안내 메시지 추가
+            alert(
+                '사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.'
+            );
+            return;
+        }
 
-		// 현재 사용자의 참여 정보 찾기
-		const userParticipation = challenge.participants?.find( p => String(p.author_id) === String(userId));
+        // 현재 챌린지 찾기
+        const challenge = filteredChallenges.find((c) => c.id === challengeId);
+        if (!challenge) return;
 
-		// 상태 결정하기!
-		let newStatus;
-		if (type === 'doing') {
-			// 이미 'doing' 상태면 해제, 아니면 'doing'으로 설정
-			newStatus = userParticipation?.status === 'doing' ? 'not_started' : 'doing';
-		} else if (type === 'done') {
-			// 이미 'done' 상태면 해제, 아니면 'done'으로 설정
-			newStatus = userParticipation?.status === 'done' ? 'not_started' : 'done';
-		}
-	
-		// 리덕스 액션 디스패치
-		dispatch(updateChallengeStatus({
-			challengeId,
-			userId: numericUserId,
-			status: newStatus
-		}));
+        // 현재 사용자의 참여 정보 찾기
+        const userParticipation = challenge.participants?.find(
+            (p) => String(p.author_id) === String(numericUserId)
+        );
 
+        // 상태 결정하기
+        let newStatus;
+        if (type === 'doing') {
+            // 이미 'doing' 상태면 해제, 아니면 'doing'으로 설정
+            newStatus =
+                userParticipation?.status === 'doing' ? 'not_started' : 'doing';
+        } else if (type === 'done') {
+            // 이미 'done' 상태면 해제, 아니면 'done'으로 설정
+            newStatus =
+                userParticipation?.status === 'done' ? 'not_started' : 'done';
+        }
+
+        console.log('상태 업데이트 요청:', {
+            challengeId,
+            userId: numericUserId, // 여기 확인
+            status: newStatus,
+        });
+
+        // 리덕스 액션 디스패치
+        dispatch(
+            updateChallengeStatus({
+                challengeId,
+                userId: numericUserId,
+                status: newStatus,
+            })
+        );
     };
 
     // 챌린지 카테고리별 뱃지 클래스
