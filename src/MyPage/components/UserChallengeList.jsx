@@ -29,32 +29,17 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     const challengeNumber = (index) => sortedChallenges.length - index;
 
     // 챌린지 상태 변경 핸들러
-    // 챌린지 상태 변경 핸들러
     const handleToggle = (challengeId, type) => {
-        // 로그인 확인
-        if (!userId) {
-            alert('로그인이 필요합니다.');
-            return;
-        }
-
-        // numericUserId 확인
-        console.log('numericUserId:', numericUserId);
-        if (!numericUserId) {
-            console.error('사용자 ID가 없습니다!');
-            // 안내 메시지 추가
-            alert(
-                '사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.'
-            );
-            return;
-        }
+        // 임시 하드코딩 ID (개발용)
+        const tempUserId = 1; // 데이터베이스에 존재하는 ID 사용
 
         // 현재 챌린지 찾기
         const challenge = filteredChallenges.find((c) => c.id === challengeId);
         if (!challenge) return;
 
-        // 현재 사용자의 참여 정보 찾기
+        // 현재 사용자의 참여 정보 찾기 (수정된 부분: tempUserId 사용)
         const userParticipation = challenge.participants?.find(
-            (p) => String(p.author_id) === String(numericUserId)
+            (p) => String(p.author_id) === String(tempUserId)
         );
 
         // 상태 결정하기
@@ -71,7 +56,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 
         console.log('상태 업데이트 요청:', {
             challengeId,
-            userId: numericUserId, // 여기 확인
+            userId: tempUserId, // 하드코딩된 ID 사용
             status: newStatus,
         });
 
@@ -79,7 +64,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
         dispatch(
             updateChallengeStatus({
                 challengeId,
-                userId: numericUserId,
+                userId: tempUserId, // 하드코딩된 ID 사용
                 status: newStatus,
             })
         );
