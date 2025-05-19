@@ -88,7 +88,6 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
     }
 );
 
-
 // 챌린지 상태 업데이트
 export const updateChallengeStatus = createAsyncThunk(
     'userChallenge/updateChallengeStatus',
@@ -170,55 +169,76 @@ const userChallengeSlice = createSlice({
                 }
             )
 
-        // updateChallengeStatus 액션 처리
-        .addCase(updateChallengeStatus.pending, (state) => {
-			state.loading.status = true;
-		})
-		.addCase(updateChallengeStatus.fulfilled, (state, action) => {
-			const { challengeId, userId, status } = action.payload;
-			
-			// 참여 챌린지 상태 업데이트
-			state.joinedChallenges = state.joinedChallenges.map(challenge => {
-				if (challenge.id === challengeId) {
-					// 기존 participants 배열 복사
-					const updatedParticipants = [...(challenge.participants || [])];
-					
-					// 현재 사용자의 참여 정보 찾기
-					const participantIndex = updatedParticipants.findIndex(
-						p => String(p.author_id) === String(userId)
-					);
-					
-					if (participantIndex >= 0) {
-						// 기존 참여자 정보 업데이트
-						updatedParticipants[participantIndex] = {
-							...updatedParticipants[participantIndex],
-							status
-						};
-					} else {
-						// 새 참여자 추가
-						updatedParticipants.push({
-							author_id: userId,
-							challenge_id: challengeId,
-							status
-						});
-					}
-					
-					// 업데이트된 챌린지 반환
-					return {
-						...challenge,
-						participants: updatedParticipants
-					};
-				}
-				return challenge;
-			});
-			
-			state.loading.status = false;
-		})
-		.addCase(updateChallengeStatus.rejected, (state, action) => {
-			state.loading.status = false;
-			state.error = action.payload;
-		})
-}
+            // updateChallengeStatus 액션 처리
+            .addCase(updateChallengeStatus.pending, (state) => {
+                state.loading.status = true;
+            })
+            .addCase(updateChallengeStatus.fulfilled, (state, action) => {
+                console.log('상태 업데이트 액션 실행:', action.payload);
+                const { challengeId, userId, status } = action.payload;
+
+                // 상태 업데이트 전 participants 배열 확인
+                console.log(
+                    '업데이트 전 참가자 배열:',
+                    state.joinedChallenges.find((c) => c.id === challengeId)
+                        ?.participants
+                );
+
+                // 참여 챌린지 상태 업데이트
+                state.joinedChallenges = state.joinedChallenges.map(
+                    (challenge) => {
+                        if (challenge.id === challengeId) {
+                            // 기존 participants 배열 복사
+                            const updatedParticipants = [
+                                ...(challenge.participants || []),
+                            ];
+
+                            // 현재 사용자의 참여 정보 찾기
+                            const participantIndex =
+                                updatedParticipants.findIndex(
+                                    (p) =>
+                                        String(p.author_id) === String(userId)
+                                );
+
+                            if (participantIndex >= 0) {
+                                // 기존 참여자 정보 업데이트
+                                updatedParticipants[participantIndex] = {
+                                    ...updatedParticipants[participantIndex],
+                                    status,
+                                };
+                            } else {
+                                // 새 참여자 추가
+                                updatedParticipants.push({
+                                    author_id: userId,
+                                    challenge_id: challengeId,
+                                    status,
+                                });
+                            }
+
+                            // 업데이트된 챌린지 반환
+                            return {
+                                ...challenge,
+                                participants: updatedParticipants,
+                            };
+                        }
+                        return challenge;
+                    }
+                );
+
+                state.loading.status = false;
+
+                // 상태 업데이트 후 participants 배열 다시 확인
+                console.log(
+                    '업데이트 후 참가자 배열:',
+                    state.joinedChallenges.find((c) => c.id === challengeId)
+                        ?.participants
+                );
+            })
+            .addCase(updateChallengeStatus.rejected, (state, action) => {
+                state.loading.status = false;
+                state.error = action.payload;
+            });
+    },
 });
 
 export const { setSelectedChallenge } = userChallengeSlice.actions;
