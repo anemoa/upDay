@@ -96,10 +96,26 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     };
 
     const getChallengeDoingClass = (challenge) => {
-        const userPaticipation = challenge.participants?.find(
-            (p) => p.author_id === userId
+        // const userPaticipation = challenge.participants?.find(
+        //     (p) => p.author_id === userId
+        // );
+        // return userPaticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
+        const tempUserId = 1; // 임시 아이디 사용
+
+        const userParticipation = challenge.participants?.find(
+            (p) => String(p.author_id) === String(tempUserId)
         );
-        return userPaticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
+
+        const classResult =
+            userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
+        console.log(
+            '버튼 클래스 계산:',
+            challenge.id,
+            userParticipation?.status,
+            classResult
+        );
+
+        return classResult;
     };
 
     const getChallengeDoneClass = (challenge) => {

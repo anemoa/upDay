@@ -158,6 +158,7 @@ const createParticipant = async (challengeId, userId, status) => {
             },
             { headers }
         );
+		console.log('참여자 생성 요청 성공! 응답:', response.data);
         return response.data;
     } catch (error) {
         console.error('참여자 생성 실패:', error);
