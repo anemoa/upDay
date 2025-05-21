@@ -16,6 +16,11 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     );
     const userId = localStorage.getItem('loggedInUser');
 
+    // Redux 상태를 직접 구독
+    const joinedChallenges = useSelector(
+        (state) => state.userChallenge.joinedChallenges
+    );
+
     const getBadgeClass = (category) => badgeClasses[category] || '';
 
     const sortedChallenges =
@@ -96,15 +101,22 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     };
 
     const getChallengeDoingClass = (challenge) => {
-        // const userPaticipation = challenge.participants?.find(
-        //     (p) => p.author_id === userId
-        // );
-        // return userPaticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
         const tempUserId = 1; // 임시 아이디 사용
 
-        const userParticipation = challenge.participants?.find(
+        // Redux 상태에서 직접 챌린지 찾기
+        const reduxChallenge = joinedChallenges.find(
+            (c) => c.id === challenge.id
+        );
+
+        console.log('Redux에서 찾은 챌린지:', reduxChallenge);
+        console.log('Redux participants:', reduxChallenge?.participants);
+
+        // reduxChallenge를 사용해야 함!
+        const userParticipation = reduxChallenge?.participants?.find(
             (p) => String(p.author_id) === String(tempUserId)
         );
+
+        console.log('찾은 참여자 정보:', tempUserId, userParticipation);
 
         const classResult =
             userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
@@ -119,10 +131,18 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     };
 
     const getChallengeDoneClass = (challenge) => {
-        const userPaticipation = challenge.participants?.find(
-            (p) => p.author_id === userId
+        const tempUserId = 1; // 임시 아이디 사용
+
+        // Redux 상태에서 직접 챌린지 찾기
+        const reduxChallenge = joinedChallenges.find(
+            (c) => c.id === challenge.id
         );
-        return userPaticipation?.status === 'done' ? 'done-on' : 'done-off';
+
+        const userParticipation = reduxChallenge?.participants?.find(
+            (p) => String(p.author_id) === String(tempUserId)
+        );
+
+        return userParticipation?.status === 'done' ? 'done-on' : 'done-off';
     };
 
     // 내 챌린지 여부 아이콘 표시

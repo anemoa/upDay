@@ -221,6 +221,7 @@ const userChallengeSlice = createSlice({
                                 participants: updatedParticipants,
                             };
                         }
+
                         return challenge;
                     }
                 );
@@ -232,6 +233,14 @@ const userChallengeSlice = createSlice({
                     '업데이트 후 참가자 배열:',
                     state.joinedChallenges.find((c) => c.id === challengeId)
                         ?.participants
+                );
+
+                console.log(
+                    '업데이트 후 participants 배열 상세:',
+                    JSON.stringify(
+                        state.joinedChallenges.find((c) => c.id === challengeId)
+                            ?.participants
+                    )
                 );
             })
             .addCase(updateChallengeStatus.rejected, (state, action) => {
