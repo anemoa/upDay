@@ -38,14 +38,19 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
         // 임시 하드코딩 ID (개발용)
         const tempUserId = 1; // 데이터베이스에 존재하는 ID 사용
 
-        // 현재 챌린지 찾기
-        const challenge = filteredChallenges.find((c) => c.id === challengeId);
-        if (!challenge) return;
+        // Redux 상태에서 최신 챌린지 찾기 (⭐️ 여기 중요함 ⭐️)
+        const challenge = joinedChallenges.find((c) => c.id === challengeId);
+        if (!challenge) {
+            console.log('Redis에서 챌린지를 찾을 수 없음:', challengeId);
+            return;
+        }
 
-        // 현재 사용자의 참여 정보 찾기 (수정된 부분: tempUserId 사용)
+        // Redux 상태에서 현재 사용자의 참여 정보 찾기
         const userParticipation = challenge.participants?.find(
             (p) => String(p.author_id) === String(tempUserId)
         );
+
+        console.log('현재 참여 상태:', userParticipation?.status);
 
         // 상태 결정하기
         let newStatus;
@@ -59,11 +64,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
                 userParticipation?.status === 'done' ? 'not_started' : 'done';
         }
 
-        console.log('상태 업데이트 요청:', {
-            challengeId,
-            userId: tempUserId, // 하드코딩된 ID 사용
-            status: newStatus,
-        });
+        console.log('변경할 상태:', userParticipation?.status, '->', newStatus);
 
         // 리덕스 액션 디스패치
         dispatch(
