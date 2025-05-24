@@ -7,8 +7,6 @@ import { fetchJoinedChallengesFromSupabase } from '../../store/features/userChal
 const UserReportSection = () => {
     const dispatch = useDispatch();
     const [loggedInUser, setLoggedInUser] = useState(null);
-    // const [users, setUsers] = useState([]);
-    // const [isTestAccount, setIsTestAccount] = useState(false);
     const joinedChallenges =
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
@@ -35,19 +33,23 @@ const UserReportSection = () => {
         );
     }).length;
     const completedChallengesCount = joinedChallenges.filter((challenge) => {
-        challenge.participants &&
+        return (
+            challenge.participants &&
             challenge.participants.some(
-                (p) => p.authorId === loggedInUser && p.status === 'done'
-            );
+                (p) => String(p.author_id) === String(1) && p.status === 'done'
+            )
+        );
     }).length;
     const incompleteChallengesCount = joinedChallenges.filter((challenge) => {
-        challenge.participants &&
+        return (
+            challenge.participants &&
             challenge.participants.some(
                 (p) =>
-                    p.authorId === loggedInUser &&
+                    String(p.author_id) === String(1) &&
                     p.status !== 'doing' &&
                     p.status !== 'done'
-            );
+            )
+        );
     }).length;
 
     const completionRate =
