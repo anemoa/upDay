@@ -34,7 +34,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     const challengeNumber = (index) => sortedChallenges.length - index;
 
     // 챌린지 상태 변경 핸들러
-    const handleToggle = (challengeId, type) => {
+    const handleToggle = async (challengeId, type) => {
         // 임시 하드코딩 ID (개발용)
         const tempUserId = 1; // 데이터베이스에 존재하는 ID 사용
 
@@ -67,13 +67,18 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
         console.log('변경할 상태:', userParticipation?.status, '->', newStatus);
 
         // 리덕스 액션 디스패치
-        dispatch(
-            updateChallengeStatus({
-                challengeId,
-                userId: tempUserId, // 하드코딩된 ID 사용
-                status: newStatus,
-            })
-        );
+        try {
+            const result = await dispatch(
+                updateChallengeStatus({
+                    challengeId,
+                    userId: tempUserId, // 하드코딩된 ID 사용
+                    status: newStatus,
+                })
+            ).unwrap(); // unwrap() 이걸로 성공/실패 확인
+			console.log('상태 업데이트 성공: ', result);
+        } catch (error) {
+			console.error('상태 업데이트 실패: ', error);
+		}
     };
 
     // 챌린지 카테고리별 뱃지 클래스
