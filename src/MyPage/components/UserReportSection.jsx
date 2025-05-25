@@ -11,7 +11,6 @@ const UserReportSection = () => {
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     // localStorage 값 가져오기
-
     useEffect(() => {
         const userId = localStorage.getItem('loggedInUser') || '';
         setLoggedInUser(userId);
