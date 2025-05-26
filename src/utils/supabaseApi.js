@@ -107,9 +107,17 @@ const getParticipant = async (challengeId, userId) => {
 // 참여자 상태 업데이트
 const updateParticipantStatus = async (participantId, status) => {
     try {
-        return await supabaseApi.patch('participants', participantId, {
+        console.log('🔄 참여자 상태 업데이트 요청:', {
+            participantId,
             status,
         });
+
+        const result = await supabaseApi.patch('participants', participantId, {
+            status,
+        });
+
+        console.log('✅ 참여자 상태 업데이트 성공:', result);
+        return result;
     } catch (error) {
         console.error('참여자 상태 업데이트 실패:', error);
         throw error;
@@ -117,37 +125,17 @@ const updateParticipantStatus = async (participantId, status) => {
 };
 
 // 새 참여자 생성
-// const createParticipant = async (challengeId, userId, status) => {
-//   try {
-//     console.log('요청 URL:', `${supabaseUrl}/rest/v1/participants`);
-//     console.log('요청 헤더:', headers);
-//     console.log('요청 데이터:', { challenge_id: challengeId, author_id: userId, status });
-
-//     const response = await axios.post(
-//       `${supabaseUrl}/rest/v1/participants`,
-//       {
-//         challenge_id: challengeId,
-//         author_id: userId,
-//         status: status
-//       },
-//       { headers }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error('참여자 생성 실패:', error);
-//     if (error.response) {
-//       console.error('응답 데이터:', error.response.data);
-//       console.error('응답 상태:', error.response.status);
-//     }
-//     throw error;
-//   }
-// };
-
 // createParticipant 함수 수정
 const createParticipant = async (challengeId, userId, status) => {
     try {
         // userId가 없으면 임시값 사용 (개발용)
         const actualUserId = userId || 1; // 데이터베이스에 존재하는 ID 사용
+
+        console.log('📝 새 참여자 생성 요청:', {
+            challenge_id: challengeId,
+            author_id: actualUserId,
+            status: status,
+        });
 
         const response = await axios.post(
             `${supabaseUrl}/rest/v1/participants`,
@@ -158,7 +146,7 @@ const createParticipant = async (challengeId, userId, status) => {
             },
             { headers }
         );
-		console.log('참여자 생성 요청 성공! 응답:', response.data);
+        console.log('참여자 생성 요청 성공! 응답:', response.data);
         return response.data;
     } catch (error) {
         console.error('참여자 생성 실패:', error);
