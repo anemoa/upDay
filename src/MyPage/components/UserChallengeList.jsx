@@ -35,10 +35,9 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 
     // 챌린지 상태 변경 핸들러
     const handleToggle = async (challengeId, type) => {
-        // 임시 하드코딩 ID (개발용)
         const tempUserId = 1; // 데이터베이스에 존재하는 ID 사용
 
-        // Redux 상태에서 최신 챌린지 찾기 (⭐️ 여기 중요함 ⭐️)
+        // Redux 상태에서 최신 챌린지 찾기
         const challenge = joinedChallenges.find((c) => c.id === challengeId);
         if (!challenge) {
             console.log('Redis에서 챌린지를 찾을 수 없음:', challengeId);
@@ -50,35 +49,39 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
             (p) => String(p.author_id) === String(tempUserId)
         );
 
-        console.log('현재 참여 상태:', userParticipation?.status);
+        console.log('🔍 현재 참여 상태:', userParticipation?.status);
 
         // 상태 결정하기
         let newStatus;
         if (type === 'doing') {
-            // 이미 'doing' 상태면 해제, 아니면 'doing'으로 설정
             newStatus =
                 userParticipation?.status === 'doing' ? 'not_started' : 'doing';
         } else if (type === 'done') {
-            // 이미 'done' 상태면 해제, 아니면 'done'으로 설정
             newStatus =
                 userParticipation?.status === 'done' ? 'not_started' : 'done';
         }
 
-        console.log('변경할 상태:', userParticipation?.status, '->', newStatus);
+        console.log(
+            '🎯 변경할 상태:',
+            userParticipation?.status,
+            '->',
+            newStatus
+        );
 
-        // 리덕스 액션 디스패치
+        // 🚀 리덕스 액션 디스패치 (async/await 완성!)
         try {
             const result = await dispatch(
                 updateChallengeStatus({
                     challengeId,
-                    userId: tempUserId, // 하드코딩된 ID 사용
+                    userId: tempUserId,
                     status: newStatus,
                 })
-            ).unwrap(); // unwrap() 이걸로 성공/실패 확인
-			console.log('상태 업데이트 성공: ', result);
+            ).unwrap(); // unwrap()으로 성공/실패 확인
+
+            console.log('✅ 상태 업데이트 성공:', result);
         } catch (error) {
-			console.error('상태 업데이트 실패: ', error);
-		}
+            console.error('❌ 상태 업데이트 실패:', error);
+        }
     };
 
     // 챌린지 카테고리별 뱃지 클래스
