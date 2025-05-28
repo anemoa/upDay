@@ -69,17 +69,37 @@ export const supabaseApi = {
         }
     },
 
-    //수정
+    // 수정
     async patch(table, id, data) {
         try {
+            console.log('🔧 PATCH 요청 시작:', {
+                table,
+                id,
+                data,
+                url: `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
+            });
+
             const response = await axios.patch(
                 `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
                 data,
-                { headers }
+                {
+                    headers: {
+                        ...headers,
+                        Prefer: 'return=representation', // 🎯 이게 핵심!
+                    },
+                }
             );
+
+            console.log('🔧 PATCH 응답:', response.data);
+            console.log('🔧 PATCH 상태 코드:', response.status);
+
             return response.data;
         } catch (error) {
-            console.error('API Error:', error);
+            console.error('❌ PATCH 에러:', error);
+            if (error.response) {
+                console.error('❌ 응답 데이터:', error.response.data);
+                console.error('❌ 응답 상태:', error.response.status);
+            }
             throw error;
         }
     },
