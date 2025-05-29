@@ -51,8 +51,6 @@ const UserChallengeSection = () => {
 	}, [dispatch, userId]);
 
 	useEffect(() => {
-		console.log('현재 Redux 상태 - myPosts:', myPosts);
-		console.log('현재 Redux 상태 - joinedChallenges:', joinedChallenges);
 	}, [myPosts, joinedChallenges]);
 
 
@@ -66,7 +64,6 @@ const UserChallengeSection = () => {
 				
 			return [];
 		}
-		console.log('필터링 시작 - 데이터 소스:', dataSource.length, '개');
 
 		let filtered = [...dataSource];
 
@@ -86,13 +83,6 @@ const UserChallengeSection = () => {
 					challenge.content.toLowerCase().includes(lowerSearchTerm)
 			);
 		}
-
-		// 내가 작성한 챌린지 글 필터링
-		// if (filterByMyPost) {
-		// 	filtered = filtered.filter(
-		// 		(challenge) => String(challenge.author_id) === String(userId)
-		// 	);
-		// }
 
 		// 진행 중인 상태 필터링
 		if (filterByDoingStatus) {
