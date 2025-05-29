@@ -151,12 +151,6 @@ const createParticipant = async (challengeId, userId, status) => {
         // userId가 없으면 임시값 사용 (개발용)
         const actualUserId = userId || 1; // 데이터베이스에 존재하는 ID 사용
 
-        console.log('📝 새 참여자 생성 요청:', {
-            challenge_id: challengeId,
-            author_id: actualUserId,
-            status: status,
-        });
-
         const response = await axios.post(
             `${supabaseUrl}/rest/v1/participants`,
             {
@@ -166,7 +160,6 @@ const createParticipant = async (challengeId, userId, status) => {
             },
             { headers }
         );
-        console.log('참여자 생성 요청 성공! 응답:', response.data);
         return response.data;
     } catch (error) {
         console.error('참여자 생성 실패:', error);

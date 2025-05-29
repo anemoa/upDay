@@ -49,8 +49,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
             (p) => String(p.author_id) === String(tempUserId)
         );
 
-        console.log('🔍 현재 참여 상태:', userParticipation?.status);
-
         // 상태 결정하기
         let newStatus;
         if (type === 'doing') {
@@ -78,7 +76,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
                 })
             ).unwrap(); // unwrap()으로 성공/실패 확인
 
-            console.log('✅ 상태 업데이트 성공:', result);
         } catch (error) {
             console.error('❌ 상태 업데이트 실패:', error);
         }
@@ -116,9 +113,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
         const reduxChallenge = joinedChallenges.find(
             (c) => c.id === challenge.id
         );
-
-        console.log('Redux에서 찾은 챌린지:', reduxChallenge);
-        console.log('Redux participants:', reduxChallenge?.participants);
 
         // reduxChallenge를 사용해야 함!
         const userParticipation = reduxChallenge?.participants?.find(

@@ -18,22 +18,22 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
         }
 
         try {
-            console.log('내 글 가져오는지 확인 시작');
+            // console.log('내 글 가져오는지 확인 시작');
 
             // 1. 이메일을 숫자 id로 변환하기
             const numericUserId = await supabaseApi.getUserIdByEmail(email);
-            console.log('email: ', email, '숫자 아이디: ', numericUserId);
+            // console.log('email: ', email, '숫자 아이디: ', numericUserId);
 
             // 2. 모든 챌린지 글 가져오기
             const challenges = await supabaseApi.get('challenges', '*');
-            console.log('전체 챌린지 수: ', challenges.length);
+            // console.log('전체 챌린지 수: ', challenges.length);
 
             // // 내가 작성한 챌린지만 필터링
             const myPosts = challenges.filter(
                 (post) => String(post.author_id) === String(numericUserId)
             );
-            console.log('필터링된 내 포스트 수:', myPosts.length);
-            console.log('내 포스트 목록:', myPosts);
+            // console.log('필터링된 내 포스트 수:', myPosts.length);
+            // console.log('내 포스트 목록:', myPosts);
 
             return myPosts;
         } catch (error) {
@@ -49,26 +49,26 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
         // 데이터가 이미 있는 경우에만 스킵
         const { joinedChallenges } = getState().userChallenge;
         if (joinedChallenges && joinedChallenges.length > 0) {
-            console.log(
-                '이미 참여 챌린지 데이터가 있음:',
-                joinedChallenges.length
-            );
+            // console.log(
+            //     '이미 참여 챌린지 데이터가 있음:',
+            //     joinedChallenges.length
+            // );
             return joinedChallenges;
         }
 
         try {
-            console.log('참여한 챌린지 가져오기 시작');
+            // console.log('참여한 챌린지 가져오기 시작');
 
             // 이메일을 숫자 id로 변환
             const numericUserId = await supabaseApi.getUserIdByEmail(email);
-            console.log('2. 변환된 ID:', numericUserId);
+            // console.log('2. 변환된 ID:', numericUserId);
 
             // 챌린지 데이터 가져오기
             const challenges = await supabaseApi.get(
                 'challenges',
                 '*, participants(*)'
             );
-            console.log('3. 챌린지 개수:', challenges.length);
+            // console.log('3. 챌린지 개수:', challenges.length);
 
             // 참여 챌린지 필터링
             const joinedChallenges = challenges.filter(
@@ -78,7 +78,7 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
                         (p) => String(p.author_id) === String(numericUserId)
                     )
             );
-            console.log('참여 챌린지 개수:', joinedChallenges.length);
+            // console.log('참여 챌린지 개수:', joinedChallenges.length);
 
             return joinedChallenges;
         } catch (error) {
