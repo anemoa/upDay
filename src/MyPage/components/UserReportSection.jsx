@@ -51,15 +51,12 @@ const UserReportSection = () => {
         );
     }).length;
 
-    const completionRate =
-        completedChallengesCount + incompleteChallengesCount > 0
-            ? Math.round(
-                  (completedChallengesCount /
-                      (completedChallengesCount + incompleteChallengesCount)) *
-                      100
-              )
-            : 0;
+	// 목표 달성률 계산
+	const totalChallenges = doingChallengesCount + completedChallengesCount + incompleteChallengesCount;
 
+    const completionRate = totalChallenges > 0
+            ? Math.round((completedChallengesCount / totalChallenges) * 100)
+            : 0;
     return (
         <div className="flex flex-col gap-2 w-full">
             <h1 className="text-xl md:text-2xl font-semibold">업데이 리포트</h1>
