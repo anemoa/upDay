@@ -60,8 +60,7 @@ const UserChallengeSection = () => {
 
 		// 데이터 없으면 빈 배열로 반환하기
 		if(!dataSource.length) {
-			console.log('데이터 소스 비었음');
-				
+			
 			return [];
 		}
 
