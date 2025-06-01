@@ -40,7 +40,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
         // Redux 상태에서 최신 챌린지 찾기
         const challenge = joinedChallenges.find((c) => c.id === challengeId);
         if (!challenge) {
-            console.log('Redis에서 챌린지를 찾을 수 없음:', challengeId);
             return;
         }
 
@@ -59,14 +58,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
                 userParticipation?.status === 'done' ? 'not_started' : 'done';
         }
 
-        console.log(
-            '🎯 변경할 상태:',
-            userParticipation?.status,
-            '->',
-            newStatus
-        );
-
-        // 🚀 리덕스 액션 디스패치 (async/await 완성!)
+        // 리덕스 액션 디스패치 (async/await 완성!)
         try {
             const result = await dispatch(
                 updateChallengeStatus({
@@ -119,16 +111,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
             (p) => String(p.author_id) === String(tempUserId)
         );
 
-        console.log('찾은 참여자 정보:', tempUserId, userParticipation);
-
-        const classResult =
-            userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
-        console.log(
-            '버튼 클래스 계산:',
-            challenge.id,
-            userParticipation?.status,
-            classResult
-        );
+        const classResult = userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
 
         return classResult;
     };
