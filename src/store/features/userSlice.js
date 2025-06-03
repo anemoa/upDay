@@ -5,6 +5,7 @@ const initialState = {
     password: '',
     nickname: '',
     profileImage: '',
+    about: '',
 };
 
 const userSlice = createSlice({
@@ -28,6 +29,9 @@ const userSlice = createSlice({
             state.password = action.payload.password;
             state.nickname = action.payload.nickname;
             state.profileImage = action.payload.profileImage;
+        },
+        setAbout: (state, action) => {
+            state.about = action.payload;
         },
     },
 });
