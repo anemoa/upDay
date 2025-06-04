@@ -29,6 +29,7 @@ const userSlice = createSlice({
             state.password = action.payload.password;
             state.nickname = action.payload.nickname;
             state.profileImage = action.payload.profileImage;
+			state.about = action.payload.about || '';
         },
         setAbout: (state, action) => {
             state.about = action.payload;
@@ -36,7 +37,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setEmail, setPassword, setNickname, setProfileImage, setUser } =
-    userSlice.actions;
+export const { setEmail, setPassword, setNickname, setProfileImage, setUser, setAbout } = userSlice.actions;
 
 export default userSlice.reducer;
