@@ -243,7 +243,7 @@ export default function PersonalInfo() {
     };
 
     const handleCancel = () => {
-        setUserInfo(userInfo); // Reset userInfo to the original values
+        setUserInfo(originalUserInfo);
         setEditMode(false);
         setPasswordError('');
         setNicknameError('');
