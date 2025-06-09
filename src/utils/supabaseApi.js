@@ -171,4 +171,55 @@ const createParticipant = async (challengeId, userId, status) => {
     }
 };
 
-export { getParticipant, updateParticipantStatus, createParticipant };
+
+// 사용자 프로필 조회 (JOIN 사용)
+const getUserProfile = async (userId) => {
+    try {
+        const response = await axios.get(
+            `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,user_profiles(about,profile_image)`,
+            { headers }
+        );
+        return response.data[0] || null;
+    } catch (error) {
+        console.error('프로필 조회 실패:', error);
+        throw error;
+    }
+};
+
+// 프로필 업데이트 (users 테이블)
+const updateUserInfo = async (userId, userData) => {
+    try {
+        const result = await supabaseApi.patch('users', userId, userData);
+        return result;
+    } catch (error) {
+        console.error('사용자 정보 업데이트 실패:', error);
+        throw error;
+    }
+};
+
+// 프로필 생성/업데이트 (user_profiles 테이블)
+const upsertUserProfile = async (userId, profileData) => {
+    try {
+        // 먼저 기존 프로필이 있는지 확인
+        const existing = await axios.get(
+            `${supabaseUrl}/rest/v1/user_profiles?user_id=eq.${userId}`,
+            { headers }
+        );
+
+        if (existing.data.length > 0) {
+            // 업데이트
+            return await supabaseApi.patch('user_profiles', existing.data[0].id, profileData);
+        } else {
+            // 생성
+            return await supabaseApi.post('user_profiles', { 
+                user_id: userId, 
+                ...profileData 
+            });
+        }
+    } catch (error) {
+        console.error('프로필 upsert 실패:', error);
+        throw error;
+    }
+};
+
+export { getParticipant, updateParticipantStatus, createParticipant, getUserProfile, updateUserInfo, upsertUserProfile };
