@@ -164,8 +164,8 @@ const createParticipant = async (challengeId, userId, status) => {
     } catch (error) {
         console.error('참여자 생성 실패:', error);
         if (error.response) {
-            console.error('응답 데이터:', error.response.data);
-            console.error('응답 상태:', error.response.status);
+            console.error('응답 데이터: ', error.response.data);
+            console.error('응답 상태: ', error.response.status);
         }
         throw error;
     }
