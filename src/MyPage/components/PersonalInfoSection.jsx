@@ -29,21 +29,7 @@ const validateNickname = (nickname) => {
 };
 
 export default function PersonalInfo() {
-    const handleRefresh = () => {
-        window.location.reload();
-    };
-
-    const loggedInUserEmail = localStorage.getItem('loggedInUser');
-
-    const [users, setUsers] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem('users')) || [];
-        } catch (error) {
-            return [];
-        }
-    });
-    const loggedInUser = users.find((user) => user.email === loggedInUserEmail);
-
+    // 1. 모든 useState들 (타입별로 그룹핑)
     const [userInfo, setUserInfo] = useState({
         email: '',
         password: '',
@@ -53,20 +39,40 @@ export default function PersonalInfo() {
         profileImage: null,
         signupDate: '',
     });
-
     const [passwordError, setPasswordError] = useState('');
     const [nicknameError, setNicknameError] = useState('');
     const [editMode, setEditMode] = useState(false);
-    const defaultImages = useMemo(() => [img1, img2, img3, img4], []);
     const [originalUserInfo, setOriginalUserInfo] = useState(null);
+    const [challengeList, setChallengeList] = useState([]);
+    const [users, setUsers] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('users')) || [];
+        } catch (error) {
+            return [];
+        }
+    });
+
+    // 2. 모든 useRef들
     const uploadPhotoInput = useRef(null);
 
+    // 3. 모든 useMemo들
+    const defaultImages = useMemo(() => [img1, img2, img3, img4], []);
+
+    // 4. 계산된 값들 (외부 데이터 + 파생 상태)
+    const loggedInUserEmail = localStorage.getItem('loggedInUser');
+    const loggedInUser = users.find((user) => user.email === loggedInUserEmail);
+
+    // 5. 함수들
+    const handleRefresh = () => {
+        window.location.reload();
+    };
+
+    // 6. 모든 useEffect들
     useEffect(() => {
         if (loggedInUser) {
             setUserInfo((prev) => {
                 let initialProfileImage = loggedInUser.profileImage;
 
-                // 프로필 이미지가 없는 경우 랜덤 이미지 설정
                 if (!initialProfileImage) {
                     initialProfileImage =
                         defaultImages[
@@ -90,8 +96,6 @@ export default function PersonalInfo() {
             });
         }
     }, [loggedInUser, defaultImages]);
-
-    const [challengeList, setChallengeList] = useState([]);
 
     useEffect(() => {
         const challenges = JSON.parse(localStorage.getItem('clglist')) || [];
@@ -256,8 +260,8 @@ export default function PersonalInfo() {
 
     if (!loggedInUser) {
         return (
-            <div className='w-full h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 p-[36px]'>
-                <p className='text-center text-gray-500'>
+            <div className="w-full h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 p-[36px]">
+                <p className="text-center text-gray-500">
                     로그인한 유저 정보를 찾을 수 없습니다.
                 </p>
             </div>
@@ -265,28 +269,28 @@ export default function PersonalInfo() {
     }
 
     return (
-        <div className='w-full h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 p-[24px] md:p-[36px]'>
+        <div className="w-full h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 p-[24px] md:p-[36px]">
             <form
-                className='h-full flex flex-col justify-between'
+                className="h-full flex flex-col justify-between"
                 onSubmit={handleSubmit}
             >
-                <div className='space-y-4 md:space-y-12'>
-                    <div className='grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-3'>
-                        <div className='col-span-full'>
-                            <label htmlFor='photo' className='block text-sm'>
+                <div className="space-y-4 md:space-y-12">
+                    <div className="grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-3">
+                        <div className="col-span-full">
+                            <label htmlFor="photo" className="block text-sm">
                                 프로필 사진
                             </label>
-                            <div className='mt-2 flex items-center gap-x-3'>
+                            <div className="mt-2 flex items-center gap-x-3">
                                 {userInfo.profileImage ? (
-                                    <div className='w-[25%] ring-2 ring-neutral-300 aspect-square overflow-hidden rounded-full flex-shrink-0'>
+                                    <div className="w-[25%] ring-2 ring-neutral-300 aspect-square overflow-hidden rounded-full flex-shrink-0">
                                         <img
                                             src={userInfo.profileImage}
-                                            alt='프로필'
-                                            className='w-full h-full object-cover'
+                                            alt="프로필"
+                                            className="w-full h-full object-cover"
                                         />
                                     </div>
                                 ) : (
-                                    <div className='w-[25%] aspect-square overflow-hidden rounded-full flex-shrink-0 flex items-center justify-center bg-gray-200'>
+                                    <div className="w-[25%] aspect-square overflow-hidden rounded-full flex-shrink-0 flex items-center justify-center bg-gray-200">
                                         <img
                                             src={
                                                 defaultImages[
@@ -296,23 +300,23 @@ export default function PersonalInfo() {
                                                     )
                                                 ]
                                             }
-                                            alt='기본 프로필'
-                                            className='w-full h-full object-cover'
+                                            alt="기본 프로필"
+                                            className="w-full h-full object-cover"
                                         />
                                     </div>
                                 )}
 
                                 <input
-                                    type='file'
-                                    accept='image/*'
+                                    type="file"
+                                    accept="image/*"
                                     onChange={handleImageUpload}
-                                    className='hidden'
-                                    id='upload-photo'
+                                    className="hidden"
+                                    id="upload-photo"
                                     disabled={!editMode}
                                     ref={uploadPhotoInput}
                                 />
                                 <label
-                                    htmlFor='upload-photo'
+                                    htmlFor="upload-photo"
                                     className={`btn px-3 text-center whitespace-nowrap
                                             ${
                                                 editMode
@@ -323,14 +327,14 @@ export default function PersonalInfo() {
                                     사진 올리기
                                 </label>
                                 <input
-                                    type='button'
+                                    type="button"
                                     onClick={handleImageDelete}
-                                    className='hidden'
-                                    id='delete-photo'
+                                    className="hidden"
+                                    id="delete-photo"
                                     disabled={!editMode}
                                 />
                                 <label
-                                    htmlFor='delete-photo'
+                                    htmlFor="delete-photo"
                                     className={`btn px-3 text-center whitespace-nowrap
                                             ${
                                                 editMode
@@ -342,22 +346,22 @@ export default function PersonalInfo() {
                                 </label>
                             </div>
                         </div>
-                        <div className='col-span-full'>
-                            <label htmlFor='about' className='block text-sm/6'>
+                        <div className="col-span-full">
+                            <label htmlFor="about" className="block text-sm/6">
                                 소개글
                             </label>
-                            <div className='mt-2'>
+                            <div className="mt-2">
                                 {editMode ? (
                                     <textarea
-                                        id='about'
-                                        name='about'
+                                        id="about"
+                                        name="about"
                                         rows={3}
                                         value={userInfo.about}
                                         onChange={handleChange}
-                                        className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
+                                        className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
                                     />
                                 ) : (
-                                    <p className='bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 rounded-xl min-h-[72px]'>
+                                    <p className="bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 rounded-xl min-h-[72px]">
                                         {userInfo.about ||
                                             '아직 소개글을 작성하지 않았습니다. 프로필을 업데이트해보세요!'}
                                     </p>
@@ -365,69 +369,69 @@ export default function PersonalInfo() {
                             </div>
                         </div>
                     </div>
-                    <div className='grid grid-cols-1 gap-3 md:gap-x-4 md:gap-y-2 md:grid-cols-6'>
-                        <div className='sm:col-span-3'>
+                    <div className="grid grid-cols-1 gap-3 md:gap-x-4 md:gap-y-2 md:grid-cols-6">
+                        <div className="sm:col-span-3">
                             <label
-                                htmlFor='nickname'
-                                className='block text-sm/6 font-medium'
+                                htmlFor="nickname"
+                                className="block text-sm/6 font-medium"
                             >
                                 닉네임
                             </label>
-                            <div className='mt-2'>
+                            <div className="mt-2">
                                 <input
-                                    id='nickname'
-                                    name='nickname'
-                                    type='text'
+                                    id="nickname"
+                                    name="nickname"
+                                    type="text"
                                     value={userInfo.nickname}
                                     onChange={handleChange}
-                                    className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
+                                    className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
                                     disabled={!editMode}
                                 />
                                 {nicknameError && (
-                                    <p className='text-red-500 text-sm'>
+                                    <p className="text-red-500 text-sm">
                                         {nicknameError}
                                     </p>
                                 )}
                             </div>
                         </div>
-                        <div className='sm:col-span-3'>
+                        <div className="sm:col-span-3">
                             <label
-                                htmlFor='email'
-                                className='block text-sm/6 font-medium'
+                                htmlFor="email"
+                                className="block text-sm/6 font-medium"
                             >
                                 email
                             </label>
-                            <div className='mt-2'>
+                            <div className="mt-2">
                                 <input
-                                    id='email'
-                                    name='email'
-                                    type='text'
+                                    id="email"
+                                    name="email"
+                                    type="text"
                                     value={userInfo.email}
-                                    className='input-field'
+                                    className="input-field"
                                     readOnly
                                 />
                             </div>
                         </div>
                         {editMode && (
-                            <div className='sm:col-span-3'>
+                            <div className="sm:col-span-3">
                                 <label
-                                    htmlFor='password'
-                                    className='block text-sm/6 font-medium'
+                                    htmlFor="password"
+                                    className="block text-sm/6 font-medium"
                                 >
                                     변경할 비밀번호
                                 </label>
-                                <div className='mt-2'>
+                                <div className="mt-2">
                                     <input
-                                        id='password'
-                                        name='password'
-                                        type='password'
+                                        id="password"
+                                        name="password"
+                                        type="password"
                                         value={userInfo.password}
                                         onChange={handleChange}
-                                        className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
+                                        className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
                                         disabled={!editMode}
                                     />
                                     {passwordError && (
-                                        <p className='text-red-500 text-sm'>
+                                        <p className="text-red-500 text-sm">
                                             {passwordError}
                                         </p>
                                     )}
@@ -435,21 +439,21 @@ export default function PersonalInfo() {
                             </div>
                         )}
                         {editMode && (
-                            <div className='sm:col-span-3'>
+                            <div className="sm:col-span-3">
                                 <label
-                                    htmlFor='confirmPassword'
-                                    className='block text-sm/6 font-medium'
+                                    htmlFor="confirmPassword"
+                                    className="block text-sm/6 font-medium"
                                 >
                                     변경할 비밀번호 확인
                                 </label>
-                                <div className='mt-2'>
+                                <div className="mt-2">
                                     <input
-                                        id='confirmPassword'
-                                        name='confirmPassword'
-                                        type='password'
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        type="password"
                                         value={userInfo.confirmPassword}
                                         onChange={handleChange}
-                                        className='input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500'
+                                        className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
                                         disabled={!editMode}
                                     />
                                 </div>
@@ -457,27 +461,27 @@ export default function PersonalInfo() {
                         )}
                     </div>
                 </div>
-                <div className='flex justify-center gap-x-6'>
+                <div className="flex justify-center gap-x-6">
                     {!editMode ? (
                         <button
-                            type='button'
+                            type="button"
                             onClick={() => setEditMode(true)}
-                            className='btn btn-black w-[36%]  text-center whitespace-nowrap'
+                            className="btn btn-black w-[36%]  text-center whitespace-nowrap"
                         >
                             수정하기
                         </button>
                     ) : (
-                        <div className='w-full  flex justify-center gap-x-4 whitespace-nowrap'>
+                        <div className="w-full  flex justify-center gap-x-4 whitespace-nowrap">
                             <button
-                                type='button'
+                                type="button"
                                 onClick={() => setEditMode(false)}
-                                className='btn btn-negative flex-1 text-center'
+                                className="btn btn-negative flex-1 text-center"
                             >
                                 취소하기
                             </button>
                             <button
-                                type='submit'
-                                className='btn btn-black flex-1 text-center'
+                                type="submit"
+                                className="btn btn-black flex-1 text-center"
                             >
                                 저장하기
                             </button>
