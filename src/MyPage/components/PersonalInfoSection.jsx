@@ -3,6 +3,7 @@ import img1 from '../img/1.svg';
 import img2 from '../img/2.svg';
 import img3 from '../img/3.svg';
 import img4 from '../img/4.svg';
+import { getUserProfile, supabaseApi } from '../../utils/supabaseApi';
 
 // 비밀번호 유효성 검사 함수
 const validatePassword = (password) => {
@@ -44,13 +45,10 @@ export default function PersonalInfo() {
     const [editMode, setEditMode] = useState(false);
     const [originalUserInfo, setOriginalUserInfo] = useState(null);
     const [challengeList, setChallengeList] = useState([]);
-    const [users, setUsers] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem('users')) || [];
-        } catch (error) {
-            return [];
-        }
-    });
+    const [loggedInUser, setLoggedInUser] = useState(null);
+
+    // 계산된 값
+    const loggedInUserEmail = localStorage.getItem('loggedInUser');
 
     // 2. 모든 useRef들
     const uploadPhotoInput = useRef(null);
@@ -58,16 +56,36 @@ export default function PersonalInfo() {
     // 3. 모든 useMemo들
     const defaultImages = useMemo(() => [img1, img2, img3, img4], []);
 
-    // 4. 계산된 값들 (외부 데이터 + 파생 상태)
-    const loggedInUserEmail = localStorage.getItem('loggedInUser');
-    const loggedInUser = users.find((user) => user.email === loggedInUserEmail);
-
     // 5. 함수들
     const handleRefresh = () => {
         window.location.reload();
     };
 
     // 6. 모든 useEffect들
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (!loggedInUserEmail) return;
+
+            try {
+                // 1. email로 userId 찾기
+                const userId =
+                    await supabaseApi.getUserIdByEmail(loggedInUserEmail);
+
+                // 2. 프로필 정보 가져오기
+                if (userId) {
+                    const userData = await getUserProfile(userId);
+                    setLoggedInUser(userData);
+                }
+            } catch (error) {
+                console.error('사용자 정보 조회 실패:', error);
+                alert('프로필 정보를 불러올 수 없습니다.');
+            }
+        };
+
+        fetchUserData();
+    }, [loggedInUserEmail]);
+
     useEffect(() => {
         if (loggedInUser) {
             setUserInfo((prev) => {
