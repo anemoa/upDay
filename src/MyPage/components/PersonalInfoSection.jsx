@@ -185,7 +185,7 @@ export default function PersonalInfo() {
         setUsers(updatedUsers);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let error = validateNickname(userInfo.nickname);
@@ -194,15 +194,15 @@ export default function PersonalInfo() {
             return;
         }
 
-        const isNicknameTaken = users.some(
-            (user) =>
-                user.nickname === userInfo.nickname &&
-                user.email !== loggedInUserEmail
-        );
-        if (isNicknameTaken) {
-            setNicknameError('이 닉네임은 이미 사용 중입니다.');
-            return;
-        }
+        // const isNicknameTaken = users.some(
+        //     (user) =>
+        //         user.nickname === userInfo.nickname &&
+        //         user.email !== loggedInUserEmail
+        // );
+        // if (isNicknameTaken) {
+        //     setNicknameError('이 닉네임은 이미 사용 중입니다.');
+        //     return;
+        // }
 
         if (passwordError) {
             alert(passwordError);
@@ -213,6 +213,28 @@ export default function PersonalInfo() {
             alert('비밀번호가 일치하지 않습니다.');
             return;
         }
+
+		    try {
+        // 닉네임 중복 검사 API
+        const existingUsers = await supabaseApi.get('users', 'nickname');
+        const isNicknameTaken = existingUsers.some(
+            user => user.nickname === userInfo.nickname && user.email !== loggedInUserEmail
+        );
+        
+        if (isNicknameTaken) {
+            setNicknameError('이 닉네임은 이미 사용 중입니다.');
+            return;
+        }
+    } catch (error) {
+        console.error('닉네임 검사 실패:', error);
+        alert('닉네임 검사 중 오류가 발생했습니다.');
+        return;
+    }
+
+    if (passwordError) {
+        alert(passwordError);
+        return;
+    }
 
         const currentUserId = loggedInUserEmail;
         const newNickname = userInfo.nickname;
