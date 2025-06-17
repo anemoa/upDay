@@ -3,7 +3,7 @@ import img1 from '../img/1.svg';
 import img2 from '../img/2.svg';
 import img3 from '../img/3.svg';
 import img4 from '../img/4.svg';
-import { getUserProfile, supabaseApi } from '../../utils/supabaseApi';
+import { getUserProfile, supabaseApi, updateUserInfo } from '../../utils/supabaseApi';
 
 // 비밀번호 유효성 검사 함수
 const validatePassword = (password) => {
@@ -188,22 +188,15 @@ export default function PersonalInfo() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+		// 1. 닉네임 유효성 검사
         let error = validateNickname(userInfo.nickname);
         if (error) {
             setNicknameError(error);
             return;
         }
 
-        // const isNicknameTaken = users.some(
-        //     (user) =>
-        //         user.nickname === userInfo.nickname &&
-        //         user.email !== loggedInUserEmail
-        // );
-        // if (isNicknameTaken) {
-        //     setNicknameError('이 닉네임은 이미 사용 중입니다.');
-        //     return;
-        // }
 
+		// 2. 비밀번호 검사
         if (passwordError) {
             alert(passwordError);
             return;
@@ -214,44 +207,45 @@ export default function PersonalInfo() {
             return;
         }
 
-		    try {
-        // 닉네임 중복 검사 API
-        const existingUsers = await supabaseApi.get('users', 'nickname');
-        const isNicknameTaken = existingUsers.some(
-            user => user.nickname === userInfo.nickname && user.email !== loggedInUserEmail
-        );
-        
-        if (isNicknameTaken) {
-            setNicknameError('이 닉네임은 이미 사용 중입니다.');
+		// 3. 닉네임 중복 검사
+        try {
+            const existingUsers = await supabaseApi.get('users', 'nickname');
+            const isNicknameTaken = existingUsers.some(
+                (user) =>
+                    user.nickname === userInfo.nickname &&
+                    user.email !== loggedInUserEmail
+            );
+
+            if (isNicknameTaken) {
+                setNicknameError('이 닉네임은 이미 사용 중입니다.');
+                return;
+            }
+        } catch (error) {
+            console.error('닉네임 검사 실패:', error);
+            alert('닉네임 검사 중 오류가 발생했습니다.');
             return;
         }
-    } catch (error) {
-        console.error('닉네임 검사 실패:', error);
-        alert('닉네임 검사 중 오류가 발생했습니다.');
-        return;
-    }
+		
+		try{
+			// 1. email로 userId 찾기
+			const userId = await supabaseApi.getUserIdByEmail(loggedInUserEmail);
 
-    if (passwordError) {
-        alert(passwordError);
-        return;
-    }
+			// 2. users 테이블 업데이트
+			await updateUserInfo(userId, {
+				nickname: userInfo.nickname,
+				...(userInfo.password && {password: userInfo.password})
+			});
 
-        const currentUserId = loggedInUserEmail;
-        const newNickname = userInfo.nickname;
+			
 
-        const updatedUser = {
-            email: userInfo.email,
-            password: userInfo.password || loggedInUser.password, // 기존 비밀번호 유지
-            nickname: userInfo.nickname,
-            signupDate: userInfo.signupDate,
-            about: userInfo.about,
-            profileImage: userInfo.profileImage,
-        };
-        const updatedUsers = users.map((user) =>
-            user.email === userInfo.email ? updatedUser : user
-        );
-        localStorage.setItem('users', JSON.stringify(updatedUsers));
-        setUsers(updatedUsers);
+		} catch(error){
+
+		}
+
+        if (passwordError) {
+            alert(passwordError);
+            return;
+        }
 
         // 챌린지 목록 업데이트 (닉네임 & 프로필 이미지 변경)
         const currentChallenges = JSON.parse(
@@ -276,8 +270,6 @@ export default function PersonalInfo() {
             console.error('clglist는 배열 형식이어야 합니다.');
         }
 
-        // 프로필 이미지 변경 후 화면 다시 렌더링
-        handleRefresh();
         setEditMode(false);
     };
 
