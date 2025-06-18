@@ -3,7 +3,12 @@ import img1 from '../img/1.svg';
 import img2 from '../img/2.svg';
 import img3 from '../img/3.svg';
 import img4 from '../img/4.svg';
-import { getUserProfile, supabaseApi, updateUserInfo } from '../../utils/supabaseApi';
+import {
+    getUserProfile,
+    supabaseApi,
+    updateUserInfo,
+    upsertUserProfile,
+} from '../../utils/supabaseApi';
 
 // 비밀번호 유효성 검사 함수
 const validatePassword = (password) => {
@@ -188,15 +193,14 @@ export default function PersonalInfo() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-		// 1. 닉네임 유효성 검사
+        // 1. 닉네임 유효성 검사
         let error = validateNickname(userInfo.nickname);
         if (error) {
             setNicknameError(error);
             return;
         }
 
-
-		// 2. 비밀번호 검사
+        // 2. 비밀번호 검사
         if (passwordError) {
             alert(passwordError);
             return;
@@ -207,7 +211,7 @@ export default function PersonalInfo() {
             return;
         }
 
-		// 3. 닉네임 중복 검사
+        // 3. 닉네임 중복 검사
         try {
             const existingUsers = await supabaseApi.get('users', 'nickname');
             const isNicknameTaken = existingUsers.some(
@@ -225,49 +229,33 @@ export default function PersonalInfo() {
             alert('닉네임 검사 중 오류가 발생했습니다.');
             return;
         }
-		
-		try{
-			// 1. email로 userId 찾기
-			const userId = await supabaseApi.getUserIdByEmail(loggedInUserEmail);
 
-			// 2. users 테이블 업데이트
-			await updateUserInfo(userId, {
-				nickname: userInfo.nickname,
-				...(userInfo.password && {password: userInfo.password})
-			});
+        try {
+            // 1. email로 userId 찾기
+            const userId =
+                await supabaseApi.getUserIdByEmail(loggedInUserEmail);
 
-			
-
-		} catch(error){
-
-		}
-
-        if (passwordError) {
-            alert(passwordError);
-            return;
-        }
-
-        // 챌린지 목록 업데이트 (닉네임 & 프로필 이미지 변경)
-        const currentChallenges = JSON.parse(
-            localStorage.getItem('clglist') || '[]'
-        );
-
-        if (Array.isArray(currentChallenges)) {
-            const updatedChallenges = currentChallenges.map((challenge) => {
-                if (challenge.authorId === currentUserId) {
-                    return {
-                        ...challenge,
-                        nickname: newNickname,
-                        profileImage:
-                            userInfo.profileImage || challenge.profileImage,
-                        userImg: userInfo.profileImage || challenge.userImg,
-                    };
-                }
-                return challenge;
+            // 2. users 테이블 업데이트
+            await updateUserInfo(userId, {
+                nickname: userInfo.nickname,
+                ...(userInfo.password && { password: userInfo.password }),
             });
-            localStorage.setItem('clglist', JSON.stringify(updatedChallenges));
-        } else {
-            console.error('clglist는 배열 형식이어야 합니다.');
+
+            // 3. user_profiles 테이블 업데이트 (소개글, 프로필 이미지)
+            await upsertUserProfile(userId, {
+                about: userInfo.about,
+                profile_image: userInfo.profileImage,
+            });
+
+            alert('프로필이 성공적으로 업데이트되었습니다!');
+            setEditMode(false);
+
+            // 4. 최신 데이터로 업데이트
+            const updatedUserData = await getUserProfile(userId);
+            setLoggedInUser(updatedUserData);
+        } catch (error) {
+            console.error('프로필 업데이트 실패:', error);
+            alert('프로필 업데이트에 실패했습니다.');
         }
 
         setEditMode(false);
