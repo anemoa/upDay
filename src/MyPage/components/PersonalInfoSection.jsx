@@ -61,12 +61,7 @@ export default function PersonalInfo() {
     // 3. 모든 useMemo들
     const defaultImages = useMemo(() => [img1, img2, img3, img4], []);
 
-    // 5. 함수들
-    const handleRefresh = () => {
-        window.location.reload();
-    };
-
-    // 6. 모든 useEffect들
+    // 4. 모든 useEffect들
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -159,15 +154,6 @@ export default function PersonalInfo() {
                     ...prev,
                     profileImage: reader.result,
                 }));
-
-                // localStorage 즉시 업데이트
-                const updatedUsers = users.map((user) =>
-                    user.email === loggedInUserEmail
-                        ? { ...user, profileImage: reader.result }
-                        : user
-                );
-                localStorage.setItem('users', JSON.stringify(updatedUsers));
-                setUsers(updatedUsers);
             };
             reader.readAsDataURL(file);
         }
@@ -178,16 +164,7 @@ export default function PersonalInfo() {
         const randomImage =
             defaultImages[Math.floor(Math.random() * defaultImages.length)];
 
-        // userInfo 상태 업데이트 및 localStorage 업데이트
         setUserInfo((prev) => ({ ...prev, profileImage: randomImage }));
-
-        const updatedUsers = users.map((user) =>
-            user.email === loggedInUserEmail
-                ? { ...user, profileImage: randomImage }
-                : user
-        );
-        localStorage.setItem('users', JSON.stringify(updatedUsers));
-        setUsers(updatedUsers);
     };
 
     const handleSubmit = async (e) => {
@@ -257,8 +234,6 @@ export default function PersonalInfo() {
             console.error('프로필 업데이트 실패:', error);
             alert('프로필 업데이트에 실패했습니다.');
         }
-
-        setEditMode(false);
     };
 
     const handleEditMode = () => {
