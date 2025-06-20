@@ -105,7 +105,7 @@ export default function PersonalInfo() {
                     nickname: loggedInUser.nickname || '',
                     signupDate: loggedInUser.signupDate || '',
                     profileImage: initialProfileImage,
-                    about: loggedInUser.about || '',
+                    about: loggedInUser.user_profiles?.[0]?.about || '',
                 };
                 if (JSON.stringify(prev) === JSON.stringify(updatedInfo)) {
                     return prev;
@@ -189,47 +189,60 @@ export default function PersonalInfo() {
         }
 
         // 3. 닉네임 중복 검사
-        try {
-            const existingUsers = await supabaseApi.get('users', 'nickname');
-            const isNicknameTaken = existingUsers.some(
-                (user) =>
-                    user.nickname === userInfo.nickname &&
-                    user.email !== loggedInUserEmail
-            );
+        // try {
+        //     const existingUsers = await supabaseApi.get('users', 'nickname');
+        //     const isNicknameTaken = existingUsers.some(
+        //         (user) =>
+        //             user.nickname === userInfo.nickname &&
+        //             user.email !== loggedInUserEmail
+        //     );
 
-            if (isNicknameTaken) {
-                setNicknameError('이 닉네임은 이미 사용 중입니다.');
-                return;
-            }
-        } catch (error) {
-            console.error('닉네임 검사 실패:', error);
-            alert('닉네임 검사 중 오류가 발생했습니다.');
-            return;
-        }
+        //     if (isNicknameTaken) {
+        //         setNicknameError('이 닉네임은 이미 사용 중입니다.');
+        //         return;
+        //     }
+        // } catch (error) {
+        //     console.error('닉네임 검사 실패:', error);
+        //     alert('닉네임 검사 중 오류가 발생했습니다.');
+        //     return;
+        // }
 
         try {
+            console.log('🔄 업데이트 시작');
+            console.log('📧 loggedInUserEmail:', loggedInUserEmail);
+
             // 1. email로 userId 찾기
             const userId =
                 await supabaseApi.getUserIdByEmail(loggedInUserEmail);
+            console.log('✅ userId:', userId);
 
-            // 2. users 테이블 업데이트
-            await updateUserInfo(userId, {
+            console.log('📝 업데이트할 데이터:', {
                 nickname: userInfo.nickname,
                 ...(userInfo.password && { password: userInfo.password }),
             });
 
-            // 3. user_profiles 테이블 업데이트 (소개글, 프로필 이미지)
-            await upsertUserProfile(userId, {
+            // 2. users 테이블 업데이트 (디버깅 + 실제 실행)
+            const result1 = await updateUserInfo(userId, {
+                nickname: userInfo.nickname,
+                ...(userInfo.password && { password: userInfo.password }),
+            });
+            console.log('✅ users 테이블 결과:', result1);
+
+            // 3. user_profiles 테이블 업데이트 (디버깅 + 실제 실행)
+            const result2 = await upsertUserProfile(userId, {
                 about: userInfo.about,
                 profile_image: userInfo.profileImage,
             });
+            console.log('✅ user_profiles 테이블 결과:', result2);
 
             alert('프로필이 성공적으로 업데이트되었습니다!');
             setEditMode(false);
 
             // 4. 최신 데이터로 업데이트
             const updatedUserData = await getUserProfile(userId);
+            console.log('🔍 getUserProfile 결과:', updatedUserData);
             setLoggedInUser(updatedUserData);
+            console.log('🔍 setLoggedInUser 완료');
         } catch (error) {
             console.error('프로필 업데이트 실패:', error);
             alert('프로필 업데이트에 실패했습니다.');
