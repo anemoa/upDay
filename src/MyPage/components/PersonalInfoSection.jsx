@@ -89,7 +89,7 @@ export default function PersonalInfo() {
     useEffect(() => {
         if (loggedInUser) {
             setUserInfo((prev) => {
-                let initialProfileImage = loggedInUser.profileImage;
+                let initialProfileImage = loggedInUser.user_profiles?.[0]?.profile_image;
 
                 if (!initialProfileImage) {
                     initialProfileImage =
