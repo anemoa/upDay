@@ -9,6 +9,7 @@ import {
     updateUserInfo,
     upsertUserProfile,
 } from '../../utils/supabaseApi';
+import ImageSelectModal from './ImageSelectModal';
 
 // 비밀번호 유효성 검사 함수
 const validatePassword = (password) => {
@@ -52,7 +53,7 @@ export default function PersonalInfo() {
     const [challengeList, setChallengeList] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
-    const [showUrlInput, setShowUrlInput] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     // 계산된 값
     const loggedInUserEmail = localStorage.getItem('loggedInUser');
@@ -147,45 +148,11 @@ export default function PersonalInfo() {
         }
     };
 
-    // const handleImageUpload = (e) => {
-    //     e.preventDefault();
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = () => {
-    //             setUserInfo((prev) => ({
-    //                 ...prev,
-    //                 profileImage: reader.result,
-    //             }));
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
-
-    // const handleImageDelete = () => {
-    //     // 랜덤 이미지 선택
-    //     const randomImage =
-    //         defaultImages[Math.floor(Math.random() * defaultImages.length)];
-
-    //     setUserInfo((prev) => ({ ...prev, profileImage: randomImage }));
-    // };
-
     const handleImageChange = (imageUrl) => {
         setUserInfo((prev) => ({
             ...prev,
             profileImage: imageUrl,
         }));
-    };
-
-    const handleRandomImage = () => {
-        const randomImage =
-            defaultImages[Math.floor(Math.random() * defaultImages.length)];
-        handleImageChange(randomImage);
-    };
-
-    // ✨ URL 입력 처리 (새로 추가)
-    const handleImageUrlChange = (e) => {
-        handleImageChange(e.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -287,6 +254,14 @@ export default function PersonalInfo() {
         }
     };
 
+	const onClose = () => setIsOpen(false);
+    const onImageSelect = (selectedImage) => {
+        setUserInfo((prev) => ({
+            ...prev,
+            profileImage: selectedImage
+        }));
+    };
+
     if (!loggedInUser) {
         return (
             <div className="w-full h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 p-[36px]">
@@ -373,39 +348,16 @@ export default function PersonalInfo() {
                                 >
                                     삭제하기
                                 </label> */}
+                                <button onClick={() => setIsOpen(true)}>
+                                    이미지 변경
+                                </button>
 
-                                {/* ✨ 새로운 버튼들 */}
-                                {editMode && (
-                                    <>
-                                        <button
-                                            type="button"
-                                            onClick={handleRandomImage}
-                                            className="btn btn-primary"
-                                        >
-                                            기본 이미지
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setShowUrlInput(!showUrlInput)
-                                            }
-                                            className="btn btn-secondary"
-                                        >
-                                            URL 입력
-                                        </button>
-                                    </>
-                                )}
-
-                                {/* ✨ URL 입력창 (조건부 표시) */}
-                                {editMode && showUrlInput && (
-                                    <input
-                                        type="url"
-                                        placeholder="이미지 URL을 입력하세요"
-                                        value={imageUrl}
-                                        onChange={handleImageUrlChange}
-                                        className="input-field"
-                                    />
-                                )}
+                                <ImageSelectModal
+                                    isOpen={isOpen}
+                                    onClose={onClose}
+                                    onImageSelect={onImageSelect}
+                                    defaultImages={defaultImages}
+                                />
                             </div>
                         </div>
                         <div className="col-span-full">
