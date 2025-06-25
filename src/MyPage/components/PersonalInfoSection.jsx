@@ -348,7 +348,7 @@ export default function PersonalInfo() {
                                 >
                                     삭제하기
                                 </label> */}
-                                <button onClick={() => setIsOpen(true)}>
+                                <button type='button' onClick={() => setIsOpen(true)}>
                                     이미지 변경
                                 </button>
 
