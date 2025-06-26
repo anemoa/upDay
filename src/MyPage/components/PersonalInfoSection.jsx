@@ -357,6 +357,7 @@ export default function PersonalInfo() {
                                     onClose={onClose}
                                     onImageSelect={onImageSelect}
                                     defaultImages={defaultImages}
+									currentImage={userInfo.profileImage}
                                 />
                             </div>
                         </div>

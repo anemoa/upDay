@@ -5,6 +5,7 @@ const ImageSelectModal = ({
     onClose,
     onImageSelect,
     defaultImages,
+    currentImage,
 }) => {
     if (!isOpen) return null;
 
@@ -29,7 +30,12 @@ const ImageSelectModal = ({
                             src={img}
                             alt={`기본 이미지 ${index + 1}`}
                             onClick={() => handleImageClick(img)}
-                            className="w-full h-20 object-cover rounded cursor-pointer hover:ring-2 hover:ring-blue-500"
+                            className={`w-full h-24 object-cover rounded cursor-pointer 
+            ${
+                img === currentImage
+                    ? 'ring-4 ring-blue-500'
+                    : 'hover:ring-2 hover:ring-gray-300'
+            }`}
                         />
                     ))}
                 </div>
