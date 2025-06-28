@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const ImageSelectModal = ({
     isOpen,
@@ -7,12 +7,22 @@ const ImageSelectModal = ({
     defaultImages,
     currentImage,
 }) => {
+    const [imageUrl, setImageUrl] = useState('');
+
     if (!isOpen) return null;
 
     // 📍 기본 이미지 클릭했을 때 실행되는 함수
     const handleImageClick = (img) => {
         onImageSelect(img); // 부모 컴포넌트에 선택된 이미지 전달
         onClose(); // 모달 닫기
+    };
+
+	const handleUrlSubmit = () => {
+        if (imageUrl.trim()) {  // URL이 비어있지 않으면
+            onImageSelect(imageUrl);  // 부모에게 URL 전달
+            setImageUrl('');  // 입력창 초기화
+            onClose();  // 모달 닫기
+        }
     };
 
     return (
@@ -38,6 +48,15 @@ const ImageSelectModal = ({
             }`}
                         />
                     ))}
+
+                    <input
+                        type="url"
+                        placeholder="이미지 URL을 입력하세요"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                    />
+
+					<button onClick={handleUrlSubmit}>확인</button>
                 </div>
             </div>
         </div>
