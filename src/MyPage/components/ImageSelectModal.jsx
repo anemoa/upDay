@@ -17,18 +17,25 @@ const ImageSelectModal = ({
         onClose(); // 모달 닫기
     };
 
-	const handleUrlSubmit = () => {
-        if (imageUrl.trim()) {  // URL이 비어있지 않으면
-            onImageSelect(imageUrl);  // 부모에게 URL 전달
-            setImageUrl('');  // 입력창 초기화
-            onClose();  // 모달 닫기
+    const handleUrlSubmit = () => {
+        if (imageUrl.trim()) {
+            // URL이 비어있지 않으면
+            onImageSelect(imageUrl); // 부모에게 URL 전달
+            setImageUrl(''); // 입력창 초기화
+            onClose(); // 모달 닫기
         }
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            onClick={onClose}
+        >
             {/* 📍 실제 모달 내용 (흰색 박스) */}
-            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <div
+                className="bg-white p-6 rounded-lg max-w-md w-full mx-4"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <h3 className="text-lg font-semibold mb-4">
                     프로필 이미지 선택
                 </h3>
@@ -55,8 +62,20 @@ const ImageSelectModal = ({
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
                     />
-
-					<button onClick={handleUrlSubmit}>확인</button>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleUrlSubmit}
+                        className="btn btn-primary flex-1"
+                    >
+                        확인
+                    </button>
+                    <button
+                        onClick={onClose}
+                        className="btn btn-negative flex-1"
+                    >
+                        취소
+                    </button>
                 </div>
             </div>
         </div>
