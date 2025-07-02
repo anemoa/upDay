@@ -177,23 +177,26 @@ export default function PersonalInfo() {
         }
 
         // 3. 닉네임 중복 검사
-        // try {
-        //     const existingUsers = await supabaseApi.get('users', 'nickname');
-        //     const isNicknameTaken = existingUsers.some(
-        //         (user) =>
-        //             user.nickname === userInfo.nickname &&
-        //             user.email !== loggedInUserEmail
-        //     );
+        try {
+            const existingUsers = await supabaseApi.get(
+                'users',
+                'nickname,email'
+            );
+            const isNicknameTaken = existingUsers.some(
+                (user) =>
+                    user.nickname === userInfo.nickname &&
+                    user.email !== loggedInUserEmail // 자신 제외
+            );
 
-        //     if (isNicknameTaken) {
-        //         setNicknameError('이 닉네임은 이미 사용 중입니다.');
-        //         return;
-        //     }
-        // } catch (error) {
-        //     console.error('닉네임 검사 실패:', error);
-        //     alert('닉네임 검사 중 오류가 발생했습니다.');
-        //     return;
-        // }
+            if (isNicknameTaken) {
+                setNicknameError('이 닉네임은 이미 사용 중입니다.');
+                return;
+            }
+        } catch (error) {
+            console.error('닉네임 검사 실패:', error);
+            alert('닉네임 검사 중 오류가 발생했습니다.');
+            return;
+        }
 
         try {
             console.log('🔄 업데이트 시작');
@@ -254,11 +257,11 @@ export default function PersonalInfo() {
         }
     };
 
-	const onClose = () => setIsOpen(false);
+    const onClose = () => setIsOpen(false);
     const onImageSelect = (selectedImage) => {
         setUserInfo((prev) => ({
             ...prev,
-            profileImage: selectedImage
+            profileImage: selectedImage,
         }));
     };
 
@@ -348,7 +351,10 @@ export default function PersonalInfo() {
                                 >
                                     삭제하기
                                 </label> */}
-                                <button type='button' onClick={() => setIsOpen(true)}>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsOpen(true)}
+                                >
                                     이미지 변경
                                 </button>
 
@@ -357,7 +363,7 @@ export default function PersonalInfo() {
                                     onClose={onClose}
                                     onImageSelect={onImageSelect}
                                     defaultImages={defaultImages}
-									currentImage={userInfo.profileImage}
+                                    currentImage={userInfo.profileImage}
                                 />
                             </div>
                         </div>
