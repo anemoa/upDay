@@ -111,9 +111,9 @@ export default function PersonalInfo() {
                     profileImage: initialProfileImage,
                     about: loggedInUser.user_profiles?.[0]?.about || '',
                 };
-                if (JSON.stringify(prev) === JSON.stringify(updatedInfo)) {
-                    return prev;
-                }
+                // if (JSON.stringify(prev) === JSON.stringify(updatedInfo)) {
+                //     return prev;
+                // }
                 return updatedInfo;
             });
         }

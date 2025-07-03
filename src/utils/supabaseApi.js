@@ -72,27 +72,19 @@ export const supabaseApi = {
     // 수정
     async patch(table, id, data) {
         try {
-            console.log('🔧 PATCH 요청 시작:', {
-                table,
-                id,
-                data,
-                url: `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
+            const url = `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`;
+            console.log('🌐 PATCH URL:', url);
+            console.log('📦 PATCH 데이터:', data);
+            console.log('🔑 PATCH 헤더:', headers);
+
+            const response = await axios.patch(url, data, {
+                headers: {
+                    ...headers,
+                    Prefer: 'return=representation',
+                },
             });
 
-            const response = await axios.patch(
-                `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
-                data,
-                {
-                    headers: {
-                        ...headers,
-                        Prefer: 'return=representation', // 🎯 이게 핵심!
-                    },
-                }
-            );
-
-            console.log('🔧 PATCH 응답:', response.data);
-            console.log('🔧 PATCH 상태 코드:', response.status);
-
+            console.log('📊 PATCH 전체 응답:', response);
             return response.data;
         } catch (error) {
             console.error('❌ PATCH 에러:', error);
@@ -171,14 +163,15 @@ const createParticipant = async (challengeId, userId, status) => {
     }
 };
 
-
 // 사용자 프로필 조회 (JOIN 사용)
 const getUserProfile = async (userId) => {
     try {
-        const response = await axios.get(
-            `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,user_profiles(about,profile_image)`,
-            { headers }
-        );
+        const url = `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,user_profiles(about,profile_image)`;
+        console.log('🔍 getUserProfile URL:', url);
+
+        const response = await axios.get(url, { headers });
+        console.log('🔍 getUserProfile 응답:', response.data);
+
         return response.data[0] || null;
     } catch (error) {
         console.error('프로필 조회 실패:', error);
@@ -189,7 +182,15 @@ const getUserProfile = async (userId) => {
 // 프로필 업데이트 (users 테이블)
 const updateUserInfo = async (userId, userData) => {
     try {
+        console.log('🔧 updateUserInfo 호출:', { userId, userData });
         const result = await supabaseApi.patch('users', userId, userData);
+        console.log('🔧 updateUserInfo 결과:', result);
+
+        // 🎯 빈 배열 체크 추가
+        if (!result || result.length === 0) {
+            throw new Error('업데이트된 행이 없습니다. 권한을 확인하세요.');
+        }
+
         return result;
     } catch (error) {
         console.error('사용자 정보 업데이트 실패:', error);
@@ -208,12 +209,16 @@ const upsertUserProfile = async (userId, profileData) => {
 
         if (existing.data.length > 0) {
             // 업데이트
-            return await supabaseApi.patch('user_profiles', existing.data[0].id, profileData);
+            return await supabaseApi.patch(
+                'user_profiles',
+                existing.data[0].id,
+                profileData
+            );
         } else {
             // 생성
-            return await supabaseApi.post('user_profiles', { 
-                user_id: userId, 
-                ...profileData 
+            return await supabaseApi.post('user_profiles', {
+                user_id: userId,
+                ...profileData,
             });
         }
     } catch (error) {
@@ -222,4 +227,11 @@ const upsertUserProfile = async (userId, profileData) => {
     }
 };
 
-export { getParticipant, updateParticipantStatus, createParticipant, getUserProfile, updateUserInfo, upsertUserProfile };
+export {
+    getParticipant,
+    updateParticipantStatus,
+    createParticipant,
+    getUserProfile,
+    updateUserInfo,
+    upsertUserProfile,
+};
