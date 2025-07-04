@@ -39,6 +39,7 @@ export default function PersonalInfo() {
     // 1. 모든 useState들 (타입별로 그룹핑)
     const [userInfo, setUserInfo] = useState({
         email: '',
+        currentPassword: '',
         password: '',
         nickname: '',
         confirmPassword: '',
@@ -145,6 +146,10 @@ export default function PersonalInfo() {
             } else {
                 setPasswordError('');
             }
+        }
+
+        if (name === 'currentPassword') {
+            setPasswordError(''); // 에러 초기화
         }
     };
 
