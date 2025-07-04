@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom'; // ✅ useLocation 추가
 import { setUser } from '../../store/features/userSlice';
 import { userData } from '../../data/userData';
+import { getUserProfile, supabaseApi } from '../../utils/supabaseApi';
 
 const useLogin = () => {
     const dispatch = useDispatch();
@@ -24,24 +25,50 @@ const useLogin = () => {
         }
     }, []);
 
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+    //     const existingUser = storedUsers.find(
+    //         (user) => user.email === email && user.password === password
+    //     );
+
+    //     if (existingUser) {
+    //         setError('');
+
+    //         localStorage.setItem('loggedInUser', existingUser.email);
+    //         dispatch(setUser({ email: existingUser.email }));
+
+    //         navigate('/main');
+    //         window.location.reload();
+    //     } else {
+    //         setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+    //     }
+    // };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
 
-        const existingUser = storedUsers.find(
-            (user) => user.email === email && user.password === password
-        );
+        try {
+            const userId = await supabaseApi.getUserIdByEmail(email);
+            if (!userId) {
+                setError('등록되지 않은 이메일입니다.');
+                return;
+            }
 
-        if (existingUser) {
-            setError('');
+            const userData = await getUserProfile(userId);
 
-            localStorage.setItem('loggedInUser', existingUser.email);
-            dispatch(setUser({ email: existingUser.email }));
-
-            navigate('/main');
-            window.location.reload();
-        } else {
-            setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+            if (userData.password === password) {
+                setError('');
+                localStorage.setItem('loggedInUser', userData.email);
+                dispatch(setUser({ email: userData.email }));
+                navigate('/main');
+                window.location.reload();
+            } else {
+                setError('비밀번호가 올바르지 않습니다.');
+            }
+        } catch (error) {
+            setError('로그인 중 오류가 발생했습니다.');
         }
     };
 
