@@ -166,7 +166,7 @@ const createParticipant = async (challengeId, userId, status) => {
 // 사용자 프로필 조회 (JOIN 사용)
 const getUserProfile = async (userId) => {
     try {
-        const url = `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,user_profiles(about,profile_image)`;
+        const url = `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,password,user_profiles(about,profile_image)`;
         console.log('🔍 getUserProfile URL:', url);
 
         const response = await axios.get(url, { headers });
