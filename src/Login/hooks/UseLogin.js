@@ -11,7 +11,7 @@ const useLogin = () => {
     const location = useLocation();
 
     const defaultEmail = 'test01@naver.com';
-    const defaultPassword = 'test123^';
+    const defaultPassword = 'aaaa11!!';
 
     const [email, setEmail] = useState(location.state?.email || defaultEmail);
     const [password, setPassword] = useState(
@@ -24,27 +24,6 @@ const useLogin = () => {
             localStorage.setItem('users', JSON.stringify(userData));
         }
     }, []);
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-    //     const existingUser = storedUsers.find(
-    //         (user) => user.email === email && user.password === password
-    //     );
-
-    //     if (existingUser) {
-    //         setError('');
-
-    //         localStorage.setItem('loggedInUser', existingUser.email);
-    //         dispatch(setUser({ email: existingUser.email }));
-
-    //         navigate('/main');
-    //         window.location.reload();
-    //     } else {
-    //         setError('이메일 또는 비밀번호가 올바르지 않습니다.');
-    //     }
-    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
