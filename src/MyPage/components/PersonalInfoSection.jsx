@@ -170,15 +170,26 @@ export default function PersonalInfo() {
             return;
         }
 
-        // 2. 비밀번호 검사
-        if (passwordError) {
-            alert(passwordError);
-            return;
-        }
+        // 2. 비밀번호 검사 (비밀번호를 변경하려는 경우에만)
+        if (userInfo.password) {
+            // 새 비밀번호가 입력되었을 때만
+            // 현재 비밀번호 확인
+            if (!userInfo.currentPassword) {
+                alert('현재 비밀번호를 입력해주세요.');
+                return;
+            }
 
-        if (userInfo.password !== userInfo.confirmPassword) {
-            alert('비밀번호가 일치하지 않습니다.');
-            return;
+            // 새 비밀번호 유효성 검사
+            if (passwordError) {
+                alert(passwordError);
+                return;
+            }
+
+            // 비밀번호 확인 일치 검사
+            if (userInfo.password !== userInfo.confirmPassword) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
         }
 
         // 3. 닉네임 중복 검사
@@ -438,6 +449,28 @@ export default function PersonalInfo() {
                                 />
                             </div>
                         </div>
+                        {editMode && (
+                            <div className="sm:col-span-3">
+                                <label
+                                    htmlFor="currentPassword"
+                                    className="block text-sm/6 font-medium"
+                                >
+                                    현재 비밀번호
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="currentPassword"
+                                        name="currentPassword"
+                                        type="password"
+                                        value={userInfo.currentPassword}
+                                        onChange={handleChange}
+                                        className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
+                                        placeholder="현재 비밀번호를 입력하세요"
+                                        disabled={!editMode}
+                                    />
+                                </div>
+                            </div>
+                        )}
                         {editMode && (
                             <div className="sm:col-span-3">
                                 <label
