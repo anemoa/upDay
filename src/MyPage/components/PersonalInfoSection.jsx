@@ -179,6 +179,16 @@ export default function PersonalInfo() {
                 return;
             }
 
+			// 현재 비밀번호가 DB와 맞는지 확인
+            const userId = await supabaseApi.getUserIdByEmail(loggedInUserEmail);
+            const currentUserData = await getUserProfile(userId);
+
+            if (currentUserData.password !== userInfo.currentPassword) {
+                alert('현재 비밀번호가 올바르지 않습니다.');
+                return;
+            }
+
+
             // 새 비밀번호 유효성 검사
             if (passwordError) {
                 alert(passwordError);
