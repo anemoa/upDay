@@ -179,15 +179,15 @@ export default function PersonalInfo() {
                 return;
             }
 
-			// 현재 비밀번호가 DB와 맞는지 확인
-            const userId = await supabaseApi.getUserIdByEmail(loggedInUserEmail);
+            // 현재 비밀번호가 DB와 맞는지 확인
+            const userId =
+                await supabaseApi.getUserIdByEmail(loggedInUserEmail);
             const currentUserData = await getUserProfile(userId);
 
             if (currentUserData.password !== userInfo.currentPassword) {
                 alert('현재 비밀번호가 올바르지 않습니다.');
                 return;
             }
-
 
             // 새 비밀번호 유효성 검사
             if (passwordError) {
@@ -252,14 +252,22 @@ export default function PersonalInfo() {
             });
             console.log('✅ user_profiles 테이블 결과:', result2);
 
-            alert('프로필이 성공적으로 업데이트되었습니다!');
-            setEditMode(false);
+            if (userInfo.password) {
+                // 비밀번호 변경된 경우
+                alert(
+                    '비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.'
+                );
+                localStorage.removeItem('loggedInUser');
+                window.location.href = '/login';
+            } else {
+                // 다른 정보만 변경된 경우
+                alert('프로필이 성공적으로 업데이트되었습니다!');
+                setEditMode(false);
 
-            // 4. 최신 데이터로 업데이트
-            const updatedUserData = await getUserProfile(userId);
-            console.log('🔍 getUserProfile 결과:', updatedUserData);
-            setLoggedInUser(updatedUserData);
-            console.log('🔍 setLoggedInUser 완료');
+                const updatedUserData = await getUserProfile(userId);
+                setLoggedInUser(updatedUserData);
+            }
+
         } catch (error) {
             console.error('프로필 업데이트 실패:', error);
             alert('프로필 업데이트에 실패했습니다.');
