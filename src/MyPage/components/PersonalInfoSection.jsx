@@ -50,6 +50,7 @@ export default function PersonalInfo() {
     const [passwordError, setPasswordError] = useState('');
     const [nicknameError, setNicknameError] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [originalUserInfo, setOriginalUserInfo] = useState(null);
     const [challengeList, setChallengeList] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
@@ -224,6 +225,8 @@ export default function PersonalInfo() {
             return;
         }
 
+        setLoading(true); // 로딩 시작
+
         try {
             console.log('🔄 업데이트 시작');
             console.log('📧 loggedInUserEmail:', loggedInUserEmail);
@@ -267,10 +270,11 @@ export default function PersonalInfo() {
                 const updatedUserData = await getUserProfile(userId);
                 setLoggedInUser(updatedUserData);
             }
-
         } catch (error) {
             console.error('프로필 업데이트 실패:', error);
             alert('프로필 업데이트에 실패했습니다.');
+        } finally {
+            setLoading(false); // 로딩 종료
         }
     };
 
