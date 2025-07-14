@@ -562,9 +562,14 @@ export default function PersonalInfo() {
                             </button>
                             <button
                                 type="submit"
-                                className="btn btn-black flex-1 text-center"
+                                disabled={loading}
+                                className={`btn flex-1 text-center ${
+                                    loading
+                                        ? 'btn-disabled cursor-not-allowed'
+                                        : 'btn-black'
+                                }`}
                             >
-                                저장하기
+                                {loading ? '저장 중...' : '저장하기'}
                             </button>
                         </div>
                     )}
