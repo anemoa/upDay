@@ -113,9 +113,7 @@ export default function PersonalInfo() {
                     profileImage: initialProfileImage,
                     about: loggedInUser.user_profiles?.[0]?.about || '',
                 };
-                // if (JSON.stringify(prev) === JSON.stringify(updatedInfo)) {
-                //     return prev;
-                // }
+
                 return updatedInfo;
             });
         }
@@ -289,9 +287,8 @@ export default function PersonalInfo() {
         setPasswordError('');
         setNicknameError('');
 
-        // If a new photo was selected but not saved, clear the input
         if (uploadPhotoInput.current) {
-            uploadPhotoInput.current.value = ''; // Clear the file input
+            uploadPhotoInput.current.value = '';
         }
     };
 
@@ -351,44 +348,6 @@ export default function PersonalInfo() {
                                     </div>
                                 )}
 
-                                {/* <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                    id="upload-photo"
-                                    disabled={!editMode}
-                                    ref={uploadPhotoInput}
-                                />
-                                <label
-                                    htmlFor="upload-photo"
-                                    className={`btn px-3 text-center whitespace-nowrap
-                                            ${
-                                                editMode
-                                                    ? 'btn-primary'
-                                                    : 'opacity-0 cursor-default'
-                                            } `}
-                                >
-                                    사진 올리기
-                                </label>
-                                <input
-                                    type="button"
-                                    onClick={handleImageDelete}
-                                    className="hidden"
-                                    id="delete-photo"
-                                    disabled={!editMode}
-                                />
-                                <label
-                                    htmlFor="delete-photo"
-                                    className={`btn px-3 text-center whitespace-nowrap
-                                            ${
-                                                editMode
-                                                    ? 'btn-negative '
-                                                    : 'opacity-0 cursor-default'
-                                            } `}
-                                >
-                                    삭제하기
-                                </label> */}
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(true)}
