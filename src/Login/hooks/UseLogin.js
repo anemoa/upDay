@@ -11,7 +11,7 @@ const useLogin = () => {
     const location = useLocation();
 
     const defaultEmail = 'test01@naver.com';
-    const defaultPassword = 'aaaa11!!';
+    const [defaultPassword, setDefaultPassword] = useState('aaaa11!!');
 
     const [email, setEmail] = useState(location.state?.email || defaultEmail);
     const [password, setPassword] = useState(
@@ -20,9 +20,16 @@ const useLogin = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify(userData));
-        }
+        const loadTestPassword = async () => {
+            try {
+                const userId = await supabaseApi.getUserIdByEmail(defaultEmail);
+                const userData = await getUserProfile(userId);
+                setDefaultPassword(userData.password || 'aaaa11!!');
+            } catch (error) {
+                console.log('기본 비밀번호 로드 실패');
+            }
+        };
+        loadTestPassword();
     }, []);
 
     const handleSubmit = async (e) => {
