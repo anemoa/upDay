@@ -159,14 +159,12 @@ export default function PersonalInfo() {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const validateInputs = async () => {
         // 1. 닉네임 유효성 검사
         let error = validateNickname(userInfo.nickname);
         if (error) {
             setNicknameError(error);
-            return;
+            throw new Error('닉네임 검증 실패');
         }
 
         // 2. 비밀번호 검사 (비밀번호를 변경하려는 경우에만)
@@ -175,7 +173,7 @@ export default function PersonalInfo() {
             // 현재 비밀번호 확인
             if (!userInfo.currentPassword) {
                 alert('현재 비밀번호를 입력해주세요.');
-                return;
+                throw new Error('현재 비밀번호 입력 바람');
             }
 
             // 현재 비밀번호가 DB와 맞는지 확인
@@ -185,19 +183,19 @@ export default function PersonalInfo() {
 
             if (currentUserData.password !== userInfo.currentPassword) {
                 alert('현재 비밀번호가 올바르지 않습니다.');
-                return;
+                throw new Error('현재 비밀번호 불일치');
             }
 
             // 새 비밀번호 유효성 검사
             if (passwordError) {
                 alert(passwordError);
-                return;
+                throw new Error('새 비밀번호 검증 실패');
             }
 
             // 비밀번호 확인 일치 검사
             if (userInfo.password !== userInfo.confirmPassword) {
                 alert('비밀번호가 일치하지 않습니다.');
-                return;
+                throw new Error('비밀번호 불일치');
             }
         }
 
@@ -215,17 +213,22 @@ export default function PersonalInfo() {
 
             if (isNicknameTaken) {
                 setNicknameError('이 닉네임은 이미 사용 중입니다.');
-                return;
+                throw new Error('사용중인 닉네임');
             }
         } catch (error) {
             console.error('닉네임 검사 실패:', error);
             alert('닉네임 검사 중 오류가 발생했습니다.');
-            return;
+            throw new Error('닉네임 검사중 오류');
         }
+    };
 
-        setLoading(true); // 로딩 시작
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+		setLoading(true); // 로딩 시작
 
         try {
+            await validateInputs();
             console.log('🔄 업데이트 시작');
             console.log('📧 loggedInUserEmail:', loggedInUserEmail);
 
@@ -269,8 +272,7 @@ export default function PersonalInfo() {
                 setLoggedInUser(updatedUserData);
             }
         } catch (error) {
-            console.error('프로필 업데이트 실패:', error);
-            alert('프로필 업데이트에 실패했습니다.');
+            console.error('에러 발생:', error.message);
         } finally {
             setLoading(false); // 로딩 종료
         }
