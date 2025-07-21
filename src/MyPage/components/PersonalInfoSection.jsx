@@ -222,39 +222,44 @@ export default function PersonalInfo() {
         }
     };
 
+    const updateDatabase = async () => {
+        console.log('🔄 업데이트 시작');
+        console.log('📧 loggedInUserEmail:', loggedInUserEmail);
+
+        // 1. email로 userId 찾기
+        const userId = await supabaseApi.getUserIdByEmail(loggedInUserEmail);
+        console.log('✅ userId:', userId);
+
+        console.log('📝 업데이트할 데이터:', {
+            nickname: userInfo.nickname,
+            ...(userInfo.password && { password: userInfo.password }),
+        });
+
+        // 2. users 테이블 업데이트 (디버깅 + 실제 실행)
+        const result1 = await updateUserInfo(userId, {
+            nickname: userInfo.nickname,
+            ...(userInfo.password && { password: userInfo.password }),
+        });
+        console.log('✅ users 테이블 결과:', result1);
+
+        // 3. user_profiles 테이블 업데이트 (디버깅 + 실제 실행)
+        const result2 = await upsertUserProfile(userId, {
+            about: userInfo.about,
+            profile_image: userInfo.profileImage,
+        });
+        console.log('✅ user_profiles 테이블 결과:', result2);
+
+        return userId;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-		setLoading(true); // 로딩 시작
+        setLoading(true); // 로딩 시작
 
         try {
             await validateInputs();
-            console.log('🔄 업데이트 시작');
-            console.log('📧 loggedInUserEmail:', loggedInUserEmail);
-
-            // 1. email로 userId 찾기
-            const userId =
-                await supabaseApi.getUserIdByEmail(loggedInUserEmail);
-            console.log('✅ userId:', userId);
-
-            console.log('📝 업데이트할 데이터:', {
-                nickname: userInfo.nickname,
-                ...(userInfo.password && { password: userInfo.password }),
-            });
-
-            // 2. users 테이블 업데이트 (디버깅 + 실제 실행)
-            const result1 = await updateUserInfo(userId, {
-                nickname: userInfo.nickname,
-                ...(userInfo.password && { password: userInfo.password }),
-            });
-            console.log('✅ users 테이블 결과:', result1);
-
-            // 3. user_profiles 테이블 업데이트 (디버깅 + 실제 실행)
-            const result2 = await upsertUserProfile(userId, {
-                about: userInfo.about,
-                profile_image: userInfo.profileImage,
-            });
-            console.log('✅ user_profiles 테이블 결과:', result2);
+            const userId = await updateDatabase();
 
             if (userInfo.password) {
                 // 비밀번호 변경된 경우
