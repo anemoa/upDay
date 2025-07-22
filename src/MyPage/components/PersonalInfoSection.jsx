@@ -252,16 +252,8 @@ export default function PersonalInfo() {
         return userId;
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        setLoading(true); // 로딩 시작
-
-        try {
-            await validateInputs();
-            const userId = await updateDatabase();
-
-            if (userInfo.password) {
+	const handleSuccess = async (userId) => {
+		if (userInfo.password) {
                 // 비밀번호 변경된 경우
                 alert(
                     '비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.'
@@ -276,6 +268,18 @@ export default function PersonalInfo() {
                 const updatedUserData = await getUserProfile(userId);
                 setLoggedInUser(updatedUserData);
             }
+	}
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setLoading(true); // 로딩 시작
+
+        try {
+            await validateInputs();
+            const userId = await updateDatabase();
+			await handleSuccess(userId);
+            
         } catch (error) {
             console.error('에러 발생:', error.message);
         } finally {
