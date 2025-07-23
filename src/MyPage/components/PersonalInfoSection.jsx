@@ -252,23 +252,23 @@ export default function PersonalInfo() {
         return userId;
     };
 
-	const handleSuccess = async (userId) => {
-		if (userInfo.password) {
-                // 비밀번호 변경된 경우
-                alert(
-                    '비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.'
-                );
-                localStorage.removeItem('loggedInUser');
-                window.location.href = '/login';
-            } else {
-                // 다른 정보만 변경된 경우
-                alert('프로필이 성공적으로 업데이트되었습니다!');
-                setEditMode(false);
+    const handleSuccess = async (userId) => {
+        if (userInfo.password) {
+            // 비밀번호 변경된 경우
+            alert(
+                '비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.'
+            );
+            localStorage.removeItem('loggedInUser');
+            window.location.href = '/login';
+        } else {
+            // 다른 정보만 변경된 경우
+            alert('프로필이 성공적으로 업데이트되었습니다!');
+            setEditMode(false);
 
-                const updatedUserData = await getUserProfile(userId);
-                setLoggedInUser(updatedUserData);
-            }
-	}
+            const updatedUserData = await getUserProfile(userId);
+            setLoggedInUser(updatedUserData);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -278,8 +278,7 @@ export default function PersonalInfo() {
         try {
             await validateInputs();
             const userId = await updateDatabase();
-			await handleSuccess(userId);
-            
+            await handleSuccess(userId);
         } catch (error) {
             console.error('에러 발생:', error.message);
         } finally {
@@ -321,8 +320,26 @@ export default function PersonalInfo() {
         );
     }
 
+    // 스피너 스타일 (컴포넌트 안에 추가)
+    const spinnerStyle = {
+        display: 'inline-block',
+        width: '16px',
+        height: '16px',
+        border: '2px solid #f3f3f3',
+        borderTop: '2px solid #3498db',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        marginLeft: '8px',
+    };
+
     return (
         <div className="w-full h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 p-[24px] md:p-[36px]">
+            <style>{`
+            	@keyframes spin {
+                	0% { transform: rotate(0deg); }
+                	100% { transform: rotate(360deg); }
+            	}`}</style>
+
             <form
                 className="h-full flex flex-col justify-between"
                 onSubmit={handleSubmit}
@@ -539,7 +556,14 @@ export default function PersonalInfo() {
                                         : 'btn-black'
                                 }`}
                             >
-                                {loading ? '저장 중...' : '저장하기'}
+                                {loading ? (
+                                    <>
+                                        저장 중...
+                                        <span style={spinnerStyle}></span>
+                                    </>
+                                ) : (
+                                    '저장하기'
+                                )}
                             </button>
                         </div>
                     )}
