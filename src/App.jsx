@@ -14,6 +14,7 @@ import Signup from './Login/Signup';
 import ProfileSetup from './Login/ProfileSetup';
 import Login from './Login/Login';
 import NotFound from './NotFound/NotFound'; // 404 NotFound 페이지 추가
+import { Toaster } from 'react-hot-toast';
 
 function App() {
     return (
@@ -46,6 +47,7 @@ function App() {
                 <Route path='*' element={<NotFound />} />
             </Routes>
             <Footer />
+			<Toaster position='top-right' />
         </div>
     );
 }
