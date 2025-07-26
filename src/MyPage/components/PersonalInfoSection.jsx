@@ -10,6 +10,7 @@ import {
     upsertUserProfile,
 } from '../../utils/supabaseApi';
 import ImageSelectModal from './ImageSelectModal';
+import toast from 'react-hot-toast';
 
 // 비밀번호 유효성 검사 함수
 const validatePassword = (password) => {
@@ -255,14 +256,12 @@ export default function PersonalInfo() {
     const handleSuccess = async (userId) => {
         if (userInfo.password) {
             // 비밀번호 변경된 경우
-            alert(
-                '비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.'
-            );
+            toast.success('비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.')
             localStorage.removeItem('loggedInUser');
             window.location.href = '/login';
         } else {
             // 다른 정보만 변경된 경우
-            alert('프로필이 성공적으로 업데이트되었습니다!');
+            toast.success('프로필이 성공적으로 업데이트되었습니다!');
             setEditMode(false);
 
             const updatedUserData = await getUserProfile(userId);
