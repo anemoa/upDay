@@ -37,7 +37,7 @@ const validateNickname = (nickname) => {
 };
 
 export default function PersonalInfo() {
-    // 1. 모든 useState들 (타입별로 그룹핑)
+    // 모든 useState들
     const [userInfo, setUserInfo] = useState({
         email: '',
         currentPassword: '',
@@ -53,21 +53,16 @@ export default function PersonalInfo() {
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const [originalUserInfo, setOriginalUserInfo] = useState(null);
-    const [challengeList, setChallengeList] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
-    const [imageUrl, setImageUrl] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
     // 계산된 값
     const loggedInUserEmail = localStorage.getItem('loggedInUser');
 
-    // 2. 모든 useRef들
-    const uploadPhotoInput = useRef(null);
-
-    // 3. 모든 useMemo들
+    // 모든 useMemo들
     const defaultImages = useMemo(() => [img1, img2, img3, img4], []);
 
-    // 4. 모든 useEffect들
+    // 모든 useEffect들
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -85,7 +80,7 @@ export default function PersonalInfo() {
                 }
             } catch (error) {
                 console.error('사용자 정보 조회 실패:', error);
-                alert('프로필 정보를 불러올 수 없습니다.');
+                toast.error('프로필 정보를 불러올 수 없습니다.');
             }
         };
 
@@ -120,10 +115,6 @@ export default function PersonalInfo() {
         }
     }, [loggedInUser, defaultImages]);
 
-    useEffect(() => {
-        const challenges = JSON.parse(localStorage.getItem('clglist')) || [];
-        setChallengeList(challenges);
-    }, []);
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -173,7 +164,7 @@ export default function PersonalInfo() {
             // 새 비밀번호가 입력되었을 때만
             // 현재 비밀번호 확인
             if (!userInfo.currentPassword) {
-                alert('현재 비밀번호를 입력해주세요.');
+                toast.error('현재 비밀번호를 입력해주세요.');
                 throw new Error('현재 비밀번호 입력 바람');
             }
 
@@ -183,19 +174,19 @@ export default function PersonalInfo() {
             const currentUserData = await getUserProfile(userId);
 
             if (currentUserData.password !== userInfo.currentPassword) {
-                alert('현재 비밀번호가 올바르지 않습니다.');
+                toast.error('현재 비밀번호가 올바르지 않습니다.');
                 throw new Error('현재 비밀번호 불일치');
             }
 
             // 새 비밀번호 유효성 검사
             if (passwordError) {
-                alert(passwordError);
+                toast.error(passwordError);
                 throw new Error('새 비밀번호 검증 실패');
             }
 
             // 비밀번호 확인 일치 검사
             if (userInfo.password !== userInfo.confirmPassword) {
-                alert('비밀번호가 일치하지 않습니다.');
+                toast.error('비밀번호가 일치하지 않습니다.');
                 throw new Error('비밀번호 불일치');
             }
         }
@@ -218,7 +209,7 @@ export default function PersonalInfo() {
             }
         } catch (error) {
             console.error('닉네임 검사 실패:', error);
-            alert('닉네임 검사 중 오류가 발생했습니다.');
+            toast.error('닉네임 검사 중 오류가 발생했습니다.');
             throw new Error('닉네임 검사중 오류');
         }
     };
@@ -282,22 +273,6 @@ export default function PersonalInfo() {
             console.error('에러 발생:', error.message);
         } finally {
             setLoading(false); // 로딩 종료
-        }
-    };
-
-    const handleEditMode = () => {
-        setOriginalUserInfo({ ...userInfo });
-        setEditMode(true);
-    };
-
-    const handleCancel = () => {
-        setUserInfo(originalUserInfo);
-        setEditMode(false);
-        setPasswordError('');
-        setNicknameError('');
-
-        if (uploadPhotoInput.current) {
-            uploadPhotoInput.current.value = '';
         }
     };
 
