@@ -52,9 +52,9 @@ export default function PersonalInfo() {
     const [nicknameError, setNicknameError] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [originalUserInfo, setOriginalUserInfo] = useState(null);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     // 계산된 값
     const loggedInUserEmail = localStorage.getItem('loggedInUser');
@@ -115,7 +115,6 @@ export default function PersonalInfo() {
         }
     }, [loggedInUser, defaultImages]);
 
-
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
@@ -144,12 +143,6 @@ export default function PersonalInfo() {
         }
     };
 
-    const handleImageChange = (imageUrl) => {
-        setUserInfo((prev) => ({
-            ...prev,
-            profileImage: imageUrl,
-        }));
-    };
 
     const validateInputs = async () => {
         // 1. 닉네임 유효성 검사
@@ -247,7 +240,9 @@ export default function PersonalInfo() {
     const handleSuccess = async (userId) => {
         if (userInfo.password) {
             // 비밀번호 변경된 경우
-            toast.success('비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.')
+            toast.success(
+                '비밀번호가 성공적으로 변경되었습니다. 보안을 위해 다시 로그인해주세요.'
+            );
             localStorage.removeItem('loggedInUser');
             window.location.href = '/login';
         } else {
@@ -463,15 +458,26 @@ export default function PersonalInfo() {
                                     변경할 비밀번호
                                 </label>
                                 <div className="mt-2">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        value={userInfo.password}
-                                        onChange={handleChange}
-                                        className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
-                                        disabled={!editMode}
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            id="password"
+                                            name="password"
+                                            type={
+                                                showPassword
+                                                    ? 'text'
+                                                    : 'password'
+                                            }
+                                            value={userInfo.password}
+                                            onChange={handleChange}
+                                            className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
+                                            disabled={!editMode}
+                                        />
+                                        <button type="button" onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                        >
+                                            {showPassword ? '🙈' : '👁️'}
+                                        </button>
+                                    </div>
                                     {passwordError && (
                                         <p className="text-red-500 text-sm">
                                             {passwordError}
