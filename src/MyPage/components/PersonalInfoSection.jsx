@@ -54,7 +54,8 @@ export default function PersonalInfo() {
     const [loading, setLoading] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     // 계산된 값
     const loggedInUserEmail = localStorage.getItem('loggedInUser');
@@ -142,7 +143,6 @@ export default function PersonalInfo() {
             setPasswordError(''); // 에러 초기화
         }
     };
-
 
     const validateInputs = async () => {
         // 1. 닉네임 유효성 검사
@@ -463,7 +463,7 @@ export default function PersonalInfo() {
                                             id="password"
                                             name="password"
                                             type={
-                                                showPassword
+                                                showNewPassword
                                                     ? 'text'
                                                     : 'password'
                                             }
@@ -472,10 +472,14 @@ export default function PersonalInfo() {
                                             className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
                                             disabled={!editMode}
                                         />
-                                        <button type="button" onClick={() => setShowPassword(!showPassword)}
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setShowNewPassword(!showNewPassword)
+                                            }
                                             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                                         >
-                                            {showPassword ? '🙈' : '👁️'}
+                                            {showNewPassword ? '🙈' : '👁️'}
                                         </button>
                                     </div>
                                     {passwordError && (
@@ -495,15 +499,31 @@ export default function PersonalInfo() {
                                     변경할 비밀번호 확인
                                 </label>
                                 <div className="mt-2">
-                                    <input
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        type="password"
-                                        value={userInfo.confirmPassword}
-                                        onChange={handleChange}
-                                        className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
-                                        disabled={!editMode}
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            type={
+                                                showConfirmPassword
+                                                    ? 'text'
+                                                    : 'password'
+                                            }
+                                            value={userInfo.confirmPassword}
+                                            onChange={handleChange}
+                                            className="input-field block w-full rounded-xl bg-neutral-100 px-3 py-1.5 text-base border border-neutral-300 focus:outline-blue-500"
+                                            disabled={!editMode}
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setShowConfirmPassword(!showConfirmPassword)
+                                            }
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                        >
+                                            {showConfirmPassword ? '🙈' : '👁️'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}
