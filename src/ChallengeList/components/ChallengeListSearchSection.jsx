@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getChallenges } from '../../utils/localStorage';
 import { BsSearch } from 'react-icons/bs';
+import { supabaseApi } from '../../utils/supabaseApi';
 
 const btnList = [
     { title: '전체', color: '#121212' },
@@ -38,27 +39,31 @@ const ChallengeListSearchSection = ({
     };
 
     // 검색 로직
-    const handleSearch = () => {
+    const handleSearch = async () => {
         if (!searchTerm.trim()) {
             setSearchResults(null); // 검색어가 없으면 검색 결과 초기화
             return;
         }
 
-        // 로컬 스토리지에 담긴 모든 챌린지 작성글
-        const challenges = getChallenges();
+        try {
+            const challenges = await supabaseApi.get('challenges');
 
-        // 검색어 필터링 하는 로직
-        const results = challenges.filter(
-            (challenges) =>
-                challenges.title
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                challenges.content
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-        );
+            // 프론트엔드에서 필터링
+            const results = challenges.filter(
+                (challenge) =>
+                    challenge.title
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                    challenge.content
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+            );
 
-        setSearchResults(results); // 검색 결과를 부모에게 전달
+            setSearchResults(results);
+        } catch (error) {
+            console.error('검색 실패:', error);
+            alert('검색 중 오류가 발생했습니다.');
+        }
     };
 
     // Enter 키 눌러도 검색 가능
@@ -69,10 +74,10 @@ const ChallengeListSearchSection = ({
     };
 
     return (
-        <section className='flex max-md:flex-wrap justify-between mb-6'>
-            <ul className='flex max-md:w-full max-md:justify-between max-md:mb-4'>
+        <section className="flex max-md:flex-wrap justify-between mb-6">
+            <ul className="flex max-md:w-full max-md:justify-between max-md:mb-4">
                 {btnList.map((ele, idx) => (
-                    <li className='pr-4 max-md:pr-0 max-md:w-[18%]' key={idx}>
+                    <li className="pr-4 max-md:pr-0 max-md:w-[18%]" key={idx}>
                         <button
                             onClick={() => handleCategoryClick(ele.title)}
                             style={{
@@ -86,27 +91,27 @@ const ChallengeListSearchSection = ({
                                         ? 'white'
                                         : 'black',
                             }}
-                            className='btn max-md:w-full px-6 max-md:px-0 py-[10px] max-md:py-1 whitespace-nowrap'
+                            className="btn max-md:w-full px-6 max-md:px-0 py-[10px] max-md:py-1 whitespace-nowrap"
                         >
                             {ele.title}
                         </button>
                     </li>
                 ))}
             </ul>
-            <div className='relative flex flex-1 items-center'>
+            <div className="relative flex flex-1 items-center">
                 <input
-                    type='text'
+                    type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder='검색어를 입력하시오'
-                    className='input-field text-xs/6 md:text-sm/7'
+                    placeholder="검색어를 입력하시오"
+                    className="input-field text-xs/6 md:text-sm/7"
                 />
                 <button
-                    className='absolute right-0.5 md:right-1 w-8 h-8'
+                    className="absolute right-0.5 md:right-1 w-8 h-8"
                     onClick={handleSearch}
                 >
-                    <BsSearch className='text-blue-900 size-4 md:size-5' />
+                    <BsSearch className="text-blue-900 size-4 md:size-5" />
                 </button>
             </div>
         </section>
