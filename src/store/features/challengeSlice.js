@@ -57,6 +57,33 @@ export const updateChallengeInSupabase = createAsyncThunk(
     }
 );
 
+// 챌린지 참여 비동기 액션
+export const joinChallengeToSupabase = createAsyncThunk(
+    'challenge/joinChallenge',
+    async ({ challengeId, authorId }, { rejectWithValue }) => {
+        try {
+            const participantData = {
+                challenge_id: challengeId,
+                author_id: authorId,
+                status: 'doing',
+            };
+
+            const result = await supabaseApi.post(
+                'participants',
+                participantData
+            );
+
+            return {
+                challengeId,
+                participant: result,
+            };
+        } catch (error) {
+            console.error('참여 실패:', error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const challengeSlice = createSlice({
     name: 'challenge',
     initialState: {
@@ -69,53 +96,6 @@ const challengeSlice = createSlice({
         // 선택된 챌린지 정보를 저장하는 액션
         setSelectedChallenge: (state, action) => {
             state.selectedChallenge = action.payload;
-        },
-
-        joinChallenge: (state, action) => {
-            const { id, authorId, nickname, userImg } = action.payload;
-            const joinDate = new Date().toISOString().split('T')[0];
-
-            const addParticipantToChallenge = (challenge) => {
-                if (challenge.id !== id) return challenge;
-
-                const participants = challenge.participants || [];
-                const isAlreadyJoined = participants.some(
-                    (p) => p.authorId === authorId
-                );
-
-                if (!isAlreadyJoined) {
-                    return {
-                        ...challenge,
-                        participants: [
-                            ...participants,
-                            {
-                                authorId,
-                                nickname,
-                                userImg,
-                                joinDate,
-                                status: 'doing',
-                            },
-                        ],
-                    };
-                }
-                return challenge;
-            };
-
-            // redux 스토어의 list 업데이트
-            state.list = state.list.map(addParticipantToChallenge);
-
-            // selectedChallenge도 업데이트
-            if (state.selectedChallenge && state.selectedChallenge.id === id) {
-                state.selectedChallenge = addParticipantToChallenge(
-                    state.selectedChallenge
-                );
-            }
-
-            console.log('🔄 업데이트된 state.list:', state.list);
-            console.log(
-                '🔄 업데이트된 selectedChallenge:',
-                state.selectedChallenge
-            );
         },
     },
     extraReducers: (builder) => {
