@@ -188,6 +188,22 @@ const challengeSlice = createSlice({
             .addCase(updateChallengeInSupabase.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            // 챌린지 참여
+            .addCase(joinChallengeToSupabase.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(joinChallengeToSupabase.fulfilled, (state, action) => {
+                state.loading = false;
+                // DB에 저장 성공
+                console.log('✅ 참여 성공:', action.payload);
+            })
+            .addCase(joinChallengeToSupabase.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                console.error('❌ 참여 실패:', action.payload);
             });
     },
 });
