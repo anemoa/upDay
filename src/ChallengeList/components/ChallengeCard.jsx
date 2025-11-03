@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-    joinChallenge,
+    joinChallengeToSupabase,
     setSelectedChallenge,
 } from '../../store/features/challengeSlice';
 import { CATEGORY_IMAGES } from '../../data/userChallengeData';
@@ -43,16 +43,26 @@ const ChallengeCard = ({ challenge }) => {
     const isAuthor = loggedInUser === author_id;
 
     // 참여하기 버튼 핸들링
-    const handleJoin = (e) => {
-        e.stopPropagation(); // 이벤트 전파 중지
-        e.preventDefault(); // 기본 동작 방지
+const handleJoin = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-        if (!loggedInUser) {
-            openLoginModal(); // 로그인 된 상태 아니면 모달 열기
-        } else {
-            dispatch(joinChallenge({ id }));
+    if (!loggedInUser) {
+        openLoginModal();
+    } else {
+        try {
+            await dispatch(joinChallengeToSupabase({ 
+                challengeId: id,
+                authorId: currentUser?.id  // currentUser에서 id 가져오기
+            })).unwrap();
+            
+            alert('챌린지 참여 성공!');
+        } catch (error) {
+            console.error('참여 실패:', error);
+            alert('참여에 실패했습니다.');
         }
-    };
+    }
+};
 
 
 
