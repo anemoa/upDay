@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { joinChallenge } from '../../store/features/challengeSlice';
+import { joinChallengeToSupabase } from '../../store/features/challengeSlice';
 import useLoginModal from '../../common/hooks/useLoginModal';
 
 const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, challengeId }) => {
@@ -10,9 +10,29 @@ const ModalFooter = ({ userImg, nickname, isMyPost, mode, onSubmit, onClose, cha
 	const {openLoginModal, renderLoginModal} = useLoginModal();
 	const selectedChallenge = useSelector(state => state.challenge.selectedChallenge);
 
-	const handleJoin = () => {
-		!loggedInUser ? openLoginModal() : dispatch(joinChallenge({ id: challengeId }));
-	}
+	const handleJoin = async () => {
+    if (!loggedInUser) {
+        openLoginModal();
+        return;
+    }
+    
+    try {
+        // currentUser 정보 가져오기 필요
+        const userString = localStorage.getItem('users');
+        const localUsers = userString ? JSON.parse(userString) : [];
+        const currentUser = localUsers.find((user) => user.email === loggedInUser);
+        
+        await dispatch(joinChallengeToSupabase({ 
+            challengeId: challengeId,
+            authorId: currentUser?.id
+        })).unwrap();
+        
+        alert('챌린지 참여 성공!');
+    } catch (error) {
+        console.error('참여 실패:', error);
+        alert('참여에 실패했습니다.');
+    }
+}
 
 	const handleShare = ()=> {
 		alert('준비중입니다')
