@@ -213,7 +213,6 @@ export const {
     updateChallenge,
     addChallenge,
     deleteChallenge,
-    joinChallenge,
     setMyPosts,
     getMyJoinedChallenge,
 } = challengeSlice.actions;
