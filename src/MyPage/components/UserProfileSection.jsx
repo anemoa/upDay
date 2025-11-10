@@ -58,9 +58,16 @@ const UserProfileSection = () => {
                     const userData = {
                         email: foundUser.email,
                         nickname: foundUser.nickname,
+                        // ❌ 기존 (무조건 user_profiles 우선)
+                        // profileImage: foundUser.user_profiles?.[0]?.profile_image || foundUser.user_img,
+
+                        // ✅ 수정 (http로 시작하는 URL만 사용)
                         profileImage:
-                            foundUser.user_profiles?.[0]?.profile_image ||
-                            foundUser.user_img,
+                            foundUser.user_profiles?.[0]?.profile_image?.startsWith(
+                                'http'
+                            )
+                                ? foundUser.user_profiles?.[0]?.profile_image
+                                : foundUser.user_img || null,
                         about: foundUser.user_profiles?.[0]?.about || '',
                         signupDate: new Date(foundUser.created_at)
                             .toISOString()
