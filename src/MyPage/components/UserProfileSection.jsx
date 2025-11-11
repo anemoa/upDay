@@ -54,6 +54,10 @@ const UserProfileSection = () => {
                 );
 
                 if (foundUser) {
+                    console.log('🔍 foundUser 전체:', foundUser);
+                    console.log('🔍 user_img:', foundUser.user_img);
+                    console.log('🔍 user_profiles:', foundUser.user_profiles);
+
                     // 데이터 구조 매핑
                     const userData = {
                         email: foundUser.email,
@@ -73,6 +77,9 @@ const UserProfileSection = () => {
                             .toISOString()
                             .split('T')[0],
                     };
+
+                    console.log('🔍 최종 userData:', userData);
+                    console.log('🔍 최종 profileImage:', userData.profileImage);
 
                     setLoggedInUser(userData);
 
