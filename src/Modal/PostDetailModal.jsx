@@ -27,6 +27,9 @@ const PostDetailModal = () => {
     );
 
 	console.log('selectedChallenge', selectedChallenge);
+	console.log('👤 users 객체:', selectedChallenge?.users);
+    console.log('🖼️ user_img:', selectedChallenge?.users?.user_img);
+    console.log('✏️ nickname:', selectedChallenge?.users?.nickname)
 	
 
     const loggedInUser = localStorage.getItem('loggedInUser');
