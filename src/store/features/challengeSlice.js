@@ -6,7 +6,7 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
-            return await supabaseApi.get('challenges', '*,users(*)');
+            return await supabaseApi.get('challenges', '*,users(nickname,user_img)');
         } catch (error) {
             console.error('API Error Details:', error.response || error);
             return rejectWithValue(error.message || 'Unknown error');
