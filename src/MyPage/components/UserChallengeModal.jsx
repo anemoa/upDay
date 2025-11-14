@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-    fetchMyPostFromSupabase,
-	setSelectedChallenge
+    fetchMyPostFromSupabase
 } from '../../store/features/userChallengeSlice';
 import ModalHeader from '../../Modal/components/ModalHeader';
 import ModalContent from '../../Modal/components/ModalContent';
@@ -202,9 +201,9 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
                     userImg={
                         isEditMode
                             ? 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
-                            : selectedChallenge?.userImg
+                            : selectedChallenge?.users?.user_img || 'https://via.placeholder.com/150'
                     }
-                    nickname={isEditMode ? '' : selectedChallenge?.nickname}
+                    nickname={isEditMode ? '' : selectedChallenge?.users?.nickname || '작성자'}
                     isMyPost={isMyPost}
                     onSubmit={handleSubmit}
                     onClose={handleClose}

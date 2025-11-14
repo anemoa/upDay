@@ -22,7 +22,7 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
             const numericUserId = await supabaseApi.getUserIdByEmail(email);
             
             // 2. 모든 챌린지 글 가져오기
-            const challenges = await supabaseApi.get('challenges', '*');
+            const challenges = await supabaseApi.get('challenges', '*,users(nickname,user_img)');
             
             // // 내가 작성한 챌린지만 필터링
             const myPosts = challenges.filter(
