@@ -12,18 +12,20 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
     async (email, { getState, rejectWithValue }) => {
         // 데이터가 이미 있는 경우에만 스킵 (로딩 상태는 확인하지 않음)
         const { myPosts } = getState().userChallenge;
-        if (myPosts && myPosts.length > 0) {     
+        if (myPosts && myPosts.length > 0) {
             return myPosts;
         }
 
         try {
-            
             // 1. 이메일을 숫자 id로 변환하기
             const numericUserId = await supabaseApi.getUserIdByEmail(email);
-            
+
             // 2. 모든 챌린지 글 가져오기
-            const challenges = await supabaseApi.get('challenges', '*,users(nickname,user_img)');
-            
+            const challenges = await supabaseApi.get(
+                'challenges',
+                '*,users(nickname,user_img)'
+            );
+
             // // 내가 작성한 챌린지만 필터링
             const myPosts = challenges.filter(
                 (post) => String(post.author_id) === String(numericUserId)
@@ -47,14 +49,12 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
         }
 
         try {
-
             // 이메일을 숫자 id로 변환
             const numericUserId = await supabaseApi.getUserIdByEmail(email);
 
             // 챌린지 데이터 가져오기
             const challenges = await supabaseApi.get(
-                'challenges',
-                '*, participants(*)'
+                '*,users(nickname,user_img),participants(*)'
             );
 
             // 참여 챌린지 필터링
