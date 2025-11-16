@@ -6,7 +6,10 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
-            return await supabaseApi.get('challenges', '*,users(nickname,user_img)');
+            return await supabaseApi.get(
+                'challenges',
+                '*,users(nickname,user_img)'
+            );
         } catch (error) {
             console.error('API Error Details:', error.response || error);
             return rejectWithValue(error.message || 'Unknown error');
@@ -68,6 +71,10 @@ export const joinChallengeToSupabase = createAsyncThunk(
                 status: 'doing',
             };
 
+            console.log('🔍 보내는 데이터:', participantData);
+            console.log('🔍 challengeId 타입:', typeof challengeId);
+            console.log('🔍 authorId 타입:', typeof authorId);
+
             const result = await supabaseApi.post(
                 'participants',
                 participantData
@@ -78,7 +85,8 @@ export const joinChallengeToSupabase = createAsyncThunk(
                 participant: result,
             };
         } catch (error) {
-            console.error('참여 실패:', error);
+            console.error('❌ 참여 실패 상세:', error);
+            console.error('❌ 에러 응답:', error.response?.data);
             return rejectWithValue(error.message);
         }
     }
