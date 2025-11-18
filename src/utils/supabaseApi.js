@@ -31,9 +31,14 @@ export const supabaseApi = {
                 `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
                 { headers }
             );
+
+            console.log('🔍 getUserIdByEmail 응답:', response.data);
+            console.log('🔍 첫 번째 사용자:', response.data[0]);
+            console.log('🔍 반환할 ID:', response.data[0]?.id);
+
             return response.data[0]?.id;
         } catch (error) {
-            console.error('API error: ', error);
+            console.error('❌ getUserIdByEmail 에러:', error);
             console.log('test');
 
             throw error;

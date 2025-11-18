@@ -27,13 +27,18 @@ const ModalFooter = ({
         }
 
         try {
+            console.log('🔍 1. loggedInUser:', loggedInUser);
+			
             // currentUser 정보 가져오기 필요
-        const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
-        
-        if (!userId) {
-            alert('사용자 정보를 찾을 수 없습니다.');
-            return;
-        }
+            const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
+
+            console.log('🔍 2. 받은 userId:', userId);
+            console.log('🔍 3. userId 타입:', typeof userId);
+
+            if (!userId) {
+                alert('사용자 정보를 찾을 수 없습니다.');
+                return;
+            }
 
             await dispatch(
                 joinChallengeToSupabase({
