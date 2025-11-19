@@ -1,6 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { joinChallengeToSupabase } from '../../store/features/challengeSlice';
+import {
+    fetchChallengesFromSupabase,
+    joinChallengeToSupabase,
+} from '../../store/features/challengeSlice';
 import useLoginModal from '../../common/hooks/useLoginModal';
 import { supabaseApi } from '../../utils/supabaseApi';
 
@@ -20,6 +23,25 @@ const ModalFooter = ({
         (state) => state.challenge.selectedChallenge
     );
 
+    // ✅ 참여 여부 확인 함수 추가
+    const isJoined = () => {
+        if (!loggedInUser || !selectedChallenge?.participants) {
+            return false;
+        }
+
+        // localStorage에서 현재 사용자 ID 가져오기 (동기)
+        const userString = localStorage.getItem('users');
+        const localUsers = userString ? JSON.parse(userString) : [];
+        const currentUser = localUsers.find(
+            (user) => user.email === loggedInUser
+        );
+
+        // participants 배열에서 현재 사용자 찾기
+        return selectedChallenge.participants?.some(
+            (p) => String(p.author_id) === String(currentUser?.id)
+        );
+    };
+
     const handleJoin = async () => {
         if (!loggedInUser) {
             openLoginModal();
@@ -28,7 +50,7 @@ const ModalFooter = ({
 
         try {
             console.log('🔍 1. loggedInUser:', loggedInUser);
-			
+
             // currentUser 정보 가져오기 필요
             const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
 
@@ -46,6 +68,9 @@ const ModalFooter = ({
                     authorId: userId,
                 })
             ).unwrap();
+
+            // ✅ 챌린지 목록 다시 가져오기!
+            await dispatch(fetchChallengesFromSupabase());
 
             alert('챌린지 참여 성공!');
         } catch (error) {
@@ -96,7 +121,7 @@ const ModalFooter = ({
                         onClick={handleJoin}
                         className="btn-primary btn w-[100%]"
                     >
-                        {selectedChallenge?.clgJoin ? '참여중' : '참여하기'}
+                        {selectedChallenge?.isJoined ? '참여중' : '참여하기'}
                     </button>
                 )}
             </div>
