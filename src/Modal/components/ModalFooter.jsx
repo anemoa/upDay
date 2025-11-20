@@ -25,6 +25,10 @@ const ModalFooter = ({
 
     // ✅ 참여 여부 확인 함수 추가
     const isJoined = () => {
+        console.log('🔍 isJoined 체크 시작');
+        console.log('🔍 loggedInUser:', loggedInUser);
+        console.log('🔍 selectedChallenge:', selectedChallenge);
+        console.log('🔍 participants:', selectedChallenge?.participants);
         if (!loggedInUser || !selectedChallenge?.participants) {
             return false;
         }
@@ -36,10 +40,16 @@ const ModalFooter = ({
             (user) => user.email === loggedInUser
         );
 
-        // participants 배열에서 현재 사용자 찾기
-        return selectedChallenge.participants?.some(
-            (p) => String(p.author_id) === String(currentUser?.id)
-        );
+        console.log('🔍 currentUser:', currentUser);
+        console.log('🔍 currentUser.id:', currentUser?.id);
+
+        const result = selectedChallenge.participants?.some((p) => {
+            console.log('🔍 비교:', p.author_id, '===', currentUser?.id);
+            return String(p.author_id) === String(currentUser?.id);
+        });
+
+        console.log('🔍 isJoined 결과:', result);
+        return result;
     };
 
     const handleJoin = async () => {
