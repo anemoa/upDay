@@ -130,8 +130,9 @@ const ModalFooter = ({
                     <button
                         onClick={handleJoin}
                         className="btn-primary btn w-[100%]"
-						disabled={isJoined()}
+                        disabled={isJoined()}
                     >
+                        {console.log('🎯 버튼 렌더링, isJoined():', isJoined())}
                         {isJoined() ? '참여중' : '참여하기'}
                     </button>
                 )}

@@ -8,7 +8,7 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
         try {
             return await supabaseApi.get(
                 'challenges',
-                '*,users(nickname,user_img)'
+                '*,users(nickname,user_img), participants(*)'
             );
         } catch (error) {
             console.error('API Error Details:', error.response || error);
