@@ -71,10 +71,6 @@ export const joinChallengeToSupabase = createAsyncThunk(
                 status: 'doing',
             };
 
-            console.log('🔍 보내는 데이터:', participantData);
-            console.log('🔍 challengeId 타입:', typeof challengeId);
-            console.log('🔍 authorId 타입:', typeof authorId);
-
             const result = await supabaseApi.post(
                 'participants',
                 participantData
