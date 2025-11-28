@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -7,18 +7,27 @@ import {
 } from '../../store/features/challengeSlice';
 import { CATEGORY_IMAGES } from '../../data/userChallengeData';
 import useLoginModal from '../../common/hooks/useLoginModal';
-
+import { supabaseApi } from '../../utils/supabaseApi';
 
 const ChallengeCard = ({ challenge }) => {
     // cardData 구조분해할당
-    const { id, category, duration, title, content, author_id, post_date, post_clicked, users } = challenge;
+    const {
+        id,
+        category,
+        duration,
+        title,
+        content,
+        author_id,
+        post_date,
+        post_clicked,
+        users,
+    } = challenge;
 
-	const nickname = users?.nickname || '작성자';
-	const user_img = users?.user_img || 'https://via.placeholder.com/32';
-	
+    const nickname = users?.nickname || '작성자';
+    const user_img = users?.user_img || 'https://via.placeholder.com/32';
 
-	// 로그인 모달 커스텀 훅 사용
-	const {openLoginModal, renderLoginModal} = useLoginModal();
+    // 로그인 모달 커스텀 훅 사용
+    const { openLoginModal, renderLoginModal } = useLoginModal();
 
     // 라우터 이동을 위한 navigate 함수
     const navigate = useNavigate();
@@ -42,29 +51,54 @@ const ChallengeCard = ({ challenge }) => {
     const isLoggedIn = loggedInUser && currentUser;
     const isAuthor = loggedInUser === author_id;
 
-    // 참여하기 버튼 핸들링
-const handleJoin = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // ✅ userId를 state로 관리
+    const [currentUserId, setCurrentUserId] = useState(null);
 
-    if (!loggedInUser) {
-        openLoginModal();
-    } else {
-        try {
-            await dispatch(joinChallengeToSupabase({ 
-                challengeId: id,
-                authorId: currentUser?.id  // currentUser에서 id 가져오기
-            })).unwrap();
-            
-            alert('챌린지 참여 성공!');
-        } catch (error) {
-            console.error('참여 실패:', error);
-            alert('참여에 실패했습니다.');
+    // ✅ 컴포넌트 마운트 시 userId 가져오기
+    useEffect(() => {
+        const fetchUserId = async () => {
+            if (loggedInUser) {
+                const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
+                setCurrentUserId(userId);
+            }
+        };
+        fetchUserId();
+    }, [loggedInUser]);
+
+    // ✅ 참여 여부 확인 함수
+    const isJoined = () => {
+        if (!currentUserId || !challenge.participants) {
+            return false;
         }
-    }
-};
 
+        return challenge.participants?.some(
+            (p) => String(p.author_id) === String(currentUserId)
+        );
+    };
 
+    // 참여하기 버튼 핸들링
+    const handleJoin = async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (!loggedInUser) {
+            openLoginModal();
+        } else {
+            try {
+                await dispatch(
+                    joinChallengeToSupabase({
+                        challengeId: id,
+                        authorId: currentUser?.id, // currentUser에서 id 가져오기
+                    })
+                ).unwrap();
+
+                alert('챌린지 참여 성공!');
+            } catch (error) {
+                console.error('참여 실패:', error);
+                alert('참여에 실패했습니다.');
+            }
+        }
+    };
 
     // 카드 클릭시 모달을 띄우는 이벤트 핸들러
     const handleCardClick = () => {
@@ -162,11 +196,12 @@ const handleJoin = async (e) => {
                         type="button"
                         className="btn btn-primary w-[40%] max-md:text-xs"
                         onClick={handleJoin}
+						disabled={isJoined}
                     >
-                        {isAuthor ? '참여중' : '참여하기'}
+                        {isJoined() ? '참여중' : isAuthor ? '참여중' : '참여하기'}
                     </button>
                 )}
-				{renderLoginModal()}
+                {renderLoginModal()}
             </div>
         </div>
     );
