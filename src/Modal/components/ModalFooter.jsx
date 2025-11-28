@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchChallengesFromSupabase,
@@ -23,33 +23,29 @@ const ModalFooter = ({
         (state) => state.challenge.selectedChallenge
     );
 
-    // ✅ 참여 여부 확인 함수 추가
+    // ✅ userId를 state로 관리
+    const [currentUserId, setCurrentUserId] = useState(null);
+
+    // ✅ 컴포넌트 마운트 시 userId 가져오기
+    useEffect(() => {
+        const fetchUserId = async () => {
+            if (loggedInUser) {
+                const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
+                setCurrentUserId(userId);
+            }
+        };
+        fetchUserId();
+    }, [loggedInUser]);
+
+    // ✅ 이제 동기 함수로 체크 가능!
     const isJoined = () => {
-        console.log('🔍 isJoined 체크 시작');
-        console.log('🔍 loggedInUser:', loggedInUser);
-        console.log('🔍 selectedChallenge:', selectedChallenge);
-        console.log('🔍 participants:', selectedChallenge?.participants);
-        if (!loggedInUser || !selectedChallenge?.participants) {
+        if (!currentUserId || !selectedChallenge?.participants) {
             return false;
         }
 
-        // localStorage에서 현재 사용자 ID 가져오기 (동기)
-        const userString = localStorage.getItem('users');
-        const localUsers = userString ? JSON.parse(userString) : [];
-        const currentUser = localUsers.find(
-            (user) => user.email === loggedInUser
+        return selectedChallenge.participants?.some(
+            (p) => String(p.author_id) === String(currentUserId)
         );
-
-        console.log('🔍 currentUser:', currentUser);
-        console.log('🔍 currentUser.id:', currentUser?.id);
-
-        const result = selectedChallenge.participants?.some((p) => {
-            console.log('🔍 비교:', p.author_id, '===', currentUser?.id);
-            return String(p.author_id) === String(currentUser?.id);
-        });
-
-        console.log('🔍 isJoined 결과:', result);
-        return result;
     };
 
     const handleJoin = async () => {
