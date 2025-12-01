@@ -65,6 +65,16 @@ export const joinChallengeToSupabase = createAsyncThunk(
     'challenge/joinChallenge',
     async ({ challengeId, authorId }, { rejectWithValue }) => {
         try {
+            // ✅ 1. 중복 체크
+            const participants = await supabaseApi.get('participants');
+            const alreadyJoined = participants.some(
+                (p) => p.challenge_id === challengeId && p.author_id === authorId
+            );
+
+            if (alreadyJoined) {
+                return rejectWithValue('이미 참여한 챌린지입니다.');
+            }
+
             const participantData = {
                 challenge_id: challengeId,
                 author_id: authorId,
