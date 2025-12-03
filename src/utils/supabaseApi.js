@@ -32,10 +32,6 @@ export const supabaseApi = {
                 { headers }
             );
 
-            console.log('🔍 getUserIdByEmail 응답:', response.data);
-            console.log('🔍 첫 번째 사용자:', response.data[0]);
-            console.log('🔍 반환할 ID:', response.data[0]?.id);
-
             return response.data[0]?.id;
         } catch (error) {
             console.error('❌ getUserIdByEmail 에러:', error);
@@ -78,9 +74,6 @@ export const supabaseApi = {
     async patch(table, id, data) {
         try {
             const url = `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`;
-            console.log('🌐 PATCH URL:', url);
-            console.log('📦 PATCH 데이터:', data);
-            console.log('🔑 PATCH 헤더:', headers);
 
             const response = await axios.patch(url, data, {
                 headers: {
@@ -89,7 +82,6 @@ export const supabaseApi = {
                 },
             });
 
-            console.log('📊 PATCH 전체 응답:', response);
             return response.data;
         } catch (error) {
             console.error('❌ PATCH 에러:', error);
@@ -124,16 +116,11 @@ const getParticipant = async (challengeId, userId) => {
 // 참여자 상태 업데이트
 const updateParticipantStatus = async (participantId, status) => {
     try {
-        console.log('🔄 참여자 상태 업데이트 요청:', {
-            participantId,
-            status,
-        });
 
         const result = await supabaseApi.patch('participants', participantId, {
             status,
         });
 
-        console.log('✅ 참여자 상태 업데이트 성공:', result);
         return result;
     } catch (error) {
         console.error('참여자 상태 업데이트 실패:', error);
@@ -172,10 +159,7 @@ const createParticipant = async (challengeId, userId, status) => {
 const getUserProfile = async (userId) => {
     try {
         const url = `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,password,user_profiles(about,profile_image)`;
-        console.log('🔍 getUserProfile URL:', url);
-
         const response = await axios.get(url, { headers });
-        console.log('🔍 getUserProfile 응답:', response.data);
 
         return response.data[0] || null;
     } catch (error) {
@@ -187,9 +171,7 @@ const getUserProfile = async (userId) => {
 // 프로필 업데이트 (users 테이블)
 const updateUserInfo = async (userId, userData) => {
     try {
-        console.log('🔧 updateUserInfo 호출:', { userId, userData });
         const result = await supabaseApi.patch('users', userId, userData);
-        console.log('🔧 updateUserInfo 결과:', result);
 
         // 🎯 빈 배열 체크 추가
         if (!result || result.length === 0) {

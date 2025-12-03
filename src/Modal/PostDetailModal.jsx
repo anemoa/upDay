@@ -31,18 +31,9 @@ const PostDetailModal = () => {
         (state) => state.challenge.selectedChallenge
     );
 
-    console.log('✅ selectedChallenge:', selectedChallenge);
-    console.log('✅ participants:', selectedChallenge?.participants);
 
     // 추가로 전체 challenge.list도 확인
     const challengeList = useSelector((state) => state.challenge.list);
-    console.log('✅ challenge.list:', challengeList);
-    console.log('✅ 첫 번째 챌린지:', challengeList[0]);
-    console.log(
-        '✅ 첫 번째 챌린지의 participants:',
-        challengeList[0]?.participants
-    );
-
     const loggedInUser = localStorage.getItem('loggedInUser');
 
     // 로그인하지 않은 상태로 글 작성 시도할 경우 로그인 모달 표시하는 함수
@@ -144,6 +135,7 @@ const PostDetailModal = () => {
                 // 목록 새로 고침
                 await dispatch(fetchChallengesFromSupabase());
                 console.log('목록 새로고침 완료');
+				
 
                 // 페이지 이동
                 navigate('/challengelist');

@@ -55,13 +55,8 @@ const ModalFooter = ({
         }
 
         try {
-            console.log('🔍 1. loggedInUser:', loggedInUser);
-
             // currentUser 정보 가져오기 필요
             const userId = await supabaseApi.getUserIdByEmail(loggedInUser);
-
-            console.log('🔍 2. 받은 userId:', userId);
-            console.log('🔍 3. userId 타입:', typeof userId);
 
             if (!userId) {
                 alert('사용자 정보를 찾을 수 없습니다.');
@@ -128,7 +123,6 @@ const ModalFooter = ({
                         className="btn-primary btn w-[100%]"
                         disabled={isJoined()}
                     >
-                        {console.log('🎯 버튼 렌더링, isJoined():', isJoined())}
                         {isJoined() ? '참여중' : '참여하기'}
                     </button>
                 )}
