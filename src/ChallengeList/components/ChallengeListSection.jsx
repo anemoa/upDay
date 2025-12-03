@@ -7,8 +7,6 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
 
 	// redux 상태에서 챌린지 목록과 로딩 상태 가져오기
 	const challenges = useSelector((state) => {
-		console.log('Redux state:', state);
-		console.log('Challenge list from Redux:', state.challenge.list);
 		return state.challenge.list
 	});
 	const loading = useSelector((state) => state.challenge.loading);
@@ -60,7 +58,6 @@ const ChallengeListSection = ({ selectedCategory, searchResults }) => {
         <section className='grid grid-cols-3 max-md:grid-cols-2 gap-6 max-md:gap-4'>
             {filteredChallenges.length > 0 ? (
                 filteredChallenges.map((challenge) => {
-					console.log('Challenge id를 위한 확인', challenge.id);
 					return (
 						<ChallengeCard key={challenge.id} challenge={challenge} />
 					)

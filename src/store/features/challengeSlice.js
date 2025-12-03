@@ -65,7 +65,7 @@ export const joinChallengeToSupabase = createAsyncThunk(
     'challenge/joinChallenge',
     async ({ challengeId, authorId }, { rejectWithValue }) => {
         try {
-            // ✅ 1. 중복 체크
+            // 1. 중복 체크
             const participants = await supabaseApi.get('participants');
             const alreadyJoined = participants.some(
                 (p) => p.challenge_id === challengeId && p.author_id === authorId
@@ -80,10 +80,6 @@ export const joinChallengeToSupabase = createAsyncThunk(
                 author_id: authorId,
                 status: 'doing',
             };
-
-            console.log('🔍 보내는 데이터:', participantData);
-            console.log('🔍 challengeId 타입:', typeof challengeId);
-            console.log('🔍 authorId 타입:', typeof authorId);
 
             const result = await supabaseApi.post(
                 'participants',
@@ -125,7 +121,6 @@ const challengeSlice = createSlice({
             })
             // 데이터 로딩 성공했을 때
             .addCase(fetchChallengesFromSupabase.fulfilled, (state, action) => {
-                console.log('Reducer fulfilled with:', action.payload);
                 state.loading = false; // 로딩 끝
                 state.list = action.payload; // 받아온 데이터 저장
             })
