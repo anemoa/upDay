@@ -58,9 +58,9 @@ export default function UserChallengeSearch({
         setFilterByDoneStatus(false);
     };
     const handleFilterByDoneStatus = () => {
-        setFilterByDoingStatus((prev) => !prev);
-        setFilterByMyPost(false);
-        setFilterByDoneStatus(false);
+    setFilterByDoneStatus((prev) => !prev);
+    setFilterByMyPost(false);
+    setFilterByDoingStatus(false);
     };
 
     return (
