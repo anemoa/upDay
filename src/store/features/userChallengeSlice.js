@@ -54,7 +54,7 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 
             // 챌린지 데이터 가져오기
             const challenges = await supabaseApi.get(
-                '*,users(nickname,user_img),participants(*)'
+               'challenges', '*,users(nickname,user_img),participants(*)'
             );
 
             // 참여 챌린지 필터링
