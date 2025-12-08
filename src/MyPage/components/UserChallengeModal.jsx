@@ -51,10 +51,8 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
 
     if (!isOpen || !selectedChallenge) return null;
 
-    const { id, authorId } = selectedChallenge;
-
     // 내가 작성한 챌린지인지 확인
-    const isMyPost = loggedInUser === authorId;
+    const isMyPost = myPosts?.some((post) => post.id === selectedChallenge?.id) || false;
 
     // 카테고리별 이미지를 가져오는 함수 추가
     const getCategoryImage = (category) => {
@@ -113,7 +111,7 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     // 삭제 버튼 클릭 시 챌린지 삭제
     const handleDelete = () => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
-            console.log('챌린지 삭제 기능 아직임', id);
+            console.log('챌린지 삭제 기능 아직임', selectedChallenge?.id);
 			
             onClose(); // 모달 닫기
         }
