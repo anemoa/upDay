@@ -20,7 +20,7 @@ const ModalFooter = ({
     const loggedInUser = localStorage.getItem('loggedInUser');
     const { openLoginModal, renderLoginModal } = useLoginModal();
     const selectedChallenge = useSelector(
-        (state) => state.challenge.selectedChallenge
+        (state) => state.userChallenge.selectedChallenge
     );
 
     // ✅ userId를 state로 관리
