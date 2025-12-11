@@ -3,21 +3,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HiFire, HiDocumentCheck, HiMiniTrophy } from 'react-icons/hi2';
 import { FaStar } from 'react-icons/fa6';
 import { fetchJoinedChallengesFromSupabase } from '../../store/features/userChallengeSlice';
+import { supabaseApi } from '../../utils/supabaseApi';
 
 const UserReportSection = () => {
     const dispatch = useDispatch();
     const [loggedInUser, setLoggedInUser] = useState(null);
+    const [numericUserId, setNumericUserId] = useState(null);
     const joinedChallenges =
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     // localStorage 값 가져오기
     useEffect(() => {
-        const userId = localStorage.getItem('loggedInUser') || '';
-        setLoggedInUser(userId);
+        const fetchUserId = async () => {
+            const userEmail = localStorage.getItem('loggedInUser') || '';
+            setLoggedInUser(userEmail);
 
-        if (userId) {
-            dispatch(fetchJoinedChallengesFromSupabase(userId));
-        }
+            if (userEmail) {
+                // ✅ 이메일을 숫자 ID로 변환
+                const userId = await supabaseApi.getUserIdByEmail(userEmail);
+                setNumericUserId(userId);
+
+                dispatch(fetchJoinedChallengesFromSupabase(userEmail));
+            }
+        };
+
+        fetchUserId();
     }, [dispatch]);
 
     // 내가 참여한 챌린지 상태 값
@@ -26,35 +36,43 @@ const UserReportSection = () => {
             challenge.participants &&
             challenge.participants.some(
                 (p) =>
-                    String(p.author_id) === String(1) && // 임시 ID 사용
+                    String(p.author_id) === String(numericUserId) && // 임시 ID 사용
                     p.status === 'doing'
             )
         );
     }).length;
+
+
     const completedChallengesCount = joinedChallenges.filter((challenge) => {
         return (
             challenge.participants &&
             challenge.participants.some(
-                (p) => String(p.author_id) === String(1) && p.status === 'done'
+                (p) => String(p.author_id) === String(numericUserId) && p.status === 'done'
             )
         );
     }).length;
+
+
     const incompleteChallengesCount = joinedChallenges.filter((challenge) => {
         return (
             challenge.participants &&
             challenge.participants.some(
                 (p) =>
-                    String(p.author_id) === String(1) &&
+                    String(p.author_id) === String(numericUserId) &&
                     p.status !== 'doing' &&
                     p.status !== 'done'
             )
         );
     }).length;
 
-	// 목표 달성률 계산
-	const totalChallenges = doingChallengesCount + completedChallengesCount + incompleteChallengesCount;
+    // 목표 달성률 계산
+    const totalChallenges =
+        doingChallengesCount +
+        completedChallengesCount +
+        incompleteChallengesCount;
 
-    const completionRate = totalChallenges > 0
+    const completionRate =
+        totalChallenges > 0
             ? Math.round((completedChallengesCount / totalChallenges) * 100)
             : 0;
     return (
