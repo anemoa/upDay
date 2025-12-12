@@ -31,7 +31,7 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
                 (post) => String(post.author_id) === String(numericUserId)
             );
 
-            return myPosts;
+            return {myPosts, numericUserId};
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -103,6 +103,7 @@ const initialState = {
     myPosts: [],
     joinedChallenges: [],
     selectedChallenge: null,
+	numericUserId: null,
     loading: {
         myPosts: false,
         joinedChallenges: false,
@@ -127,7 +128,8 @@ const userChallengeSlice = createSlice({
                 //state.error.myPosts = null;
             })
             .addCase(fetchMyPostFromSupabase.fulfilled, (state, action) => {
-                state.myPosts = action.payload;
+                state.myPosts = action.payload.myPosts;
+				state.numericUserId = action.payload.numericUserId;
                 state.loading.myPosts = false;
             })
             .addCase(fetchMyPostFromSupabase.rejected, (state, action) => {
