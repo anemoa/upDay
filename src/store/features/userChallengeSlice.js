@@ -31,7 +31,7 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
                 (post) => String(post.author_id) === String(numericUserId)
             );
 
-            return {myPosts, numericUserId};
+            return { myPosts, numericUserId };
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -54,7 +54,8 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
 
             // 챌린지 데이터 가져오기
             const challenges = await supabaseApi.get(
-               'challenges', '*,users(nickname,user_img),participants(*)'
+                'challenges',
+                '*,users(nickname,user_img),participants(*)'
             );
 
             // 참여 챌린지 필터링
@@ -66,7 +67,7 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
                     )
             );
 
-            return joinedChallenges;
+            return { joinedChallenges, numericUserId };
         } catch (error) {
             console.error('오류 발생:', error);
             return rejectWithValue(error.message);
@@ -103,7 +104,7 @@ const initialState = {
     myPosts: [],
     joinedChallenges: [],
     selectedChallenge: null,
-	numericUserId: null,
+    numericUserId: null,
     loading: {
         myPosts: false,
         joinedChallenges: false,
@@ -129,7 +130,7 @@ const userChallengeSlice = createSlice({
             })
             .addCase(fetchMyPostFromSupabase.fulfilled, (state, action) => {
                 state.myPosts = action.payload.myPosts;
-				state.numericUserId = action.payload.numericUserId;
+                state.numericUserId = action.payload.numericUserId;
                 state.loading.myPosts = false;
             })
             .addCase(fetchMyPostFromSupabase.rejected, (state, action) => {
@@ -144,8 +145,9 @@ const userChallengeSlice = createSlice({
             .addCase(
                 fetchJoinedChallengesFromSupabase.fulfilled,
                 (state, action) => {
-                    state.joinedChallenges = action.payload;
-                    state.loading.joinChallenges = false;
+                    state.joinedChallenges = action.payload.joinedChallenges;
+                    state.numericUserId = action.payload.numericUserId;
+                    state.loading.joinedChallenges = false;
                 }
             )
             .addCase(
