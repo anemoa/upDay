@@ -35,7 +35,8 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 
     // 챌린지 상태 변경 핸들러
     const handleToggle = async (challengeId, type) => {
-        const tempUserId = 1; // 데이터베이스에 존재하는 ID 사용
+
+		if(!numericUserId) return;
 
         // Redux 상태에서 최신 챌린지 찾기
         const challenge = joinedChallenges.find((c) => c.id === challengeId);
@@ -45,7 +46,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 
         // Redux 상태에서 현재 사용자의 참여 정보 찾기
         const userParticipation = challenge.participants?.find(
-            (p) => String(p.author_id) === String(tempUserId)
+            (p) => String(p.author_id) === String(numericUserId)
         );
 
         // 상태 결정하기
@@ -63,7 +64,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
             const result = await dispatch(
                 updateChallengeStatus({
                     challengeId,
-                    userId: tempUserId,
+                    userId: numericUserId,
                     status: newStatus,
                 })
             ).unwrap(); // unwrap()으로 성공/실패 확인
@@ -99,7 +100,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     };
 
     const getChallengeDoingClass = (challenge) => {
-        const tempUserId = 1; // 임시 아이디 사용
 
         // Redux 상태에서 직접 챌린지 찾기
         const reduxChallenge = joinedChallenges.find(
@@ -108,7 +108,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 
         // reduxChallenge를 사용해야 함!
         const userParticipation = reduxChallenge?.participants?.find(
-            (p) => String(p.author_id) === String(tempUserId)
+            (p) => String(p.author_id) === String(numericUserId)
         );
 
         const classResult = userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
@@ -117,7 +117,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     };
 
     const getChallengeDoneClass = (challenge) => {
-        const tempUserId = 1; // 임시 아이디 사용
 
         // Redux 상태에서 직접 챌린지 찾기
         const reduxChallenge = joinedChallenges.find(
@@ -125,7 +124,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
         );
 
         const userParticipation = reduxChallenge?.participants?.find(
-            (p) => String(p.author_id) === String(tempUserId)
+            (p) => String(p.author_id) === String(numericUserId)
         );
 
         return userParticipation?.status === 'done' ? 'done-on' : 'done-off';
