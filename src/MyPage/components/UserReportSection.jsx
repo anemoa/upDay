@@ -3,31 +3,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HiFire, HiDocumentCheck, HiMiniTrophy } from 'react-icons/hi2';
 import { FaStar } from 'react-icons/fa6';
 import { fetchJoinedChallengesFromSupabase } from '../../store/features/userChallengeSlice';
-import { supabaseApi } from '../../utils/supabaseApi';
 
 const UserReportSection = () => {
     const dispatch = useDispatch();
     const [loggedInUser, setLoggedInUser] = useState(null);
-    const [numericUserId, setNumericUserId] = useState(null);
+    const numericUserId = useSelector(
+        (state) => state.userChallenge.numericUserId
+    );
     const joinedChallenges =
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     // localStorage 값 가져오기
     useEffect(() => {
-        const fetchUserId = async () => {
-            const userEmail = localStorage.getItem('loggedInUser') || '';
-            setLoggedInUser(userEmail);
+        const userId = localStorage.getItem('loggedInUser') || '';
+        setLoggedInUser(userId);
 
-            if (userEmail) {
-                // ✅ 이메일을 숫자 ID로 변환
-                const userId = await supabaseApi.getUserIdByEmail(userEmail);
-                setNumericUserId(userId);
-
-                dispatch(fetchJoinedChallengesFromSupabase(userEmail));
-            }
-        };
-
-        fetchUserId();
+        if (userId) {
+            dispatch(fetchJoinedChallengesFromSupabase(userId));
+        }
     }, [dispatch]);
 
     // 내가 참여한 챌린지 상태 값
@@ -42,16 +35,16 @@ const UserReportSection = () => {
         );
     }).length;
 
-
     const completedChallengesCount = joinedChallenges.filter((challenge) => {
         return (
             challenge.participants &&
             challenge.participants.some(
-                (p) => String(p.author_id) === String(numericUserId) && p.status === 'done'
+                (p) =>
+                    String(p.author_id) === String(numericUserId) &&
+                    p.status === 'done'
             )
         );
     }).length;
-
 
     const incompleteChallengesCount = joinedChallenges.filter((challenge) => {
         return (
