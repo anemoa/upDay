@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserChallengeSearch from './UserChallengeSearch';
 import UserChallengeList from './UserChallengeList';
-import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice';
 import ModalForLogin from '../../common/ModalForLogin';
 import {
     fetchJoinedChallengesFromSupabase,
@@ -15,6 +14,7 @@ const UserChallengeSection = () => {
         useSelector((state) => state.userChallenge.joinedChallenges) || [];
     const myPosts = useSelector((state) => state.userChallenge.myPosts) || [];
     const loading = useSelector((state) => state.userChallenge.loading);
+	const numericUserId = useSelector((state) => state.userChallenge.numericUserId);
 
     // 필터링 관련 상태
     const [categoryFilter, setCategoryFilter] = useState('전체');
@@ -106,7 +106,7 @@ const UserChallengeSection = () => {
                     challenge.participants &&
                     challenge.participants.some(
                         (p) =>
-                            String(p.author_id) === String(userId) &&
+                            String(p.author_id) === String(numericUserId) &&
                             p.status === 'doing'
                     )
             );
@@ -119,7 +119,7 @@ const UserChallengeSection = () => {
                     challenge.participants &&
                     challenge.participants.some(
                         (p) =>
-                            String(p.author_id) === String(userId) &&
+                            String(p.author_id) === String(numericUserId) &&
                             p.status === 'done'
                     )
             );
@@ -135,6 +135,7 @@ const UserChallengeSection = () => {
         filterByDoingStatus,
         filterByDoneStatus,
         userId,
+		numericUserId
     ]);
 
     // 필터링 적용
