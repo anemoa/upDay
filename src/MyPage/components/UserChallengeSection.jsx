@@ -42,17 +42,12 @@ const UserChallengeSection = () => {
 
     // 데이터 가져오기
     useEffect(() => {
-        // localStorage에 이미 데이터가 로드되었다는 표시가 있는지 확인
-        const hasLoadedData = localStorage.getItem('hasLoadedChallengeData');
 
         if (userId) {
-            console.log('데이터 로드 시작');
             dispatch(fetchJoinedChallengesFromSupabase(userId));
             dispatch(fetchMyPostFromSupabase(userId));
         }
     }, [dispatch, userId]);
-
-    useEffect(() => {}, [myPosts, joinedChallenges]);
 
     // 필터링 로직을 메모이제이션 해서 최적화 하기
     const applyFilters = useCallback(() => {

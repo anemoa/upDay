@@ -163,15 +163,8 @@ const userChallengeSlice = createSlice({
                 state.loading.status = true;
             })
             .addCase(updateChallengeStatus.fulfilled, (state, action) => {
-                console.log('상태 업데이트 액션 실행:', action.payload);
-                const { challengeId, userId, status } = action.payload;
 
-                // 상태 업데이트 전 participants 배열 확인
-                console.log(
-                    '업데이트 전 참가자 배열:',
-                    state.joinedChallenges.find((c) => c.id === challengeId)
-                        ?.participants
-                );
+                const { challengeId, userId, status } = action.payload;
 
                 // 참여 챌린지 상태 업데이트
                 state.joinedChallenges = state.joinedChallenges.map(
@@ -217,20 +210,6 @@ const userChallengeSlice = createSlice({
 
                 state.loading.status = false;
 
-                // 상태 업데이트 후 participants 배열 다시 확인
-                console.log(
-                    '업데이트 후 참가자 배열:',
-                    state.joinedChallenges.find((c) => c.id === challengeId)
-                        ?.participants
-                );
-
-                console.log(
-                    '업데이트 후 participants 배열 상세:',
-                    JSON.stringify(
-                        state.joinedChallenges.find((c) => c.id === challengeId)
-                            ?.participants
-                    )
-                );
             })
             .addCase(updateChallengeStatus.rejected, (state, action) => {
                 state.loading.status = false;
