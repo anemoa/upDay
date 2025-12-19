@@ -96,9 +96,6 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
             ...selectedChallenge,
             ...formData,
         };
-
-		// 임시로 콘솔 로그만
-		console.log('challenge update not implemented yet', updatedChallenge);
 		
 		if(loggedInUser){
 			dispatch(fetchMyPostFromSupabase(loggedInUser));
@@ -111,7 +108,6 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     // 삭제 버튼 클릭 시 챌린지 삭제
     const handleDelete = () => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
-            console.log('챌린지 삭제 기능 아직임', selectedChallenge?.id);
 			
             onClose(); // 모달 닫기
         }
