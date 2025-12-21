@@ -99,6 +99,29 @@ export const updateChallengeStatus = createAsyncThunk(
     }
 );
 
+// 챌린지 수정
+export const updateChallengeFromSupabase = createAsyncThunk(
+    'userChallenge/updateChallengeFromSupabase',
+    async ({ challengeId, updateData }, { rejectWithValue }) => {
+        try {
+            const result = await supabaseApi.patch(
+                'challenges',
+                challengeId,
+                updateData
+            );
+
+            if (!result || result.length === 0) {
+                throw new Error('업데이트된 챌린지가 없습니다.');
+            }
+
+            return result[0]; // 업데이트된 챌린지 반환
+        } catch (error) {
+            console.error('챌린지 수정 실패:', error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 //초기 상태
 const initialState = {
     myPosts: [],
@@ -163,7 +186,6 @@ const userChallengeSlice = createSlice({
                 state.loading.status = true;
             })
             .addCase(updateChallengeStatus.fulfilled, (state, action) => {
-
                 const { challengeId, userId, status } = action.payload;
 
                 // 참여 챌린지 상태 업데이트
@@ -209,10 +231,25 @@ const userChallengeSlice = createSlice({
                 );
 
                 state.loading.status = false;
-
             })
             .addCase(updateChallengeStatus.rejected, (state, action) => {
                 state.loading.status = false;
+                state.error = action.payload;
+            })
+
+            // updateChallengeFromSupabase 액션 처리
+            .addCase(updateChallengeFromSupabase.pending, (state) => {
+                state.loading.myPosts = true;
+            })
+            .addCase(updateChallengeFromSupabase.fulfilled, (state, action) => {
+                // myPosts에서 해당 챌린지 업데이트
+                state.myPosts = state.myPosts.map((post) =>
+                    post.id === action.payload.id ? action.payload : post
+                );
+                state.loading.myPosts = false;
+            })
+            .addCase(updateChallengeFromSupabase.rejected, (state, action) => {
+                state.loading.myPosts = false;
                 state.error = action.payload;
             });
     },
