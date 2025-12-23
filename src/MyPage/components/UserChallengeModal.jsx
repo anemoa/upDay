@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-    fetchMyPostFromSupabase
+    fetchMyPostFromSupabase,
+    updateChallengeFromSupabase,
 } from '../../store/features/userChallengeSlice';
 import ModalHeader from '../../Modal/components/ModalHeader';
 import ModalContent from '../../Modal/components/ModalContent';
@@ -32,9 +33,9 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     });
 
     useEffect(() => {
-		if(loggedInUser){
-			dispatch(fetchMyPostFromSupabase(loggedInUser));
-		}
+        if (loggedInUser) {
+            dispatch(fetchMyPostFromSupabase(loggedInUser));
+        }
     }, [dispatch, myPosts]);
 
     useEffect(() => {
@@ -52,7 +53,8 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     if (!isOpen || !selectedChallenge) return null;
 
     // 내가 작성한 챌린지인지 확인
-    const isMyPost = myPosts?.some((post) => post.id === selectedChallenge?.id) || false;
+    const isMyPost =
+        myPosts?.some((post) => post.id === selectedChallenge?.id) || false;
 
     // 카테고리별 이미지를 가져오는 함수 추가
     const getCategoryImage = (category) => {
@@ -78,7 +80,7 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     };
 
     // 글 수정하는 로직
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!isEditMode || !selectedChallenge) return;
 
         if (
@@ -91,40 +93,54 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
             return;
         }
 
-        // 수정된 내용 저장하는 로직
-        const updatedChallenge = {
-            ...selectedChallenge,
-            ...formData,
-        };
-		
-		if(loggedInUser){
-			dispatch(fetchMyPostFromSupabase(loggedInUser));
-		}
+        try {
+            // Redux 액션 디스패치
+            await dispatch(
+                updateChallengeFromSupabase({
+                    challengeId: selectedChallenge.id,
+                    updateData: {
+                        title: formData.title,
+                        content: formData.content,
+                        category: formData.category,
+                        duration: formData.duration,
+                    },
+                })
+            ).unwrap();
 
-        navigate('/mypage');
-        onClose();
+            alert('챌린지가 수정되었습니다!');
+
+            // 목록 새로고침
+            if (loggedInUser) {
+                await dispatch(fetchMyPostFromSupabase(loggedInUser));
+            }
+
+            navigate('/mypage');
+            onClose();
+        } catch (error) {
+            console.error('수정 실패:', error);
+            alert('챌린지 수정에 실패했습니다.');
+        }
     };
 
     // 삭제 버튼 클릭 시 챌린지 삭제
     const handleDelete = () => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
-			
             onClose(); // 모달 닫기
         }
     };
 
     return (
         <div
-            className='fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]'
+            className="fixed inset-0 bg-neutral-900/60 flex items-center justify-center z-[100]"
             onClick={handleBackgroundClick}
         >
             {/* 모달 내부 클릭시 닫히지 않도록 하는 메소드 */}
             <div
-                className='w-[440px] max-md:w-[90%] max-md:mx-4 p-6 max-md:p-4 rounded-2xl bg-neutral-100'
+                className="w-[440px] max-md:w-[90%] max-md:mx-4 p-6 max-md:p-4 rounded-2xl bg-neutral-100"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className='h-[384px] max-md:h-[280px] mb-4 max-md:mb-3 overflow-hidden rounded-2xl'
+                    className="h-[384px] max-md:h-[280px] mb-4 max-md:mb-3 overflow-hidden rounded-2xl"
                     style={{
                         backgroundColor: isViewMode
                             ? selectedChallenge?.category === '식단'
@@ -148,7 +164,7 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
                     }}
                 >
                     <img
-                        className='h-full mx-auto p-[1rem]'
+                        className="h-full mx-auto p-[1rem]"
                         src={
                             isViewMode
                                 ? getCategoryImage(selectedChallenge?.category)
@@ -156,7 +172,7 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
                                   ? getCategoryImage(formData.category)
                                   : CATEGORY_IMAGES.default
                         }
-                        alt=''
+                        alt=""
                     />
                 </div>
                 <ModalHeader
@@ -195,9 +211,14 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
                     userImg={
                         isEditMode
                             ? 'https://img.freepik.com/free-photo/happy-smiling-young-woman-outdoor-with-headphones_624325-2774.jpg?t=st=1739337349~exp=1739340949~hmac=09682bb91bc32e12f74294761387c2d0b03eb8ba74bc808b70070949c2b90a8c&w=900'
-                            : selectedChallenge?.users?.user_img || 'https://via.placeholder.com/150'
+                            : selectedChallenge?.users?.user_img ||
+                              'https://via.placeholder.com/150'
                     }
-                    nickname={isEditMode ? '' : selectedChallenge?.users?.nickname || '작성자'}
+                    nickname={
+                        isEditMode
+                            ? ''
+                            : selectedChallenge?.users?.nickname || '작성자'
+                    }
                     isMyPost={isMyPost}
                     onSubmit={handleSubmit}
                     onClose={handleClose}
