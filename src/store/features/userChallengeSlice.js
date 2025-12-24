@@ -122,6 +122,20 @@ export const updateChallengeFromSupabase = createAsyncThunk(
     }
 );
 
+// 챌린지 삭제
+export const deleteChallengeFromSupabase = createAsyncThunk(
+    'userChallenge/deleteChallengeFromSupabase',
+    async (challengeId, { rejectWithValue }) => {
+        try {
+            await supabaseApi.delete('challenges', challengeId);
+            return challengeId; // 삭제된 챌린지 ID 반환
+        } catch (error) {
+            console.error('챌린지 삭제 실패:', error);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 //초기 상태
 const initialState = {
     myPosts: [],
@@ -249,6 +263,22 @@ const userChallengeSlice = createSlice({
                 state.loading.myPosts = false;
             })
             .addCase(updateChallengeFromSupabase.rejected, (state, action) => {
+                state.loading.myPosts = false;
+                state.error = action.payload;
+            })
+
+            // deleteChallengeFromSupabase 액션 처리
+            .addCase(deleteChallengeFromSupabase.pending, (state) => {
+                state.loading.myPosts = true;
+            })
+            .addCase(deleteChallengeFromSupabase.fulfilled, (state, action) => {
+                // myPosts에서 해당 챌린지 제거
+                state.myPosts = state.myPosts.filter(
+                    (post) => post.id !== action.payload
+                );
+                state.loading.myPosts = false;
+            })
+            .addCase(deleteChallengeFromSupabase.rejected, (state, action) => {
                 state.loading.myPosts = false;
                 state.error = action.payload;
             });
