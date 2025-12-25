@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+    deleteChallengeFromSupabase,
     fetchMyPostFromSupabase,
     updateChallengeFromSupabase,
 } from '../../store/features/userChallengeSlice';
@@ -123,9 +124,28 @@ const UserChallengeModal = ({ isOpen, onClose, stopPropagation = false }) => {
     };
 
     // 삭제 버튼 클릭 시 챌린지 삭제
-    const handleDelete = () => {
-        if (window.confirm('정말 삭제하시겠습니까?')) {
-            onClose(); // 모달 닫기
+    const handleDelete = async () => {
+        if (!window.confirm('정말 삭제하시겠습니까?')) {
+            return;
+        }
+
+        try {
+            await dispatch(
+                deleteChallengeFromSupabase(selectedChallenge.id)
+            ).unwrap();
+
+            alert('챌린지가 삭제되었습니다!');
+
+            // 목록 새로고침
+            if (loggedInUser) {
+                await dispatch(fetchMyPostFromSupabase(loggedInUser));
+            }
+
+            navigate('/mypage');
+            onClose();
+        } catch (error) {
+            console.error('삭제 실패:', error);
+            alert('챌린지 삭제에 실패했습니다.');
         }
     };
 
