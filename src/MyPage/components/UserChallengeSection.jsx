@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserChallengeSearch from './UserChallengeSearch';
 import UserChallengeList from './UserChallengeList';
@@ -22,7 +22,6 @@ const UserChallengeSection = () => {
     const [filterByMyPost, setFilterByMyPost] = useState(false);
     const [filterByDoingStatus, setFilterByDoingStatus] = useState(false);
     const [filterByDoneStatus, setFilterByDoneStatus] = useState(false);
-    const [filteredChallenges, setFilteredChallenges] = useState([]);
 
     // 사용자 id 가져오기
     const userId = localStorage.getItem('loggedInUser');
@@ -50,7 +49,7 @@ const UserChallengeSection = () => {
     }, [dispatch, userId]);
 
     // 필터링 로직을 메모이제이션 해서 최적화 하기
-    const applyFilters = useCallback(() => {
+    const filteredChallenges = useMemo(() => {
         // ✨ 새로운 로직: 둘 다 합치기
         let dataSource = [];
 
@@ -129,15 +128,8 @@ const UserChallengeSection = () => {
         filterByMyPost,
         filterByDoingStatus,
         filterByDoneStatus,
-        userId,
 		numericUserId
     ]);
-
-    // 필터링 적용
-    useEffect(() => {
-        const filtered = applyFilters();
-        setFilteredChallenges(filtered);
-    }, [applyFilters]);
 
     return (
         <div className="w-full h-[637px] md:h-[756px] rounded-r-3xl rounded-bl-3xl bg-neutral-100 px-[24px] py-[32px] md:p-[36px]">
