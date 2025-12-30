@@ -24,24 +24,6 @@ const UserProfileSection = () => {
                 return;
             }
 
-            // if (usersData) {
-            //     try {
-            //         const users = JSON.parse(usersData);
-            //         const foundUser = users.find(
-            //             (user) => user.email === loggedInUserEmail
-            //         );
-
-            //         if (foundUser) {
-            //             setLoggedInUser(foundUser);
-            //             const signupDate = new Date(foundUser.signupDate);
-            //             const today = new Date();
-            //             const days = differenceInDays(today, signupDate);
-            //             setDaysSinceSignup(days + 1);
-            //         }
-            //     } catch (error) {
-            //         console.error('로컬 스토리지 데이터 파싱 오류:', error);
-            //     }
-            // }
 
             try {
                 // ✅ Supabase에서 사용자 정보 가져오기
