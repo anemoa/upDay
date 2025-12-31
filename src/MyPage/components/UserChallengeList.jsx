@@ -17,9 +17,8 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     const userId = localStorage.getItem('loggedInUser');
 
     // Redux 상태를 직접 구독
-    const joinedChallenges = useSelector(
-        (state) => state.userChallenge.joinedChallenges
-    );
+    const joinedChallenges =
+        useSelector((state) => state.userChallenge.joinedChallenges) || [];
 
     const getBadgeClass = (category) => badgeClasses[category] || '';
 
@@ -35,8 +34,7 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
 
     // 챌린지 상태 변경 핸들러
     const handleToggle = async (challengeId, type) => {
-
-		if(!numericUserId) return;
+        if (!numericUserId) return;
 
         // Redux 상태에서 최신 챌린지 찾기
         const challenge = joinedChallenges.find((c) => c.id === challengeId);
@@ -68,7 +66,6 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
                     status: newStatus,
                 })
             ).unwrap(); // unwrap()으로 성공/실패 확인
-
         } catch (error) {
             console.error('❌ 상태 업데이트 실패:', error);
         }
@@ -100,6 +97,10 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
     };
 
     const getChallengeDoingClass = (challenge) => {
+        // ✅ 안전 체크 추가
+        if (!joinedChallenges || joinedChallenges.length === 0) {
+            return 'doing-off';
+        }
 
         // Redux 상태에서 직접 챌린지 찾기
         const reduxChallenge = joinedChallenges.find(
@@ -111,12 +112,17 @@ export default function UserChallengeList({ filteredChallenges, myPosts }) {
             (p) => String(p.author_id) === String(numericUserId)
         );
 
-        const classResult = userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
+        const classResult =
+            userParticipation?.status === 'doing' ? 'doing-on' : 'doing-off';
 
         return classResult;
     };
 
     const getChallengeDoneClass = (challenge) => {
+        // ✅ 안전 체크 추가
+        if (!joinedChallenges || joinedChallenges.length === 0) {
+            return 'done-off';
+        }
 
         // Redux 상태에서 직접 챌린지 찾기
         const reduxChallenge = joinedChallenges.find(
