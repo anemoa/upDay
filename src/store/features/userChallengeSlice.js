@@ -11,9 +11,9 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
     'userChallenge/fetchMyPostFromSupabase',
     async (email, { getState, rejectWithValue }) => {
         // 데이터가 이미 있는 경우에만 스킵 (로딩 상태는 확인하지 않음)
-        const { myPosts } = getState().userChallenge;
-        if (myPosts && myPosts.length > 0) {
-            return myPosts;
+        const { myPosts, numericUserId } = getState().userChallenge;
+        if (myPosts && myPosts.length > 0 && numericUserId) {
+            return {myPosts, numericUserId};
         }
 
         try {
