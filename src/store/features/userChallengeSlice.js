@@ -43,9 +43,10 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
     'userChallenge/fetchJoinedChallengesFromSupabase',
     async (email, { getState, rejectWithValue }) => {
         // 데이터가 이미 있는 경우에만 스킵
-        const { joinedChallenges } = getState().userChallenge;
-        if (joinedChallenges && joinedChallenges.length > 0) {
-            return joinedChallenges;
+        const { joinedChallenges, numericUserId } = getState().userChallenge;
+        
+        if (joinedChallenges && joinedChallenges.length > 0 && numericUserId) {
+            return { joinedChallenges, numericUserId };
         }
 
         try {
