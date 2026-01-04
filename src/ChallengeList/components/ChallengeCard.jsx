@@ -196,7 +196,7 @@ const ChallengeCard = ({ challenge }) => {
                         type="button"
                         className="btn btn-primary w-[40%] max-md:text-xs"
                         onClick={handleJoin}
-						disabled={isJoined}
+						disabled={isJoined()}
                     >
                         {isJoined() ? '참여중' : isAuthor ? '참여중' : '참여하기'}
                     </button>
