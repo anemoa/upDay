@@ -13,11 +13,23 @@ import MainFlower from '../images/main_logo.svg';
 import MbFlower from '../images/mb_flower.svg';
 import ChallengeIcon from '../images/challenge-2.svg';
 import { userChallengeList } from '../../data/userChallengeData';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice';
+import { supabaseApi } from '../../utils/supabaseApi';
 
 const MainLayout = () => {
+    const dispatch = useDispatch(); // ✅ 추가
+    const challenges = useSelector((state) => state.challenge.list) || []; // ✅ 추가
+    const loading = useSelector((state) => state.challenge.loading); // ✅ 추가
     const [userName, setUserName] = useState('');
     const [challengeDays, setChallengeDays] = useState(0);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUserId, setCurrentUserId] = useState(null);
+
+    // ✅ 챌린지 데이터 가져오기
+    useEffect(() => {
+        dispatch(fetchChallengesFromSupabase());
+    }, [dispatch]);
 
     useEffect(() => {
         const loggedInUserEmail = localStorage.getItem('loggedInUser');
@@ -41,6 +53,16 @@ const MainLayout = () => {
                         setChallengeDays(diffDays + 1);
                     }
                     setIsLoggedIn(true);
+
+                    // ✅ 이메일 → 숫자 ID 변환
+                    const fetchUserId = async () => {
+                        const userId =
+                            await supabaseApi.getUserIdByEmail(
+                                loggedInUserEmail
+                            );
+                        setCurrentUserId(userId);
+                    };
+                    fetchUserId();
                 }
             } catch (error) {
                 console.error('로컬 스토리지 데이터 파싱 오류:', error);
@@ -54,8 +76,7 @@ const MainLayout = () => {
             return [];
         }
         return userChallengeList.filter((challenge) => challenge.clgDoing);
-     }, [isLoggedIn]);
-    
+    }, [isLoggedIn]);
 
     const sortedChallenges = useMemo(() => {
         return Array.isArray(userChallengeList)
@@ -97,10 +118,10 @@ const MainLayout = () => {
             <Helmet>
                 <title>홈 - UpDay</title>
             </Helmet>
-            <div className='h-[1143px] md:h-[796px] w-[90%] md:w-[80%] md:max-w-[1344px] mx-auto flex flex-col md:flex-row md:gap-[4%]'>
+            <div className="h-[1143px] md:h-[796px] w-[90%] md:w-[80%] md:max-w-[1344px] mx-auto flex flex-col md:flex-row md:gap-[4%]">
                 {/* 왼쪽 콘텐츠 */}
-                <div className='relative w-full h-[796px] md:w-[48%] flex flex-col items-center'>
-                    <div className='w-full md:h-full flex flex-col gap-44 md:justify-between z-20'>
+                <div className="relative w-full h-[796px] md:w-[48%] flex flex-col items-center">
+                    <div className="w-full md:h-full flex flex-col gap-44 md:justify-between z-20">
                         <UserInfo
                             userName={userName}
                             challengeDays={challengeDays}
@@ -113,29 +134,29 @@ const MainLayout = () => {
 
                     <img
                         src={MainFlower}
-                        alt='웹 메인 로고'
-                        className='hidden md:flex md:absolute w-[95%] bottom-80 right-0 '
+                        alt="웹 메인 로고"
+                        className="hidden md:flex md:absolute w-[95%] bottom-80 right-0 "
                     />
                     <img
                         src={MbFlower}
-                        alt='모바일 메인 로고'
-                        className='absolute w-[150px] top-12 right-12 md:hidden'
+                        alt="모바일 메인 로고"
+                        className="absolute w-[150px] top-12 right-12 md:hidden"
                     />
                 </div>
-                <div className='h-[796px] w-full md:w-[48%] flex flex-col gap-60 md:gap-10 -mt-64 md:m-0 '>
+                <div className="h-[796px] w-full md:w-[48%] flex flex-col gap-60 md:gap-10 -mt-64 md:m-0 ">
                     <PopularChallenges challenges={sortedChallenges} />
                     <div>
-                        <div className='relative mt-1 mb-12 md:mt-0 md:mb-4'>
+                        <div className="relative mt-1 mb-12 md:mt-0 md:mb-4">
                             <img
                                 src={ChallengeIcon}
-                                alt='챌린지 아이콘'
-                                className='hidden md:block w-[180px]'
+                                alt="챌린지 아이콘"
+                                className="hidden md:block w-[180px]"
                             />
-                            <h2 className='absolute z-20 font-bold text-lg md:text-xl md:text-neutral-100 mb-6 md:top-[6px] md:left-[28px]'>
+                            <h2 className="absolute z-20 font-bold text-lg md:text-xl md:text-neutral-100 mb-6 md:top-[6px] md:left-[28px]">
                                 챌린지 카테고리
                             </h2>
                         </div>
-                        <div className='grid grid-cols-2 gap-4'>
+                        <div className="grid grid-cols-2 gap-4">
                             {categories.map((category, index) => (
                                 <Link
                                     key={index}
@@ -143,21 +164,21 @@ const MainLayout = () => {
                                     className={`card p-4 ${category.color} relative flex justify-between items-center`}
                                     style={{ height: '196.5px' }}
                                 >
-                                    <div className='h-[100%] flex flex-col justify-between items-between`'>
-                                        <span className='text-2xl font-semibold whitespace-nowrap'>
+                                    <div className="h-[100%] flex flex-col justify-between items-between`">
+                                        <span className="text-2xl font-semibold whitespace-nowrap">
                                             {category.name}
                                         </span>
                                         <img
                                             src={ButtonIcon}
-                                            alt='Button'
-                                            className='w-8 h-8'
+                                            alt="Button"
+                                            className="w-8 h-8"
                                         />
                                     </div>
-                                    <div className='absolute h-full right-0 object-contain flex items-center'>
+                                    <div className="absolute h-full right-0 object-contain flex items-center">
                                         <img
                                             src={category.icon}
                                             alt={`${category.name} icon`}
-                                            className='mr-4 pt-2 h-[65%]'
+                                            className="mr-4 pt-2 h-[65%]"
                                         />
                                     </div>
                                 </Link>
