@@ -70,21 +70,30 @@ const MainLayout = () => {
         }
     }, []);
 
+    // ✅ 진행 중인 챌린지 필터링 (participants에서)
     const filteredChallenges = useMemo(() => {
-        const loggedInUserEmail = localStorage.getItem('loggedInUser') || '';
-        if (!isLoggedIn || loggedInUserEmail !== 'test01@naver.com') {
+        if (!isLoggedIn || !currentUserId || !challenges.length) {
             return [];
         }
-        return userChallengeList.filter((challenge) => challenge.clgDoing);
-    }, [isLoggedIn]);
 
+        return challenges.filter((challenge) => {
+            return challenge.participants?.some(
+                (p) =>
+                    String(p.author_id) === String(currentUserId) &&
+                    p.status === 'doing'
+            );
+        });
+    }, [isLoggedIn, currentUserId, challenges]);
+
+    // ✅ 인기 챌린지 정렬 (post_clicked 기준)
     const sortedChallenges = useMemo(() => {
-        return Array.isArray(userChallengeList)
-            ? [...userChallengeList]
-                  .sort((a, b) => b.postClicked - a.postClicked)
-                  .slice(0, 5)
-            : [];
-    }, []);
+        if (!challenges || challenges.length === 0) {
+            return [];
+        }
+        return [...challenges]
+            .sort((a, b) => (b.post_clicked || 0) - (a.post_clicked || 0))
+            .slice(0, 5);
+    }, [challenges]);
 
     const categories = [
         {
