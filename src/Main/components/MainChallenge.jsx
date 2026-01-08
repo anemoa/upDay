@@ -1,6 +1,6 @@
 // MainChallenge.jsx
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../index';
 
@@ -54,16 +54,30 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
     const [startIndex, setStartIndex] = useState(0);
     const challengesPerPage = 4;
 
-    const filteredChallenges = userChallengeData
-        .filter(
-            (challenge) =>
-                challenge.clgJoin === true && challenge.clgDoing === true
-        )
-        .sort((a, b) => {
-            const daysA = calculateDaysPassed(a.joinDate);
-            const daysB = calculateDaysPassed(b.joinDate);
-            return daysA - daysB; // 숫자가 작은 순서대로 정렬
-        });
+	    const sortedChallenges = useMemo(() => {
+        if (!userChallengeData || userChallengeData.length === 0) {
+            return [];
+        }
+
+        return [...userChallengeData]
+            .map((challenge) => {
+                // participants에서 join_date 찾기
+                const participant = challenge.participants?.find(
+                    (p) => p.status === 'doing'
+                );
+                
+                return {
+                    ...challenge,
+                    joinDate: participant?.join_date || participant?.created_at || challenge.created_at
+                };
+            })
+            .sort((a, b) => {
+                const dateA = new Date(a.joinDate);
+                const dateB = new Date(b.joinDate);
+                return dateA - dateB; // 오래된 순 (도전 일수가 많은 순)
+            });
+    }, [userChallengeData]);
+
 
     const handleLeftClick = () => {
         setStartIndex((prev) =>
