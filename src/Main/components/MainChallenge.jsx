@@ -106,12 +106,12 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
             </div>
 
             {isLoggedIn ? (
-                filteredChallenges.length > 0 ? (
+                sortedChallenges.length > 0 ? (
                     <>
                         <div className='flex flex-wrap gap-3 md:py-2 md:mt-5 md:hidden w-full justify-start'>
                             {[...Array(3)].map((_, index) => {
                                 const challenge =
-                                    filteredChallenges[startIndex + index];
+                                    sortedChallenges[startIndex + index];
                                 return (
                                     <div
                                         key={index}
@@ -141,7 +141,7 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
                         <ul className='hidden md:block'>
                             {[...Array(challengesPerPage)].map((_, index) => {
                                 const challenge =
-                                    filteredChallenges[startIndex + index];
+                                    sortedChallenges[startIndex + index];
                                 return (
                                     <li
                                         key={index}
