@@ -87,7 +87,7 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
 
     const handleRightClick = () => {
         setStartIndex((prev) =>
-            prev + challengesPerPage >= filteredChallenges.length
+            prev + challengesPerPage >= sortedChallenges.length
                 ? prev
                 : prev + challengesPerPage
         );

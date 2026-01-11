@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ChallengeIcon from '../images/challenge-2.svg';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 const PopularChallenges = ({ challenges }) => {
-    const [currentChallenges, setCurrentChallenges] = useState([]);
     const [challengeIndex, setChallengeIndex] = useState(0);
 
-    useEffect(() => {
-        if (challenges && challenges.length > 0) {
-            const sortedChallenges = [...challenges].sort(
-                (a, b) => b.postClicked - a.postClicked
-            );
-            setCurrentChallenges(sortedChallenges.slice(0, 9));
-        }
-    }, [challenges]);
+const currentChallenges = useMemo(() => {
+    return challenges?.slice(0, 9) || [];
+}, [challenges]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -83,7 +77,7 @@ const PopularChallenges = ({ challenges }) => {
                                     {challenge.title}
                                 </div>
                                 <div className='text-sm text-gray-600'>
-                                    {challenge.description}
+                                    {challenge.content}
                                 </div>
                             </div>
                             <button
