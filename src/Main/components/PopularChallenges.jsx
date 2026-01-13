@@ -76,7 +76,7 @@ const currentChallenges = useMemo(() => {
                                     </span>
                                     {challenge.title}
                                 </div>
-                                <div className='text-sm text-gray-600'>
+                                <div className='text-sm text-gray-600 line-clamp-2'>
                                     {challenge.content}
                                 </div>
                             </div>
