@@ -40,7 +40,7 @@ const PopularChallenges = ({ challenges }) => {
 
     if (currentChallenges.length < 3) return null;
 
-	const handleChallengeClick = (challenge) => {
+    const handleChallengeClick = (challenge) => {
         dispatch(setSelectedChallenge(challenge));
         navigate(`/challengelist/${challenge.id}`);
     };
@@ -67,14 +67,19 @@ const PopularChallenges = ({ challenges }) => {
                     return (
                         <div
                             key={index}
+                            onClick={() => handleChallengeClick(challenge)}
                             className={`bg-white p-4 rounded-xl md:text-lg font-semibold transition-all duration-500 ease-in-out 
                                 ${isHighlighted ? 'opacity-100 scale-105' : 'opacity-50 scale-100'} 
                                 w-[95%] md:w-full shrink-0 snap-center
-                                relative flex items-center justify-between 
+                                relative flex items-center justify-between
+								cursor-pointer hover:shadow-lg  
                                 ${offset !== 0 ? 'hidden md:flex' : ''}`}
                         >
                             <button
-                                onClick={handlePrevChallenge}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handlePrevChallenge();
+                                }}
                                 className="absolute z-20 left-2 md:hidden"
                             >
                                 <IoIosArrowBack size={18} />
@@ -91,7 +96,10 @@ const PopularChallenges = ({ challenges }) => {
                                 </div>
                             </div>
                             <button
-                                onClick={handleNextChallenge}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleNextChallenge();
+                                }}
                                 className="absolute z-20 right-2 md:hidden"
                             >
                                 <IoIosArrowForward size={18} />
