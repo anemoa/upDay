@@ -12,15 +12,13 @@ import HeartIcon from '../../assets/images/common/heart.svg';
 import MainFlower from '../images/main_logo.svg';
 import MbFlower from '../images/mb_flower.svg';
 import ChallengeIcon from '../images/challenge-2.svg';
-import { userChallengeList } from '../../data/userChallengeData';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice';
 import { supabaseApi } from '../../utils/supabaseApi';
 
 const MainLayout = () => {
-    const dispatch = useDispatch(); // ✅ 추가
-    const challenges = useSelector((state) => state.challenge.list) || []; // ✅ 추가
-    const loading = useSelector((state) => state.challenge.loading); // ✅ 추가
+    const dispatch = useDispatch();
+    const challenges = useSelector((state) => state.challenge.list) || [];
     const [userName, setUserName] = useState('');
     const [challengeDays, setChallengeDays] = useState(0);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
