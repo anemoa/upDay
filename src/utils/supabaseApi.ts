@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Challenge, User, Participant } from '../types';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -11,7 +12,7 @@ const headers = {
 
 export const supabaseApi = {
     // 조회
-    async get(table, query = '*') {
+    async get<T = any>(table: string, query: string = '*'): Promise<T[]> {
         try {
             const response = await axios.get(
                 `${supabaseUrl}/rest/v1/${table}?select=${query}`,
@@ -25,24 +26,21 @@ export const supabaseApi = {
     },
 
     // email로 id 사용자 id 조회 함수
-    async getUserIdByEmail(email) {
+    async getUserIdByEmail(email: string): Promise<number | undefined> {
         try {
             const response = await axios.get(
                 `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
                 { headers }
             );
-
             return response.data[0]?.id;
         } catch (error) {
             console.error('❌ getUserIdByEmail 에러:', error);
-            console.log('test');
-
             throw error;
         }
     },
 
     // 생성
-    async post(table, data) {
+    async post<T = any>(table: string, data: any): Promise<T> {
         try {
             const response = await axios.post(
                 `${supabaseUrl}/rest/v1/${table}`,
@@ -57,7 +55,7 @@ export const supabaseApi = {
     },
 
     // 삭제
-    async delete(table, id) {
+    async delete(table: string, id: number): Promise<void> {
         try {
             const response = await axios.delete(
                 `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`,
@@ -71,23 +69,27 @@ export const supabaseApi = {
     },
 
     // 수정
-    async patch(table, id, data) {
+    async patch<T = any>(table: string, id: number, data: any): Promise<T[]> {
         try {
             const url = `${supabaseUrl}/rest/v1/${table}?id=eq.${id}`;
-
             const response = await axios.patch(url, data, {
                 headers: {
                     ...headers,
                     Prefer: 'return=representation',
                 },
             });
-
             return response.data;
         } catch (error) {
             console.error('❌ PATCH 에러:', error);
-            if (error.response) {
-                console.error('❌ 응답 데이터:', error.response.data);
-                console.error('❌ 응답 상태:', error.response.status);
+            if (error instanceof Error) {
+                // ✅ 타입 체크 추가
+                console.error('❌ 에러 메시지:', error.message);
+            }
+            // axios 에러인 경우
+            if (axios.isAxiosError(error)) {
+                // ✅ axios 에러 체크
+                console.error('❌ 응답 데이터:', error.response?.data);
+                console.error('❌ 응답 상태:', error.response?.status);
             }
             throw error;
         }
@@ -116,7 +118,6 @@ const getParticipant = async (challengeId, userId) => {
 // 참여자 상태 업데이트
 const updateParticipantStatus = async (participantId, status) => {
     try {
-
         const result = await supabaseApi.patch('participants', participantId, {
             status,
         });
