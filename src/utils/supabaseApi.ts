@@ -21,6 +21,9 @@ export const supabaseApi = {
             return response.data;
         } catch (error) {
             console.error('API error: ', error);
+            if (axios.isAxiosError(error)) {
+                console.error('❌ 응답:', error.response);
+            }
             throw error;
         }
     },
@@ -34,7 +37,10 @@ export const supabaseApi = {
             );
             return response.data[0]?.id;
         } catch (error) {
-            console.error('❌ getUserIdByEmail 에러:', error);
+            console.error('API error: ', error);
+            if (axios.isAxiosError(error)) {
+                console.error('❌ 응답:', error.response);
+            }
             throw error;
         }
     },
@@ -50,6 +56,9 @@ export const supabaseApi = {
             return response.data;
         } catch (error) {
             console.error('API error: ', error);
+            if (axios.isAxiosError(error)) {
+                console.error('❌ 응답:', error.response);
+            }
             throw error;
         }
     },
@@ -63,7 +72,10 @@ export const supabaseApi = {
             );
             return response.data;
         } catch (error) {
-            console.error('API Error:', error);
+            console.error('API error: ', error);
+            if (axios.isAxiosError(error)) {
+                console.error('❌ 응답:', error.response);
+            }
             throw error;
         }
     },
