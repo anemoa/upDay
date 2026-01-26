@@ -109,7 +109,7 @@ export const supabaseApi = {
 };
 
 // 참여자 정보 가져오기
-const getParticipant = async (challengeId, userId) => {
+const getParticipant = async (challengeId: number, userId: number) => {
     try {
         const participants = await supabaseApi.get('participants', '*');
 
@@ -128,7 +128,10 @@ const getParticipant = async (challengeId, userId) => {
 };
 
 // 참여자 상태 업데이트
-const updateParticipantStatus = async (participantId, status) => {
+const updateParticipantStatus = async (
+    participantId: number,
+    status: 'doing' | 'done' | 'not_started'
+): Promise<Participant[]> => {
     try {
         const result = await supabaseApi.patch('participants', participantId, {
             status,
@@ -143,7 +146,11 @@ const updateParticipantStatus = async (participantId, status) => {
 
 // 새 참여자 생성
 // createParticipant 함수 수정
-const createParticipant = async (challengeId, userId, status) => {
+const createParticipant = async (
+    challengeId: number,
+    userId: number,
+    status: 'doing' | 'done' | 'not_started'
+): Promise<any> => {
     try {
         // userId가 없으면 임시값 사용 (개발용)
         const actualUserId = userId || 1; // 데이터베이스에 존재하는 ID 사용
