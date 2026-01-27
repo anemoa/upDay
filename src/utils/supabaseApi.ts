@@ -167,16 +167,16 @@ const createParticipant = async (
         return response.data;
     } catch (error) {
         console.error('참여자 생성 실패:', error);
-        if (error.response) {
-            console.error('응답 데이터: ', error.response.data);
-            console.error('응답 상태: ', error.response.status);
+        if (axios.isAxiosError(error)) {
+            console.error('응답 데이터: ', error.response?.data);
+            console.error('응답 상태: ', error.response?.status);
         }
         throw error;
     }
 };
 
 // 사용자 프로필 조회 (JOIN 사용)
-const getUserProfile = async (userId) => {
+const getUserProfile = async (userId: number): Promise<User | null> => {
     try {
         const url = `${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=id,email,nickname,password,user_profiles(about,profile_image)`;
         const response = await axios.get(url, { headers });
@@ -189,7 +189,7 @@ const getUserProfile = async (userId) => {
 };
 
 // 프로필 업데이트 (users 테이블)
-const updateUserInfo = async (userId, userData) => {
+const updateUserInfo = async (userId: number, userData: Partial<User>) => {
     try {
         const result = await supabaseApi.patch('users', userId, userData);
 
@@ -206,7 +206,7 @@ const updateUserInfo = async (userId, userData) => {
 };
 
 // 프로필 생성/업데이트 (user_profiles 테이블)
-const upsertUserProfile = async (userId, profileData) => {
+const upsertUserProfile = async (userId: number, profileData: Partial<{about: String; profile_image: string}>) => {
     try {
         // 먼저 기존 프로필이 있는지 확인
         const existing = await axios.get(
