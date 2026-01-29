@@ -109,8 +109,15 @@ export const supabaseApi = {
 };
 
 // 참여자 정보 가져오기
+const getParticipant = async (
+    challengeId: number,
+    userId: number
+): Promise<Participant | null> => {
     try {
-        const participants = await supabaseApi.get('participants', '*');
+        const participants = await supabaseApi.get<Participant>(
+            'participants',
+            '*'
+        );
 
         // 메모리에서 필터링
         return (
@@ -188,7 +195,7 @@ const getUserProfile = async (userId: number): Promise<User | null> => {
 };
 
 // 프로필 업데이트 (users 테이블)
-const updateUserInfo = async (userId: number, userData: Partial<User>): Promise<User[]> => {
+const updateUserInfo = async (userId: number, userData: Partial<User>): Promise<any> => {
     try {
         const result = await supabaseApi.patch('users', userId, userData);
 
@@ -205,7 +212,10 @@ const updateUserInfo = async (userId: number, userData: Partial<User>): Promise<
 };
 
 // 프로필 생성/업데이트 (user_profiles 테이블)
-const upsertUserProfile = async (userId: number, profileData: Partial<{about: string; profile_image: string}>): Promise<any> => {
+const upsertUserProfile = async (
+    userId: number,
+    profileData: Partial<{ about: String; profile_image: string }>
+): Promise<User[]> => {
     try {
         // 먼저 기존 프로필이 있는지 확인
         const existing = await axios.get(
