@@ -195,7 +195,7 @@ const getUserProfile = async (userId: number): Promise<User | null> => {
 };
 
 // 프로필 업데이트 (users 테이블)
-const updateUserInfo = async (userId: number, userData: Partial<User>): Promise<any> => {
+const updateUserInfo = async (userId: number, userData: Partial<User>): Promise<User[]> => {
     try {
         const result = await supabaseApi.patch('users', userId, userData);
 
@@ -215,7 +215,7 @@ const updateUserInfo = async (userId: number, userData: Partial<User>): Promise<
 const upsertUserProfile = async (
     userId: number,
     profileData: Partial<{ about: String; profile_image: string }>
-): Promise<User[]> => {
+): Promise<any> => {
     try {
         // 먼저 기존 프로필이 있는지 확인
         const existing = await axios.get(

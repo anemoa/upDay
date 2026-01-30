@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { supabaseApi } from '../../utils/supabaseApi';
+import { Challenge } from '../../types';
 
 // Supabase에서 챌린지 가져오는 비동기 액션 생성
-export const fetchChallengesFromSupabase = createAsyncThunk(
+export const fetchChallengesFromSupabase = createAsyncThunk <Challenge[]>(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
@@ -11,8 +12,11 @@ export const fetchChallengesFromSupabase = createAsyncThunk(
                 '*,users(nickname,user_img), participants(*)'
             );
         } catch (error) {
-            console.error('API Error Details:', error.response || error);
-            return rejectWithValue(error.message || 'Unknown error');
+            console.error('API Error Details:', error);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
