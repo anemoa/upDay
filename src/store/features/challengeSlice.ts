@@ -3,7 +3,7 @@ import { supabaseApi } from '../../utils/supabaseApi';
 import { Challenge } from '../../types';
 
 // Supabase에서 챌린지 가져오는 비동기 액션 생성
-export const fetchChallengesFromSupabase = createAsyncThunk <Challenge[]>(
+export const fetchChallengesFromSupabase = createAsyncThunk<Challenge[]>(
     'challenge/fetchChallenges',
     async (_, { rejectWithValue }) => {
         try {
@@ -22,28 +22,34 @@ export const fetchChallengesFromSupabase = createAsyncThunk <Challenge[]>(
 );
 
 // 챌린지 글 생성 액션
-export const createChallengeToSupabase = createAsyncThunk(
-    'challenge/createChallenge',
-    async (challengeData, { rejectWithValue }) => {
-        try {
-            return await supabaseApi.post('challenges', challengeData);
-        } catch (error) {
-            console.error('API Error Details:', error.response || error);
-            return rejectWithValue(error.message || 'Unknown error');
+export const createChallengeToSupabase = createAsyncThunk<
+    Challenge, // 반환 타입
+    Partial<Challenge> // 인자 타입
+>('challenge/createChallenge', async (challengeData, { rejectWithValue }) => {
+    try {
+        return await supabaseApi.post<Challenge>('challenges', challengeData);
+    } catch (error) {
+        console.error('API Error Details:', error);
+        if (error instanceof Error) {
+            return rejectWithValue(error.message);
         }
+        return rejectWithValue('Unknown error');
     }
-);
+});
 
 // 챌린지 글 삭제 액션
-export const deleteChallengeFromSupbase = createAsyncThunk(
+export const deleteChallengeFromSupbase = createAsyncThunk<number, number>(
     'challenge/deleteChallenge',
     async (id, { rejectWithValue }) => {
         try {
             await supabaseApi.delete('challenges', id);
             return id; // 삭제된 ID 반환
         } catch (error) {
-            console.error('API Error Details:', error.response || error);
-            return rejectWithValue(error.message || 'Unknown error');
+            console.error('API Error Details:', error);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
@@ -72,7 +78,8 @@ export const joinChallengeToSupabase = createAsyncThunk(
             // 1. 중복 체크
             const participants = await supabaseApi.get('participants');
             const alreadyJoined = participants.some(
-                (p) => p.challenge_id === challengeId && p.author_id === authorId
+                (p) =>
+                    p.challenge_id === challengeId && p.author_id === authorId
             );
 
             if (alreadyJoined) {
