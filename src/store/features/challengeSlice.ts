@@ -55,17 +55,23 @@ export const deleteChallengeFromSupbase = createAsyncThunk<number, number>(
 );
 
 // 챌린기 글 수정 액셩
-export const updateChallengeInSupabase = createAsyncThunk(
+export const updateChallengeInSupabase = createAsyncThunk<
+    Challenge,
+    { id: number; challengeData: Partial<Challenge> }
+>(
     'challenge/updateChallenge',
     async ({ id, challengeData }, { rejectWithValue }) => {
         try {
             await supabaseApi.patch('challenges', id, challengeData);
 
             // 수정 성공 후 해당 챌린지 데이터 반환
-            return { id, ...challengeData };
+            return { id, ...challengeData } as Challenge;
         } catch (error) {
-            console.error('API Error Details:', error.response || error);
-            return rejectWithValue(error.message || 'Unknown error');
+            console.error('API Error Details:', error);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
