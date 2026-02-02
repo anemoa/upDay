@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { supabaseApi } from '../../utils/supabaseApi';
-import { Challenge } from '../../types';
+import { Challenge, ChallengeState } from '../../types';
 
 // Supabase에서 챌린지 가져오는 비동기 액션 생성
 export const fetchChallengesFromSupabase = createAsyncThunk<Challenge[]>(
@@ -77,7 +77,10 @@ export const updateChallengeInSupabase = createAsyncThunk<
 );
 
 // 챌린지 참여 비동기 액션
-export const joinChallengeToSupabase = createAsyncThunk(
+export const joinChallengeToSupabase = createAsyncThunk<
+    { challengeId: number; participant: any },
+    { challengeId: number; authorId: number }
+>(
     'challenge/joinChallenge',
     async ({ challengeId, authorId }, { rejectWithValue }) => {
         try {
@@ -109,23 +112,31 @@ export const joinChallengeToSupabase = createAsyncThunk(
             };
         } catch (error) {
             console.error('❌ 참여 실패 상세:', error);
-            console.error('❌ 에러 응답:', error.response?.data);
-            return rejectWithValue(error.message);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
 
+// 초기 상태
+const initialState: ChallengeState = {
+    list: [],
+    loading: false,
+    error: null,
+    selectedChallenge: null,
+};
+
 const challengeSlice = createSlice({
     name: 'challenge',
-    initialState: {
-        list: [],
-        loading: false,
-        error: null,
-        selectedChallenge: null,
-    },
+    initialState,
     reducers: {
         // 선택된 챌린지 정보를 저장하는 액션
-        setSelectedChallenge: (state, action) => {
+        setSelectedChallenge: (
+            state,
+            action: PayloadAction<Challenge | null>
+        ) => {
             state.selectedChallenge = action.payload;
         },
     },
@@ -144,7 +155,7 @@ const challengeSlice = createSlice({
             // 데이터 로딩 실패했을 때
             .addCase(fetchChallengesFromSupabase.rejected, (state, action) => {
                 state.loading = false; // 로딩 끝
-                state.error = action.payload; // 에러 메시지 저장
+                state.error = action.payload as string; // 에러 메시지 저장
             })
 
             // 글 작성할 때
@@ -160,7 +171,7 @@ const challengeSlice = createSlice({
             })
             .addCase(createChallengeToSupabase.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             })
 
             // 글 삭제하는 액션
@@ -182,7 +193,7 @@ const challengeSlice = createSlice({
             })
             .addCase(deleteChallengeFromSupbase.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             })
 
             // 글 수정하는 액션
@@ -217,7 +228,7 @@ const challengeSlice = createSlice({
             })
             .addCase(updateChallengeInSupabase.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             })
 
             // 챌린지 참여
@@ -232,18 +243,11 @@ const challengeSlice = createSlice({
             })
             .addCase(joinChallengeToSupabase.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
                 console.error('❌ 참여 실패:', action.payload);
             });
     },
 });
 
-export const {
-    setSelectedChallenge,
-    updateChallenge,
-    addChallenge,
-    deleteChallenge,
-    setMyPosts,
-    getMyJoinedChallenge,
-} = challengeSlice.actions;
+export const { setSelectedChallenge } = challengeSlice.actions;
 export default challengeSlice.reducer;
