@@ -5,15 +5,20 @@ import {
     supabaseApi,
     updateParticipantStatus,
 } from '../../utils/supabaseApi';
+import { Challenge, UserChallengeState } from '../../types';
 
 // 내가 작성한 챌린지 데이터 가져오기
-export const fetchMyPostFromSupabase = createAsyncThunk(
+export const fetchMyPostFromSupabase = createAsyncThunk<
+    { myPosts: Challenge[]; numericUserId: number },
+    string,
+    { state: { userChallenge: UserChallengeState } }
+>(
     'userChallenge/fetchMyPostFromSupabase',
     async (email, { getState, rejectWithValue }) => {
         // 데이터가 이미 있는 경우에만 스킵 (로딩 상태는 확인하지 않음)
         const { myPosts, numericUserId } = getState().userChallenge;
         if (myPosts && myPosts.length > 0 && numericUserId) {
-            return {myPosts, numericUserId};
+            return { myPosts, numericUserId };
         }
 
         try {
@@ -33,7 +38,10 @@ export const fetchMyPostFromSupabase = createAsyncThunk(
 
             return { myPosts, numericUserId };
         } catch (error) {
-            return rejectWithValue(error.message);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
@@ -44,7 +52,7 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
     async (email, { getState, rejectWithValue }) => {
         // 데이터가 이미 있는 경우에만 스킵
         const { joinedChallenges, numericUserId } = getState().userChallenge;
-        
+
         if (joinedChallenges && joinedChallenges.length > 0 && numericUserId) {
             return { joinedChallenges, numericUserId };
         }
