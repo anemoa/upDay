@@ -8,7 +8,6 @@ import {
     createChallengeToSupabase,
     deleteChallengeFromSupbase,
     fetchChallengesFromSupabase,
-    updateChallenge,
     updateChallengeInSupabase,
 } from '../store/features/challengeSlice';
 import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
@@ -30,7 +29,6 @@ const PostDetailModal = () => {
     const selectedChallenge = useSelector(
         (state) => state.challenge.selectedChallenge
     );
-
 
     // 추가로 전체 challenge.list도 확인
     const challengeList = useSelector((state) => state.challenge.list);
@@ -135,7 +133,6 @@ const PostDetailModal = () => {
                 // 목록 새로 고침
                 await dispatch(fetchChallengesFromSupabase());
                 console.log('목록 새로고침 완료');
-				
 
                 // 페이지 이동
                 navigate('/challengelist');
@@ -179,12 +176,12 @@ const PostDetailModal = () => {
             }
 
             // 수정된 내용 저장하는 로직
-            const updatedChallenge = {
-                ...selectedChallenge,
-                ...formData,
-            };
-
-            dispatch(updateChallenge(updatedChallenge));
+            dispatch(
+                updateChallengeInSupabase({
+                    id: selectedChallenge.id,
+                    challengeData: formData,
+                })
+            );
             navigate('/challengelist');
         }
     };

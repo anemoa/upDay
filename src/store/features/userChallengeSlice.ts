@@ -6,12 +6,13 @@ import {
     updateParticipantStatus,
 } from '../../utils/supabaseApi';
 import { Challenge, UserChallengeState } from '../../types';
+import { RootState } from '../index';
 
 // 내가 작성한 챌린지 데이터 가져오기
 export const fetchMyPostFromSupabase = createAsyncThunk<
     { myPosts: Challenge[]; numericUserId: number },
     string,
-    { state: { userChallenge: UserChallengeState } }
+    { state: RootState }
 >(
     'userChallenge/fetchMyPostFromSupabase',
     async (email, { getState, rejectWithValue }) => {
@@ -23,10 +24,14 @@ export const fetchMyPostFromSupabase = createAsyncThunk<
 
         try {
             // 1. 이메일을 숫자 id로 변환하기
-            const numericUserId = await supabaseApi.getUserIdByEmail(email);
+            const fetchedUserId = await supabaseApi.getUserIdByEmail(email);
+			
+			if (!fetchedUserId) {  // ✅ undefined 체크
+                throw new Error('사용자를 찾을 수 없습니다.');
+            }
 
             // 2. 모든 챌린지 글 가져오기
-            const challenges = await supabaseApi.get(
+            const challenges = await supabaseApi.get<Challenge>(
                 'challenges',
                 '*,users(nickname,user_img)'
             );
@@ -36,7 +41,7 @@ export const fetchMyPostFromSupabase = createAsyncThunk<
                 (post) => String(post.author_id) === String(numericUserId)
             );
 
-            return { myPosts, numericUserId };
+            return { myPosts, numericUserId: fetchedUserId };
         } catch (error) {
             if (error instanceof Error) {
                 return rejectWithValue(error.message);
