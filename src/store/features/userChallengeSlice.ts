@@ -52,39 +52,46 @@ export const fetchMyPostFromSupabase = createAsyncThunk<
 );
 
 // 참여한 챌린지 데이터 가져오기
-export const fetchJoinedChallengesFromSupabase = createAsyncThunk(
+export const fetchJoinedChallengesFromSupabase = createAsyncThunk
+    { joinedChallenges: Challenge[]; numericUserId: number },
+    string,
+    { state: RootState }
+>(
     'userChallenge/fetchJoinedChallengesFromSupabase',
     async (email, { getState, rejectWithValue }) => {
-        // 데이터가 이미 있는 경우에만 스킵
         const { joinedChallenges, numericUserId } = getState().userChallenge;
-
+        
         if (joinedChallenges && joinedChallenges.length > 0 && numericUserId) {
             return { joinedChallenges, numericUserId };
         }
 
         try {
-            // 이메일을 숫자 id로 변환
-            const numericUserId = await supabaseApi.getUserIdByEmail(email);
+            const fetchedUserId = await supabaseApi.getUserIdByEmail(email);  // ✅ 변수명 변경
+            
+            if (!fetchedUserId) {  // ✅ undefined 체크
+                throw new Error('사용자를 찾을 수 없습니다.');
+            }
 
-            // 챌린지 데이터 가져오기
-            const challenges = await supabaseApi.get(
+            const challenges = await supabaseApi.get<Challenge>(
                 'challenges',
                 '*,users(nickname,user_img),participants(*)'
             );
 
-            // 참여 챌린지 필터링
             const joinedChallenges = challenges.filter(
                 (challenge) =>
                     challenge.participants &&
                     challenge.participants.some(
-                        (p) => String(p.author_id) === String(numericUserId)
+                        (p) => String(p.author_id) === String(fetchedUserId)
                     )
             );
 
-            return { joinedChallenges, numericUserId };
+            return { joinedChallenges, numericUserId: fetchedUserId };  // ✅ number 확정
         } catch (error) {
             console.error('오류 발생:', error);
-            return rejectWithValue(error.message);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
