@@ -38,7 +38,7 @@ export const fetchMyPostFromSupabase = createAsyncThunk<
 
             // // 내가 작성한 챌린지만 필터링
             const myPosts = challenges.filter(
-                (post) => String(post.author_id) === String(numericUserId)
+                (post) => String(post.author_id) === String(fetchedUserId)
             );
 
             return { myPosts, numericUserId: fetchedUserId };
@@ -52,7 +52,7 @@ export const fetchMyPostFromSupabase = createAsyncThunk<
 );
 
 // 참여한 챌린지 데이터 가져오기
-export const fetchJoinedChallengesFromSupabase = createAsyncThunk
+export const fetchJoinedChallengesFromSupabase = createAsyncThunk<
     { joinedChallenges: Challenge[]; numericUserId: number },
     string,
     { state: RootState }
