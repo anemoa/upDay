@@ -25,8 +25,9 @@ export const fetchMyPostFromSupabase = createAsyncThunk<
         try {
             // 1. 이메일을 숫자 id로 변환하기
             const fetchedUserId = await supabaseApi.getUserIdByEmail(email);
-			
-			if (!fetchedUserId) {  // ✅ undefined 체크
+
+            if (!fetchedUserId) {
+                // ✅ undefined 체크
                 throw new Error('사용자를 찾을 수 없습니다.');
             }
 
@@ -60,15 +61,16 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk<
     'userChallenge/fetchJoinedChallengesFromSupabase',
     async (email, { getState, rejectWithValue }) => {
         const { joinedChallenges, numericUserId } = getState().userChallenge;
-        
+
         if (joinedChallenges && joinedChallenges.length > 0 && numericUserId) {
             return { joinedChallenges, numericUserId };
         }
 
         try {
-            const fetchedUserId = await supabaseApi.getUserIdByEmail(email);  // ✅ 변수명 변경
-            
-            if (!fetchedUserId) {  // ✅ undefined 체크
+            const fetchedUserId = await supabaseApi.getUserIdByEmail(email); // ✅ 변수명 변경
+
+            if (!fetchedUserId) {
+                // ✅ undefined 체크
                 throw new Error('사용자를 찾을 수 없습니다.');
             }
 
@@ -85,7 +87,7 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk<
                     )
             );
 
-            return { joinedChallenges, numericUserId: fetchedUserId };  // ✅ number 확정
+            return { joinedChallenges, numericUserId: fetchedUserId }; // ✅ number 확정
         } catch (error) {
             console.error('오류 발생:', error);
             if (error instanceof Error) {
@@ -97,7 +99,14 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk<
 );
 
 // 챌린지 상태 업데이트
-export const updateChallengeStatus = createAsyncThunk(
+export const updateChallengeStatus = createAsyncThunk<
+    { challengeId: number; userId: number; status: string; result: any },
+    {
+        challengeId: number;
+        userId: number;
+        status: 'doing' | 'done' | 'not_started';
+    }
+>(
     'userChallenge/updateChallengeStatus',
     async ({ challengeId, userId, status }, { rejectWithValue }) => {
         try {
@@ -121,7 +130,10 @@ export const updateChallengeStatus = createAsyncThunk(
 );
 
 // 챌린지 수정
-export const updateChallengeFromSupabase = createAsyncThunk(
+export const updateChallengeFromSupabase = createAsyncThunk<
+    Challenge,
+    { challengeId: number; updateData: Partial<Challenge> }
+>(
     'userChallenge/updateChallengeFromSupabase',
     async ({ challengeId, updateData }, { rejectWithValue }) => {
         try {
@@ -144,7 +156,7 @@ export const updateChallengeFromSupabase = createAsyncThunk(
 );
 
 // 챌린지 삭제
-export const deleteChallengeFromSupabase = createAsyncThunk(
+export const deleteChallengeFromSupabase = createAsyncThunk<number, number>(
     'userChallenge/deleteChallengeFromSupabase',
     async (challengeId, { rejectWithValue }) => {
         try {
