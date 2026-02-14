@@ -170,7 +170,7 @@ export const deleteChallengeFromSupabase = createAsyncThunk<number, number>(
 );
 
 //초기 상태
-const initialState = {
+const initialState: UserChallengeState = {
     myPosts: [],
     joinedChallenges: [],
     selectedChallenge: null,
@@ -181,7 +181,6 @@ const initialState = {
     },
     error: null,
 };
-
 // 슬라이스 생성
 const userChallengeSlice = createSlice({
     name: 'userChallenge',
