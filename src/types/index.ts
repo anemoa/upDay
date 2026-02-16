@@ -61,6 +61,7 @@ export interface UserChallengeState {
   loading: {
     myPosts: boolean;
     joinedChallenges: boolean;
+	status?: boolean;
   };
   error: string | null;
 }

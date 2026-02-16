@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
     createParticipant,
     getParticipant,
@@ -100,7 +100,12 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk<
 
 // 챌린지 상태 업데이트
 export const updateChallengeStatus = createAsyncThunk<
-    { challengeId: number; userId: number; status: string; result: any },
+    { 
+        challengeId: number; 
+        userId: number; 
+        status: 'doing' | 'done' | 'not_started';  // ✅ string → 정확한 타입
+        result: any 
+    },
     {
         challengeId: number;
         userId: number;
@@ -124,7 +129,10 @@ export const updateChallengeStatus = createAsyncThunk<
             // 3. 업데이트된 챌린지 정보 반환
             return { challengeId, userId, status, result };
         } catch (error) {
-            return rejectWithValue(error.message);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
@@ -150,7 +158,10 @@ export const updateChallengeFromSupabase = createAsyncThunk<
             return result[0]; // 업데이트된 챌린지 반환
         } catch (error) {
             console.error('챌린지 수정 실패:', error);
-            return rejectWithValue(error.message);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
@@ -164,7 +175,10 @@ export const deleteChallengeFromSupabase = createAsyncThunk<number, number>(
             return challengeId; // 삭제된 챌린지 ID 반환
         } catch (error) {
             console.error('챌린지 삭제 실패:', error);
-            return rejectWithValue(error.message);
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Unknown error');
         }
     }
 );
@@ -186,10 +200,14 @@ const userChallengeSlice = createSlice({
     name: 'userChallenge',
     initialState,
     reducers: {
-        setSelectedChallenge: (state, action) => {
+        setSelectedChallenge: (
+            state,
+            action: PayloadAction<Challenge | null>
+        ) => {
             state.selectedChallenge = action.payload;
         },
     },
+
     extraReducers: (builder) => {
         builder
             // 내가 작성한 챌린지 가져오기
@@ -204,7 +222,7 @@ const userChallengeSlice = createSlice({
             })
             .addCase(fetchMyPostFromSupabase.rejected, (state, action) => {
                 state.loading.myPosts = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             })
 
             // 참여한 챌린지 가져오기
@@ -223,7 +241,7 @@ const userChallengeSlice = createSlice({
                 fetchJoinedChallengesFromSupabase.rejected,
                 (state, action) => {
                     state.loading.joinedChallenges = false;
-                    state.error = action.payload;
+                    state.error = action.payload as string;
                 }
             )
 
@@ -280,7 +298,7 @@ const userChallengeSlice = createSlice({
             })
             .addCase(updateChallengeStatus.rejected, (state, action) => {
                 state.loading.status = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             })
 
             // updateChallengeFromSupabase 액션 처리
@@ -296,7 +314,7 @@ const userChallengeSlice = createSlice({
             })
             .addCase(updateChallengeFromSupabase.rejected, (state, action) => {
                 state.loading.myPosts = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             })
 
             // deleteChallengeFromSupabase 액션 처리
@@ -312,7 +330,7 @@ const userChallengeSlice = createSlice({
             })
             .addCase(deleteChallengeFromSupabase.rejected, (state, action) => {
                 state.loading.myPosts = false;
-                state.error = action.payload;
+                state.error = action.payload as string;
             });
     },
 });
