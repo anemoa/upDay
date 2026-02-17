@@ -36,12 +36,12 @@ export interface UserProfile {
 
 // Participant 타입
 export interface Participant {
-  id: number;
+  id?: number;
   challenge_id: number;
   author_id: number;
   join_date?: string;
   status: 'doing' | 'done' | 'not_started';
-  created_at: string;
+  created_at?: string;
   updated_at?: string;
 }
 
