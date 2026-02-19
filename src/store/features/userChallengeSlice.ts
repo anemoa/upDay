@@ -100,11 +100,11 @@ export const fetchJoinedChallengesFromSupabase = createAsyncThunk<
 
 // 챌린지 상태 업데이트
 export const updateChallengeStatus = createAsyncThunk<
-    { 
-        challengeId: number; 
-        userId: number; 
-        status: 'doing' | 'done' | 'not_started';  // ✅ string → 정확한 타입
-        result: any 
+    {
+        challengeId: number;
+        userId: number;
+        status: 'doing' | 'done' | 'not_started'; // ✅ string → 정확한 타입
+        result: any;
     },
     {
         challengeId: number;
@@ -121,6 +121,9 @@ export const updateChallengeStatus = createAsyncThunk<
             let result;
             // 2. 참여 정보가 있으면 업데이트, 없으면 새로 생성
             if (participant) {
+                if (!participant.id) {
+                    throw new Error('참여자 ID가 없습니다.');
+                }
                 result = await updateParticipantStatus(participant.id, status);
             } else {
                 result = await createParticipant(challengeId, userId, status);
