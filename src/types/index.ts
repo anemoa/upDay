@@ -65,3 +65,13 @@ export interface UserChallengeState {
   };
   error: string | null;
 }
+
+
+// User State 타입
+export interface UserState {
+  email: string;
+  password: string;
+  nickname: string;
+  profileImage: string;
+  about: string;
+}
