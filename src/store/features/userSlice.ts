@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { UserState } from '../../types';
 
 const initialState = {
     email: '',
@@ -12,26 +13,26 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setEmail: (state, action) => {
+        setEmail: (state, action: PayloadAction<string>) => {
             state.email = action.payload;
         },
-        setPassword: (state, action) => {
+        setPassword: (state, action: PayloadAction<string>) => {
             state.password = action.payload;
         },
-        setNickname: (state, action) => {
+        setNickname: (state, action: PayloadAction<string>) => {
             state.nickname = action.payload;
         },
-        setProfileImage: (state, action) => {
+        setProfileImage: (state, action: PayloadAction<string>) => {
             state.profileImage = action.payload;
         },
-        setUser: (state, action) => {
-            state.email = action.payload.email;
-            state.password = action.payload.password;
-            state.nickname = action.payload.nickname;
-            state.profileImage = action.payload.profileImage;
-			state.about = action.payload.about || '';
+        setUser: (state, action: PayloadAction<Partial<UserState>>) => {
+            state.email = action.payload.email || '';
+            state.password = action.payload.password || '';
+            state.nickname = action.payload.nickname || '';
+            state.profileImage = action.payload.profileImage || '';
+            state.about = action.payload.about || '';
         },
-        setAbout: (state, action) => {
+        setAbout: (state, action: PayloadAction<string>) => {
             state.about = action.payload;
         },
     },
