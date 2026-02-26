@@ -1,7 +1,12 @@
 import React from 'react';
 import MainDay from '../images/mainday.svg';
 
-const UserInfo = ({ userName, challengeDays }) => {
+interface UserInfoProps{
+	userName?: string;
+	challengeDays?: number;
+}
+
+const UserInfo = ({ userName, challengeDays }: UserInfoProps) => {
     return (
         <div className='w-full h-auto md:h-[120px] mt-32 md:mt-16 card bg-neutral-100 md:bg-neutral-100/0 p-[24px] md:p-0 text-left flex flex-col justify-center gap-4'>
             <h1 className='text-base md:text-lg font-medium'>
