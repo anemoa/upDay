@@ -4,11 +4,17 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSelectedChallenge } from '../../store/features/challengeSlice';
+import { Challenge } from '../../types';
 
-const PopularChallenges = ({ challenges }) => {
+interface PopularChallengesProps {
+    challenges: Challenge[];
+}
+
+
+const PopularChallenges = ({ challenges }: PopularChallengesProps ) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [challengeIndex, setChallengeIndex] = useState(0);
+    const [challengeIndex, setChallengeIndex] = useState<number>(0);
 
     const currentChallenges = useMemo(() => {
         return challenges?.slice(0, 9) || [];
@@ -40,7 +46,7 @@ const PopularChallenges = ({ challenges }) => {
 
     if (currentChallenges.length < 3) return null;
 
-    const handleChallengeClick = (challenge) => {
+    const handleChallengeClick = (challenge: Challenge) => {
         dispatch(setSelectedChallenge(challenge));
         navigate(`/challengelist/${challenge.id}`);
     };
