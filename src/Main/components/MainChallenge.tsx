@@ -3,8 +3,14 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../index';
+import { Challenge } from '../../types';
 
-const ArrowButton = ({ direction, onClick }) => {
+interface ArrowButtonProps {
+    direction: 'left' | 'right';
+    onClick: () => void;
+}
+
+const ArrowButton = ({ direction, onClick }: ArrowButtonProps) => {
     return (
         <button
             onClick={onClick}
@@ -41,17 +47,22 @@ const ArrowButton = ({ direction, onClick }) => {
     );
 };
 
-const calculateDaysPassed = (joinDate) => {
+const calculateDaysPassed = (joinDate: string) : number => {
     const start = new Date(joinDate);
     const today = new Date();
-    const diffTime = Math.abs(today - start);
+    const diffTime = Math.abs(today.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
 };
 
-const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
+interface MainChallengeProps {
+    userChallengeData: Challenge[];
+    isLoggedIn: boolean;
+}
+
+const MainChallenge = ({ userChallengeData, isLoggedIn }: MainChallengeProps) => {
     const navigate = useNavigate();
-    const [startIndex, setStartIndex] = useState(0);
+    const [startIndex, setStartIndex] = useState<number>(0);
     const challengesPerPage = 4;
 
 	    const sortedChallenges = useMemo(() => {
@@ -74,7 +85,7 @@ const MainChallenge = ({ userChallengeData, isLoggedIn }) => {
             .sort((a, b) => {
                 const dateA = new Date(a.joinDate);
                 const dateB = new Date(b.joinDate);
-                return dateA - dateB; // 오래된 순 (도전 일수가 많은 순)
+                return dateA.getTime() - dateB.getTime(); // 오래된 순 (도전 일수가 많은 순)
             });
     }, [userChallengeData]);
 
