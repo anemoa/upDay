@@ -15,10 +15,19 @@ import ChallengeIcon from '../images/challenge-2.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice';
 import { supabaseApi } from '../../utils/supabaseApi';
+import { RootState } from '../../store';
+
+
+interface Category {
+    name: string;
+    color: string;
+    icon: string;
+    path: string;
+}
 
 const MainLayout = () => {
     const dispatch = useDispatch();
-    const challenges = useSelector((state) => state.challenge.list) || [];
+    const challenges = useSelector((state: RootState) => state.challenge.list) || [];
     const [userName, setUserName] = useState('');
     const [challengeDays, setChallengeDays] = useState(0);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
