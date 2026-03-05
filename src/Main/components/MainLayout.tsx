@@ -15,7 +15,7 @@ import ChallengeIcon from '../images/challenge-2.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice';
 import { supabaseApi } from '../../utils/supabaseApi';
-import { RootState } from '../../store';
+import { AppDispatch, RootState } from '../../store';
 
 
 interface Category {
@@ -26,12 +26,12 @@ interface Category {
 }
 
 const MainLayout = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const challenges = useSelector((state: RootState) => state.challenge.list) || [];
-    const [userName, setUserName] = useState('');
-    const [challengeDays, setChallengeDays] = useState(0);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [currentUserId, setCurrentUserId] = useState(null);
+    const [userName, setUserName] = useState<string>('');
+    const [challengeDays, setChallengeDays] = useState<number>(0);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
     // ✅ 챌린지 데이터 가져오기
     useEffect(() => {
