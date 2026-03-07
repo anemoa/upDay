@@ -17,7 +17,6 @@ import { fetchChallengesFromSupabase } from '../../store/features/challengeSlice
 import { supabaseApi } from '../../utils/supabaseApi';
 import { AppDispatch, RootState } from '../../store';
 
-
 interface Category {
     name: string;
     color: string;
@@ -27,7 +26,8 @@ interface Category {
 
 const MainLayout = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const challenges = useSelector((state: RootState) => state.challenge.list) || [];
+    const challenges =
+        useSelector((state: RootState) => state.challenge.list) || [];
     const [userName, setUserName] = useState<string>('');
     const [challengeDays, setChallengeDays] = useState<number>(0);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -46,7 +46,7 @@ const MainLayout = () => {
             try {
                 const users = JSON.parse(usersData);
                 const foundUser = users.find(
-                    (user) => user.email === loggedInUserEmail
+                    (user: any) => user.email === loggedInUserEmail
                 );
 
                 if (foundUser) {
@@ -55,7 +55,8 @@ const MainLayout = () => {
                         const signUpDate = new Date(foundUser.signupDate);
                         const today = new Date();
                         const diffDays = Math.floor(
-                            (today - signUpDate) / (1000 * 60 * 60 * 24)
+                            (today.getTime() - signUpDate.getTime()) /
+                                (1000 * 60 * 60 * 24)
                         );
                         setChallengeDays(diffDays + 1);
                     }
@@ -67,7 +68,10 @@ const MainLayout = () => {
                             await supabaseApi.getUserIdByEmail(
                                 loggedInUserEmail
                             );
-                        setCurrentUserId(userId);
+
+                        if (userId) {
+                            setCurrentUserId(userId);
+                        }
                     };
                     fetchUserId();
                 }
@@ -102,7 +106,7 @@ const MainLayout = () => {
             .slice(0, 5);
     }, [challenges]);
 
-    const categories = [
+    const categories: Category[] = [
         {
             name: '식단',
             color: 'bg-mint-200',
