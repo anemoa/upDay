@@ -2,8 +2,14 @@
 
 import React from 'react';
 import MainChallenge from './MainChallenge';
+import { Challenge } from '../../types';
 
-const OngoingChallenges = ({ userChallengeData, isLoggedIn }) => {
+interface OngoingChallengesProps {
+    userChallengeData: Challenge[];
+    isLoggedIn: boolean;
+}
+
+const OngoingChallenges = ({ userChallengeData, isLoggedIn }: OngoingChallengesProps) => {
     return (
         <div className=''>
             <MainChallenge
