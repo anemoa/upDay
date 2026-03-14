@@ -4,7 +4,12 @@ import pic4 from '../img/Group 112.svg';
 import pic5 from '../img/Group 1.svg';
 import pic6 from '../img/Group 239.svg';
 
-const LoginLayout = ({ children, title }) => {
+interface LoginLayoutProps{
+	children: React.ReactNode;
+	title: string;
+}
+
+const LoginLayout = ({ children, title }: LoginLayoutProps) => {
     return (
         <div className='w-[90%] mx-auto flex justify-center items-center relative h-[796px] md:w-[80%] md:max-w-[1344px]'>
             <img
