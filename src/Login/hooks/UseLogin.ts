@@ -4,20 +4,27 @@ import { useNavigate, useLocation } from 'react-router-dom'; // ✅ useLocation 
 import { setUser } from '../../store/features/userSlice';
 import { userData } from '../../data/userData';
 import { getUserProfile, supabaseApi } from '../../utils/supabaseApi';
+import { AppDispatch } from '../../store';
+
+interface LocationState {
+    email?: string;
+    password?: string;
+}
 
 const useLogin = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
+	const locationState = location.state as LocationState | null;
 
     const defaultEmail = 'test01@naver.com';
-    const [defaultPassword, setDefaultPassword] = useState('aaaa11!!');
+    const [defaultPassword, setDefaultPassword] = useState<string>('aaaa11!!');
 
-    const [email, setEmail] = useState(location.state?.email || defaultEmail);
-    const [password, setPassword] = useState(
+    const [email, setEmail] = useState<string>(location.state?.email || defaultEmail);
+    const [password, setPassword] = useState<string>(
         location.state?.password || defaultPassword
     );
-    const [error, setError] = useState('');
+    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         const loadTestPassword = async () => {
