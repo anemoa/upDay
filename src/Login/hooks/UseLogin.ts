@@ -15,12 +15,14 @@ const useLogin = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
-	const locationState = location.state as LocationState | null;
+    const locationState = location.state as LocationState | null;
 
     const defaultEmail = 'test01@naver.com';
     const [defaultPassword, setDefaultPassword] = useState<string>('aaaa11!!');
 
-    const [email, setEmail] = useState<string>(location.state?.email || defaultEmail);
+    const [email, setEmail] = useState<string>(
+        location.state?.email || defaultEmail
+    );
     const [password, setPassword] = useState<string>(
         location.state?.password || defaultPassword
     );
@@ -30,7 +32,9 @@ const useLogin = () => {
         const loadTestPassword = async () => {
             try {
                 const userId = await supabaseApi.getUserIdByEmail(defaultEmail);
+                if (!userId) return;
                 const userData = await getUserProfile(userId);
+                if (!userData) return;
                 setDefaultPassword(userData.password || 'aaaa11!!');
             } catch (error) {
                 console.log('기본 비밀번호 로드 실패');
@@ -39,7 +43,7 @@ const useLogin = () => {
         loadTestPassword();
     }, []);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
@@ -50,6 +54,10 @@ const useLogin = () => {
             }
 
             const userData = await getUserProfile(userId);
+            if (!userData) {
+                setError('등록되지 않은 사용자입니다.');
+                return;
+            }
 
             if (userData.password === password) {
                 setError('');
