@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword } from '../../store/features/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { AppDispatch, RootState } from '../../store';
 
 const useSignup = () => {
-    const [email, setEmailState] = useState('');
-    const [password, setPasswordState] = useState('');
-    const [passwordConfirm, setPasswordConfirmState] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [pwError, setPwError] = useState('');
-    const [pwConfirmError, setPwConfirmError] = useState('');
-    const [error, setError] = useState('');
-    const dispatch = useDispatch();
+    const [email, setEmailState] = useState<string>('');
+    const [password, setPasswordState] = useState<string>('');
+    const [passwordConfirm, setPasswordConfirmState] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>('');
+    const [pwError, setPwError] = useState<string>('');
+    const [pwConfirmError, setPwConfirmError] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
     const clglist = useSelector((state) => state.challenge.list ?? []);
