@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword } from '../../store/features/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -15,13 +15,16 @@ const useSignup = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const clglist = useSelector((state) => state.challenge.list ?? []);
+    const clglist = useSelector(
+        (state: RootState) => state.challenge.list ?? []
+    );
 
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const validatePassword = (password) =>
+    const validateEmail = (email: string) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const validatePassword = (password: string) =>
         password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         let newEmailError = '';
@@ -41,12 +44,12 @@ const useSignup = () => {
             newPwConfirmError = '비밀번호가 일치하지 않습니다.';
         }
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const users:{email: string}[] = JSON.parse(localStorage.getItem('users') ?? '[]');
         if (users.some((user) => user.email === email)) {
             newError = '이미 등록된 아이디입니다.';
         }
 
-        if (clglist.some((challenge) => challenge.authorId === email)) {
+        if (clglist.some((challenge) => challenge.author_id === Number(email))) {
             newError = '이미 등록된 아이디입니다.';
         }
 
