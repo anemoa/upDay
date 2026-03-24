@@ -6,17 +6,26 @@ import img1 from '../img/1.svg';
 import img2 from '../img/2.svg';
 import img3 from '../img/3.svg';
 import img4 from '../img/4.svg';
+import { AppDispatch, RootState } from '../../store';
+
+interface NewUser {
+    email: string;
+    password: string;
+    nickname: string;
+    profileImage: string;
+    signupDate: string;
+}
 
 const useProfileSetup = () => {
-    const [nickname, setNicknameState] = useState('');
-    const [profileImage, setProfileImageState] = useState('');
-    const [error, setError] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const dispatch = useDispatch();
+    const [nickname, setNicknameState] = useState<string>('');
+    const [profileImage, setProfileImageState] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const email = useSelector((state) => state.user.email);
-    const password = useSelector((state) => state.user.password);
+    const email = useSelector((state: RootState) => state.user.email);
+    const password = useSelector((state: RootState) => state.user.password);
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
