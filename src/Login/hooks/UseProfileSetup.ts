@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNickname, setProfileImage } from '../../store/features/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -27,19 +27,20 @@ const useProfileSetup = () => {
     const email = useSelector((state: RootState) => state.user.email);
     const password = useSelector((state: RootState) => state.user.password);
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProfileImageState(reader.result);
-                dispatch(setProfileImage(reader.result));
+				const result = reader.result as string;
+                setProfileImageState(result);
+                dispatch(setProfileImage(result));
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (nickname.length > 6) {
