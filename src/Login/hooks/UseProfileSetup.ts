@@ -48,7 +48,7 @@ const useProfileSetup = () => {
             return;
         }
 
-        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let users: NewUser[] = JSON.parse(localStorage.getItem('users') ?? '[]');
         if (users.some((user) => user.nickname === nickname)) {
             setError('이 닉네임은 이미 사용 중입니다.');
             return;
@@ -61,7 +61,7 @@ const useProfileSetup = () => {
         // Redux 상태 업데이트
         dispatch(setNickname(nickname));
 
-        const newUser = {
+        const newUser: NewUser = {
             email,
             password,
             nickname,
