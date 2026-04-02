@@ -10,12 +10,20 @@ import {
     fetchChallengesFromSupabase,
     updateChallengeInSupabase,
 } from '../store/features/challengeSlice';
-import { CATEGORY_IMAGES, userChallengeList } from '../data/userChallengeData';
+import { CATEGORY_IMAGES } from '../data/userChallengeData';
 import useLoginModal from '../common/hooks/useLoginModal';
 import { supabaseApi } from '../utils/supabaseApi';
+import { AppDispatch, RootState } from '../store';
+
+interface FormData {
+    title: string;
+    content: string;
+    category: string;
+    duration: string;
+}
 
 const PostDetailModal = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { pathname } = useLocation();
     // 로그인 모달 커스텀 훅
@@ -27,7 +35,7 @@ const PostDetailModal = () => {
     const isViewMode = !isCreateMode && !isEditMode;
 
     const selectedChallenge = useSelector(
-        (state) => state.challenge.selectedChallenge
+        (state: RootState) => state.challenge.selectedChallenge
     );
 
     // 추가로 전체 challenge.list도 확인
